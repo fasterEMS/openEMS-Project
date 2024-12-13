@@ -5,6 +5,12 @@
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 
+which python
+which python3
+echo $PATH
+echo $CXXFLAGS
+echo $LDFLAGS
+
 if [ $# -lt 1 ]
 then
   echo "Usage: `basename $0` <path-to-install> [<options>]"
