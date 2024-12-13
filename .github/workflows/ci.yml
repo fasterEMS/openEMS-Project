@@ -327,6 +327,7 @@ jobs:
           cd $GITHUB_WORKSPACE/openEMS-Project
 
           # needed by Python modules
+          source $HOME/opt/bin/activate  # activate venv
           export PATH="$HOME/opt/bin:${PATH}"
           export CXXFLAGS="-std=c++11 -I$HOME/opt/include -I/opt/homebrew/include"
           export LDFLAGS="-L$HOME/opt/lib -L/opt/homebrew/lib"
