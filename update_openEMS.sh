@@ -155,8 +155,11 @@ fi
 #####  python extension build ####
 
 if [ $BUILD_PY_EXT -eq 1 ]; then
+    # are we running inside a Python venv?
+    PY_INST_IS_VENV=$(python3 -c "import sys; exit(sys.prefix == sys.base_prefix)")
+
     PY_INST_USER=''
-    if (( $EUID != 0 )); then
+    if (( $EUID != 0 )) && (( $PY_INST_VENV != 1 )); then
         PY_INST_USER='--user'
     fi
     for PY_EXT in 'CSXCAD' 'openEMS'
