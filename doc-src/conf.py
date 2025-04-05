@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'numpydoc',
     'sphinx.ext.autosummary',
+    'sphinxcontrib.video'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
