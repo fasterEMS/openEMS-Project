@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>First Lessons For Circuit Designers &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Start from the Basics" href="First_Lessons_Forewords.html" />
+    <link rel="prev" title="Tutorials" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">First Lessons For Circuit Designers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="First_Lessons_Forewords.html">Start from the Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="First_Lessons_Forewords.html#workflow-of-fdtd">Workflow of FDTD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html">Parallel-Plate Capacitor and Waveguide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      <li>First Lessons For Circuit Designers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/openEMS/Tutorials/First_Lessons.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="first-lessons-for-circuit-designers">
+<span id="first-lessons"></span><h1>First Lessons For Circuit Designers<a class="headerlink" href="#first-lessons-for-circuit-designers" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="First_Lessons_Forewords.html">Start from the Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="First_Lessons_Forewords.html#workflow-of-fdtd">Workflow of FDTD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html">Parallel-Plate Capacitor and Waveguide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#this-tutorial-covers">This tutorial covers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#problem">Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#create-conductors">Create Conductors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#requirements-for-the-mesh">Requirements for the Mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#general-requirements">General Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#courant-friedrichs-lewy-cfl-criterion">Courant-Friedrichs-Lewy (CFL) Criterion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#create-a-mesh">Create a Mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#obtain-the-mesh-object">Obtain the Mesh Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#decide-the-upper-frequency-and-mesh-resolution">Decide the Upper Frequency and Mesh Resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#a-simple-but-flawed-mesh">A Simple But Flawed Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#a-practical-mesh">A Practical Mesh</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#optional-create-a-field-dump-box">Optional: Create A Field Dump Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#purpose-of-ports">Purpose of Ports</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#test-fixture-as-1-port-or-2-port-network">Test Fixture as 1-Port or 2-Port Network</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#create-ports">Create Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#create-excitation">Create Excitation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#specify-the-boundary-conditions">Specify the Boundary Conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#reflecting-dirichlet-boundary-conditions">Reflecting (Dirichlet) Boundary Conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#absorbing-boundary-conditions-abc">Absorbing Boundary Conditions (ABC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#set-boundary-conditions">Set Boundary Conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#start-simulation">Start Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-checkpoint-1">Code Checkpoint 1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#our-existing-code-so-far">Our Existing Code So Far</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-refactoring">Code Refactoring</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#run-simulation">Run Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#built-in-post-processing">Built-In Post-Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#port-attribute-references">Port Attribute References</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#introduction-to-s-parameters">Introduction to S-parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#calculate-s-parameters">Calculate S-parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-s-parameters-via-matplotlib">Plot S-parameters via matplotlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-z-parameters-impedances-via-matplotlib">Plot Z-parameters (Impedances) via matplotlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-checkpoint-2-eliminate-repetitions-in-matplotlib-code">Code Checkpoint 2: Eliminate Repetitions in <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-time-domain-waveforms-via-matplotlib">Plot Time-Domain Waveforms via matplotlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#export-s-parameters-to-touchstone">Export S-parameters to Touchstone</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s2p-file"><code class="docutils literal notranslate"><span class="pre">.s2p</span></code> file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s1p-file"><code class="docutils literal notranslate"><span class="pre">.s1p</span></code> file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#snp-file"><code class="docutils literal notranslate"><span class="pre">.snp</span></code> file</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-checkpoint-3">Code Checkpoint 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#third-party-post-processing">Third-Party Post-Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-scikit-rf">S-parameters Analysis via <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#install-and-import">Install and Import</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-smith-charts">Plot Smith Charts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-magnitude-phase-charts">Plot Magnitude-Phase Charts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-impedance-chart">Plot Impedance Chart</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#time-domain-reflectometry">Time Domain Reflectometry</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#transient-analysis-via-signalintegrity">Transient Analysis via <code class="docutils literal notranslate"><span class="pre">SignalIntegrity</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#install">Install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#impulse-signal-analysis">Impulse Signal Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#eye-diagram-analysis">Eye Diagram Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-qucs">S-Parameters Analysis via Qucs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#id9">Install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#enable-qucsator">Enable Qucsator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameter-simulation-skeleton">S-Parameter Simulation Skeleton</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#two-port-s-parameter-analysis">Two-Port S-Parameter Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#comparison-with-microstrip">Comparison with Microstrip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#field-dumps-analysis-via-paraview">Field Dumps Analysis via ParaView</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#experimental-validation-and-discussion">Experimental Validation and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#motivation">Motivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#experiment">Experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#impedance-transformation">Impedance Transformation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#troubleshoot">Troubleshoot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#notes-for-wayland-users">Notes for Wayland Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#warning-unused-primitive-type-box-detected-in-property-plate">Warning: Unused primitive (type: Box) detected in property: plate!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#warning-unused-primitive-type-box-detected-in-property-port-excite-1">Warning: Unused primitive (type: Box) detected in property: port_excite_1!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#calcvoltageintegral-error-only-a-1d-line-integration-is-allowed">CalcVoltageIntegral: Error, only a 1D/line integration is allowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#no-qucsator-in-qucs-s">No <span class="guilabel">Qucsator</span> in Qucs-S</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#programmatic-solution">Programmatic Solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#gui-solution">GUI Solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#bibliography">Bibliography</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="First_Lessons_Forewords.html" class="btn btn-neutral float-right" title="Start from the Basics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

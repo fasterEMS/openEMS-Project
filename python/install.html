@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Install &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CSXCAD Python Interface" href="CSXCAD/CSXCAD_API.html" />
+    <link rel="prev" title="Python Interface" href="python.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-requirements">Module requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#build-modules-automatically">Build Modules Automatically</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-modules-from-source-manually">Build Modules From Source Manually</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#install-pre-build-modules">Install Pre-build Modules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-modules-from-source">Build Modules From Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="python.html">Python Interface</a> &raquo;</li>
+      <li>Install</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/python/install.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="install">
+<span id="pyinstall"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this headline"></a></h1>
+<p>Instructions how to install the <strong>CSXCAD &amp; openEMS python interface</strong>.</p>
+<section id="module-requirements">
+<h2>Module requirements<a class="headerlink" href="#module-requirements" title="Permalink to this headline"></a></h2>
+<p>Some python modules are required to run openEMS simulations and tutorials: numpy, h5py, matplotlib</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install numpy h5py matplotlib</span>
+</pre></div>
+</div>
+<p>Additionally Cython is required to compile CSXCAD and openEMS e.g. on Linux.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install cython</span>
+</pre></div>
+</div>
+</section>
+<section id="linux">
+<span id="python-linux-install"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this headline"></a></h2>
+<section id="build-modules-automatically">
+<h3>Build Modules Automatically<a class="headerlink" href="#build-modules-automatically" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>Build or update <strong>CSXCAD</strong> and <strong>openEMS</strong> using the “–python” flag (Recommended). See <a class="reference internal" href="../install/index.html#install-src"><span class="std std-ref">Install from Source</span></a> for more details.</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./update_openEMS.sh ~/opt/openEMS --python</span>
+</pre></div>
+</div>
+</section>
+<section id="build-modules-from-source-manually">
+<h3>Build Modules From Source Manually<a class="headerlink" href="#build-modules-from-source-manually" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>Alternative: Manual build and install (if installed to /usr/local):</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd CSXCAD</span>
+<span class="go">python setup.py install</span>
+<span class="go">cd ..</span>
+
+<span class="go">cd openEMS</span>
+<span class="go">python setup.py install</span>
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Extended options, e.g. for custom install path at <em>/opt</em>:</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py build_ext -I/opt/include -L/opt/lib -R/opt/lib&quot;</span>
+<span class="go">python setup.py install</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> The install command may require root on Linux, or add <code class="docutils literal notranslate"><span class="pre">--user</span></code> to install to <em>~/.local</em></p>
+</section>
+</section>
+<section id="windows">
+<span id="python-windows-install"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h2>
+<p>The python interface for CSXCAD &amp; openEMS requires a build with a <a class="reference external" href="https://wiki.python.org/moin/WindowsCompilers">MS Visual Compiler</a>.
+Download the latest windows build with the “msvc” label: <a class="reference external" href="https://github.com/thliebig/openEMS-Project/releases">openEMS_win</a></p>
+<section id="install-pre-build-modules">
+<h3>Install Pre-build Modules<a class="headerlink" href="#install-pre-build-modules" title="Permalink to this headline"></a></h3>
+<p>For some python versions, pre-build wheel files can be found in the python sub-directory. E.g. for python 3.10 (using pip):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd C:\opt\openEMS\python</span>
+<span class="go">pip install CSXCAD-0.6.2-cp310-cp310-win_amd64.whl</span>
+<span class="go">pip install openEMS-0.0.33-cp310-cp310-win_amd64.whl</span>
+</pre></div>
+</div>
+</section>
+<section id="build-modules-from-source">
+<h3>Build Modules From Source<a class="headerlink" href="#build-modules-from-source" title="Permalink to this headline"></a></h3>
+<p>Download the sources using <a class="reference external" href="https://git-scm.com">git</a>. Assuming the MSVC binary build of openEMS is install at “C:\opt\openEMS”,
+run from a working python command prompt (e.g. using <a class="reference external" href="https://winpython.github.io/">WinPython</a>):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone --recursive https://github.com/thliebig/openEMS-Project.git</span>
+<span class="go">cd openEMS-Project/CSXCAD/python</span>
+<span class="go">python setup.py build_ext -IC:\opt\openEMS\include -LC:\opt\openEMS</span>
+<span class="go">python setup.py install</span>
+
+<span class="go">cd ../../openEMS/python</span>
+<span class="go">python setup.py build_ext -IC:\opt\openEMS\include -LC:\opt\openEMS</span>
+<span class="go">python setup.py install</span>
+</pre></div>
+</div>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"></a></h3>
+<p><strong>Important Note:</strong> Python needs to find the dependent libraries (dll’s) during module import.
+To allow this, it is necessary to set an environment variable (permantently, terminal restart my be necessary):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">setx OPENEMS_INSTALL_PATH C:\opt\openEMS</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="python.html" class="btn btn-neutral float-left" title="Python Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSXCAD/CSXCAD_API.html" class="btn btn-neutral float-right" title="CSXCAD Python Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
