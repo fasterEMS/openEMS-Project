@@ -102,7 +102,12 @@
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#obtain-the-mesh-object">Obtain the Mesh Object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#decide-the-upper-frequency-and-mesh-resolution">Decide the Upper Frequency and Mesh Resolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#a-simple-but-flawed-mesh">A Simple But Flawed Mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#a-practical-mesh">A Practical Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#a-practical-mesh">A Practical Mesh</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#simulation-box-size">Simulation Box Size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#zero-thickness-metal-alignment">Zero-Thickness Metal Alignment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#rule">1/3-2/3 Rule</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#optional-create-a-field-dump-box">Optional: Create A Field Dump Box</a></li>
@@ -133,38 +138,14 @@
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-z-parameters-impedances-via-matplotlib">Plot Z-parameters (Impedances) via matplotlib</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-checkpoint-2-eliminate-repetitions-in-matplotlib-code">Code Checkpoint 2: Eliminate Repetitions in <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> Code</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-time-domain-waveforms-via-matplotlib">Plot Time-Domain Waveforms via matplotlib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#export-s-parameters-to-touchstone">Export S-parameters to Touchstone</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s2p-file"><code class="docutils literal notranslate"><span class="pre">.s2p</span></code> file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s1p-file"><code class="docutils literal notranslate"><span class="pre">.s1p</span></code> file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#snp-file"><code class="docutils literal notranslate"><span class="pre">.snp</span></code> file</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#export-s-parameters-to-touchstone">Export S-parameters to Touchstone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#code-checkpoint-3">Code Checkpoint 3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#third-party-post-processing">Third-Party Post-Processing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-scikit-rf">S-parameters Analysis via <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#install-and-import">Install and Import</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-smith-charts">Plot Smith Charts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-magnitude-phase-charts">Plot Magnitude-Phase Charts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#plot-impedance-chart">Plot Impedance Chart</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#time-domain-reflectometry">Time Domain Reflectometry</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#transient-analysis-via-signalintegrity">Transient Analysis via <code class="docutils literal notranslate"><span class="pre">SignalIntegrity</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#install">Install</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#impulse-signal-analysis">Impulse Signal Analysis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#eye-diagram-analysis">Eye Diagram Analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-qucs">S-Parameters Analysis via Qucs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#id9">Install</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#enable-qucsator">Enable Qucsator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameter-simulation-skeleton">S-Parameter Simulation Skeleton</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#two-port-s-parameter-analysis">Two-Port S-Parameter Analysis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#comparison-with-microstrip">Comparison with Microstrip</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-scikit-rf">S-parameters Analysis via <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#transient-analysis-via-signalintegrity">Transient Analysis via <code class="docutils literal notranslate"><span class="pre">SignalIntegrity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#s-parameters-analysis-via-qucs">S-Parameters Analysis via Qucs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#field-dumps-analysis-via-paraview">Field Dumps Analysis via ParaView</a></li>
 </ul>
 </li>
@@ -180,11 +161,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#warning-unused-primitive-type-box-detected-in-property-plate">Warning: Unused primitive (type: Box) detected in property: plate!</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#warning-unused-primitive-type-box-detected-in-property-port-excite-1">Warning: Unused primitive (type: Box) detected in property: port_excite_1!</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#calcvoltageintegral-error-only-a-1d-line-integration-is-allowed">CalcVoltageIntegral: Error, only a 1D/line integration is allowed</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#no-qucsator-in-qucs-s">No <span class="guilabel">Qucsator</span> in Qucs-S</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#programmatic-solution">Programmatic Solution</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#gui-solution">GUI Solution</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#no-qucsator-in-qucs-s">No <span class="guilabel">Qucsator</span> in Qucs-S</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html#bibliography">Bibliography</a></li>

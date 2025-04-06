@@ -183,16 +183,26 @@ General Requirements
 
 In general, the mesh must satisfy three requirements:
 
-#. Its interval must be small enough to resolve the shortest wavelength (highest
+#. **Temporal Resolution**. Its interval must be small enough to resolve the
+   shortest wavelength (highest
    frequency component) of the signal, so that electromagnetic field details are
    not missed. Thus, we need several cells per wavelength.
 
-#. Its interval must be small enough to resolve the shapes of the simulated
-   structure (especially small details), so that the details of the structure
-   are not missed. Thus, we need at least a few cells around the important
-   shapes (such as the waveguide plates) of the structure.
+#. **Spatial Resolution**. Its interval must be small enough to resolve the 
+   shapes of the simulated
+   structure, so that small details of the structure are not missed. Thus, we
+   need at least a few cells around the important shapes (such as the waveguide 
+   plates) of the structure. openEMS uses a rectilinear mesh with variable
+   spacing. To save time, only use a fine mesh interval around details within
+   a structure, use a coarse mesh for the rest.
 
-#. Its interval should not change suddenly by a large factor.
+#. **Smoothness**. Its interval should change smoothly, not by a sudden jump.
+   It's recommended to keep the spacing change within a factor of 1.5 between
+   adjacent mesh lines.
+
+#. **1/3-2/3 Rule.**  Ideally, around a metal conductor's edges, the metal
+   should occupy 1/3 of a cell, while the vacuum or insulator occupies 2/3 of
+   a cell. More on that later.
 
 As a rule of thumb, we want a mesh resolution of at least:
 
@@ -220,13 +230,13 @@ The speed of light in a medium is given by:
 
 .. math::
 
-   v \approx \frac{c_0}{\sqrt{\epsilon_r\mue_r}}
+   v \approx \frac{c_0}{\sqrt{\epsilon_r\mu_r}}
 
 in which :math:`c_0` is the speed of light in vacuum, :math:`\epsilon_r`
 is the relative permittivity of the medium (in engineering, it's sometimes
 also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
-In vacuum, :math:`\epsilon_r = 1` and :math:`\mue_r = 1` exactly. The
-:math:`\mue_r` term is usually omitted in engineering since most insulators
+In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly. The
+:math:`\mu_r` term is usually omitted in engineering since most insulators
 (like plastics or fiberglass) is non-magnetic.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
@@ -295,13 +305,14 @@ meters)::
 Decide the Upper Frequency and Mesh Resolution
 """"""""""""""""""""""""""""""""""""""""""""""
 
-Let's pick an arbitrary upper frequency of 10 GHz. Based on the previous
-analysis, one can calculate the desired mesh resolution via the following
-code::
+Let's pick an arbitrary lower frequency of 100 MHz and an upper frequency
+of 10 GHz. Based on the previous analysis, one can calculate the desired
+mesh resolution via the following code::
 
     import math
     from openEMS.physical_constants import C0
 
+    f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
@@ -322,7 +333,7 @@ using the :meth:`~CSX.ContinuousStructure.AddLine` method::
 
 Once we have two lines per axis, one can ask CSXCAD to automatically smooth
 the mesh based on all existing lines via
-:meth:`~CSX.ContinuousStructure.SmoothMeshLines`. Its second argument
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines`. Its second argument
 is the minimum spacing between the lines, here we let it to be ``res``. This is the
 desired mesh resolution we've just calculated::
 
@@ -338,8 +349,9 @@ Now it's a good time to rerun the script and inspect the 3D model again in AppCS
    an angle or a different direction (e.g. if there are no mesh lines when viewed from
    the top, try dragging the model to view it from with a slight angle). It's also useful
    to change the "Grid opacity" slider to the maximum (but it still requires viewing from
-   an angle).
-
+   an angle). AppCSXCAD can only display 2D and 3D cells, if only one axis of the
+   simulation box is meshed, no lines will be shown.
+   
    .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-opacity-slider.png
 
 Our 3D model's XY and YZ cross-sections are:
@@ -355,14 +367,16 @@ A Practical Mesh
 Unfortunately, using the mesh as shown in a simulation will produce
 incorrect results due to several problems.
 
-The simulation box is as large as the waveguide, there's no empty
+Simulation Box Size
+'''''''''''''''''''
+
+Our simulation box is as large as the waveguide, there's no empty
 space around the waveguide in the simulation box, so the electric
-field around the waveguide is not modeled correctly. There are
-legitimate use cases for this model, such as when modeling an
-infinite-length waveguide (with Absorbing Boundary Conditions),
-or a capacitor stuck in a metal box (with Perfect Electric Conductor
-boundary conditions). But here, we are modeling a finite waveguide
-with realistic behaviors, including fringe fields and radiation.
+field around the waveguide is not modeled correctly. To be fair,
+there are legitimate use cases for this model, such as when modeling an
+infinite-length waveguide, or a capacitor stuck in a metal box. But
+here, we are modeling a finite waveguide with realistic behaviors,
+including fringe fields and radiation.
 
 As a quick fix to the problem, one can make the simulation box several
 times as big in volume in comparison to the waveguide, giving plenty of
@@ -382,35 +396,78 @@ the following::
     mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
     mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
 
-Another problem is that the mesh is perfectly aligned with the edges
-of the waveguide plates. In simulations, the edge of a structure creates
-singularities with strong electric fields, creating significant errors
-that can't be removed even when tiny cells are used.
+.. important::
+   If it's necessary to capture fringe fields, increase the
+   size of the simulation box beyond the object. 
 
-To mitigate this fundamental error source of FDTD, the mesh should
-be intentionally misaligned with the metal edge. For the best results,
-we introduce additional cells with different sizes around the edge,
-creating an overall rectilinear mesh of non-uniform size. Around the
-metal edge, the metal occupies 1/3 of a cell, while the vacuum or
-insulator occupies 2/3 of a cell. This is known as the **1/3-2/3 rule**.
+Zero-Thickness Metal Alignment
+''''''''''''''''''''''''''''''
 
-Let's apply the rule to the X and Y axis::
-
-    # strategically draw lines misaligned with the waveguide's left and right edges,
-    # so that the edge occupies 33% space within a cell.
-    mesh.AddLine('x', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the X axis
-    mesh.AddLine('y', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the Y axis
-
-Another thing to note is that zero-thickness objects like the metal
-plates must align to an exact mesh lines, otherwise these objects can't
-be simulated. Thus, we create two mesh lines on the Z axis at the exact
-level of the plates::
+The Z mesh lines are now going from -50 to 50, and we're going to
+rely on automation to fill the gaps with additional lines.
+The lack of guaranteed mesh line alignment becomes a problem.
+Zero-thickness objects like the metal plates must align to an exact mesh
+lines, otherwise these objects can't be simulated. Thus, we create two
+mesh lines on the Z axis at the exact level of the plates::
 
     # zero-thickness metal plates need mesh lines at their exact levels
     mesh.AddLine('z', [-8, 8])
 
 .. important::
-   Zero-thickness metal plates need mesh lines at their exact levels
+   Zero-thickness metal plates (and other objects) need mesh lines at
+   their exact levels.
+
+1/3-2/3 Rule
+'''''''''''''
+
+After solving the misalignment on the Z plane, ironically we
+have an opposite problem on the X and Y planes. On both planes, the mesh
+is perfectly aligned with the edges of the waveguide plates, which
+is a problem.
+
+In FDTD, a fundamental error source is the singularities around metal
+edges, which have strong electric fields that are difficult to calculate
+properly. As long as the mesh line and metal edge are aligned exactly,
+the simulation accuracy is degraded unnecessarily - increasing the
+mesh resolution is inefficient and ineffective - it's wasteful and
+only has a marginal effect.
+
+To mitigate this technical limitation, the mesh should be intentionally
+misaligned with metal edges. For the best results, we introduce additional
+cells with different sizes around the edge, creating an overall rectilinear
+mesh of non-uniform size. Around the metal edge, the metal occupies 1/3 of
+a cell, while the vacuum or insulator occupies 2/3 of a cell. This is known
+as the **1/3-2/3 rule**.
+
+Let's apply the rule to the X and Y axis::
+
+    # use a smaller cell size around metal edge, not just the base mesh size
+    highres = res / 1.5
+
+    # strategically draw lines misaligned with the waveguide's left and right edges,
+    # so that the edge occupies 33% space within a cell.
+    mesh.AddLine('x', [
+        # apply 1/3-2/3 rule on the X axis
+        -50 + highres * 1/3, -50 - highres * 2/3,  # left edge
+         50 - highres * 1/3,  50 + highres * 2/3   # right edge
+    ])
+
+    mesh.AddLine('y', [
+        # apply 1/3-2/3 rule on the Y axis
+        -50 + highres * 1/3, -50 - highres * 2/3,  # lower edge
+         50 - highres * 1/3,  50 + highres * 2/3   # upper edge
+    ])
+
+The interval between the 1/3 and 2/3 mesh lines (i.e. the length of the
+cell) is ``highres``, it's smaller than the base interval ``res`` by a
+factor of `1.5`. This is a workaround: If the same mesh resolution is
+used for all cells, when we later smooth the mesh,
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` may add additional mesh
+lines within our handcrafted cells, effectively undoing the 1/3-2/3 rule.
+Use an interval `highres` works around the problem, since
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` is not allowed to add cells
+smaller than ``res``. A factor of 1.5 is recommended to preserve mesh
+smoothness.
 
 Finally we resmooth the mesh::
 
@@ -424,6 +481,33 @@ Now let's inspect the model again, it's now much better.
    :width: 49%
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/capacitor_yz_bettermesh.png
    :width: 49%
+
+.. hint::
+   **Perspective.** The mesh line alignment may look misleading in AppCSXCAD
+   due to different camera angle and perspective when looking at the 3D scene.
+   Click the :guilabel:`2D` button for a planer view.
+
+   .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-2d-button.png
+   .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-opacity-slider.png
+
+   When in doubt, use :guilabel:`Rectilinear Grid` panel's :guilabel:`Edit` button
+   (or call :meth:`~CSXCAD.CSRectGrid.CSRectGrid.GetLines()`) to check mesh
+   coordinates manually.
+
+   **Mesh Interval.** Use a smaller mesh interval ``highres = res / 1.5``
+   for cells with
+   1/3-2/3 rules to prevent :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines`
+   from undoing it. Alternatively, one may avoid calling this function by
+   adding mesh lines one by one manually, or by extracting all generated
+   lines and removing unwanted one, or by moving the whole simulated
+   structure by an offset. For our purpose, the ``highres`` workaround
+   is the most convenient solution.
+
+   **Imperfect Rule is Still Better Than No Rule.** If the
+   simulated structure is complicated, making it difficult to enforce the
+   1/3-2/3 rule, at least try avoiding an exact alignment between metal
+   edge and the mesh. This won't be as accurate as the 1/3-2/3 rule, but
+   still gives a small accuracy boost at no cost.
 
 .. _fielddump:
 
@@ -459,7 +543,7 @@ the upper waveguide plate as a 2D surface, using the
 :meth:`~CSX.ContinuousStructure.AddDump`` function::
 
     dump = csx.AddDump("curl_H_upper", dump_type=3)
-    dump.AddBox(start=[-50, -50, 0.8], stop=[50, 50, 0.8])
+    dump.AddBox(start=[-50, -50, 8], stop=[50, 50, 8])
 
 .. note::
 
@@ -873,11 +957,14 @@ last::
     
     # calculate mesh resolution according to simulation frequency
     unit = 1e-3
+    f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
+    # use a smaller cell size around metal edge, not just the base mesh size
+    highres = res / 1.5
     
     # port impedance
     z0 = 50
@@ -918,21 +1005,30 @@ last::
     mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
     mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
 
-    # strategically draw lines misaligned with the waveguide's left and right edges,
-    # so that the edge occupies a cell by 33%.
-    mesh.AddLine('x', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the X axis
-    mesh.AddLine('y', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the Y axis
-
     # zero-thickness metal plates need mesh lines at their exact levels
     mesh.AddLine('z', [-8, 8])    # two lines at -8, 8
     
+    # strategically draw lines misaligned with the waveguide's left and right edges,
+    # so that the edge occupies 33% space within a cell.
+    mesh.AddLine('x', [
+        # apply 1/3-2/3 rule on the X axis
+        -50 + highres * 1/3, -50 - highres * 2/3,  # left edge
+         50 - highres * 1/3,  50 + highres * 2/3   # right edge
+    ])
+
+    mesh.AddLine('y', [
+        # apply 1/3-2/3 rule on the Y axis
+        -50 + highres * 1/3, -50 - highres * 2/3,  # lower edge
+         50 - highres * 1/3,  50 + highres * 2/3   # upper edge
+    ])
+
     mesh.SmoothMeshLines('x', res)
     mesh.SmoothMeshLines('y', res)
     mesh.SmoothMeshLines('z', res)
     
     port = [None, None]
-    port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * res, -2.5, -8], [-50 + 1/3 * res, 2.5, 8], 'z', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * res, -2.5, -8], [ 50 - 1/3 * res, 2.5, 8], 'z', excite=0)
+    port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
+    port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
     
     # save structure to file for inspection
     csx.Write2XML(str(xmlpath))
@@ -967,11 +1063,14 @@ build upon further::
     
     # calculate mesh resolution according to simulation frequency
     unit = 1e-3
+    f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
+    # use a smaller cell size around metal edge, not just the base mesh size
+    highres = res / 1.5
     
     # port impedance
     z0 = 50
@@ -1017,13 +1116,22 @@ build upon further::
         mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
         mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
     
-        # strategically draw lines misaligned with the waveguide's left and right edges,
-        # so that the edge occupies a cell by 33%.
-        mesh.AddLine('x', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the X axis
-        mesh.AddLine('y', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the Y axis
-    
         # zero-thickness metal plates need mesh lines at their exact levels
         mesh.AddLine('z', [-8, 8])    # two lines at -8, 8
+        
+        # strategically draw lines misaligned with the waveguide's left and right edges,
+        # so that the edge occupies 33% space within a cell.
+        mesh.AddLine('x', [
+            # apply 1/3-2/3 rule on the X axis
+            -50 + highres * 1/3, -50 - highres * 2/3,  # left edge
+             50 - highres * 1/3,  50 + highres * 2/3   # right edge
+        ])
+
+        mesh.AddLine('y', [
+            # apply 1/3-2/3 rule on the Y axis
+            -50 + highres * 1/3, -50 - highres * 2/3,  # lower edge
+             50 - highres * 1/3,  50 + highres * 2/3   # upper edge
+        ])
     
         mesh.SmoothMeshLines('x', res)
         mesh.SmoothMeshLines('y', res)
@@ -1041,8 +1149,8 @@ build upon further::
         or simulation parameters.
         """
         port = [None, None]
-        port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * res, -2.5, -8], [-50 + 1/3 * res, 2.5, 8], 'z', excite=1)
-        port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * res, -2.5, -8], [ 50 - 1/3 * res, 2.5, 8], 'z', excite=0)
+        port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
+        port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
         return port
     
     
@@ -1138,7 +1246,7 @@ simulation should finish within a few minutes::
     		boost  -- compiled against: 1_76
     		vtk -- Version: 9.1.0
     		       compiled against: 9.1.0
-    
+
     Create FDTD operator (compressed SSE + multi-threading)
     CalcNyquistNum(4756540486875873280,4438156221306557130)
     FDTD simulation size: 70x70x37 --> 181300 FDTD cells
@@ -1165,11 +1273,11 @@ respective solution.
 * :ref:`unused_excite`
 * :ref:`voltage_integral_error`
 
-Built-In Post-Processing 
+Built-In Post-Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By now, the electromagnetic field simulation is complete. It's up to us analyze
-and interpret the data. 
+and interpret the data.
 
 To analyze the frequency response of the structure, one would need to specify a
 discrete list of frequencies of interest. One can generate such a list with the
@@ -1179,7 +1287,7 @@ with 1000 evenly-spaced elements from 100 MHz to 10 GHz::
     import numpy as np
 
     points = 1000
-    freq_list = np.linspace(100e6, f_max, points)
+    freq_list = np.linspace(f_min, f_max, points)
 
 Then, call the :meth:`~openEMS.Port.CalcPort` function at each port object one
 by one to calculate its response. This is the reason that we've chosen to
@@ -1367,14 +1475,14 @@ interpret, so the Smith chart (covered later) is a better tool for this
 job::
 
     s11_deg_list = np.angle(s11_list, deg=True)
-    
+
     plt.figure()
     plt.plot(freq_list / 1e9, s11_deg_list, label='$S_{11}$ deg')
     plt.grid()
     plt.legend()
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('S11 Phase (deg)')
-    
+
     plt.show()
 
 As we can see from the plot, there's a sharp 40 dB notch at 500 MHz,
@@ -1388,7 +1496,7 @@ or electrical impedance mismatch.
    :width: 49%
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_deg_sim.svg
    :width: 49%
-    
+
 The scalar insertion loss (magnitude of :math:`S_{21}` in decibels)
 on a line chart shows how much power is transmitted into the second port,
 which shows the attenuation of signals at each frequency::
@@ -1401,7 +1509,7 @@ which shows the attenuation of signals at each frequency::
     plt.legend()
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('Insertion Loss (dB)')
-    
+
     # By convention, insertion loss values increases downward on the Y axis.
     # This is consistent with the plot shapes on spectrum analyzers, and
     # perhaps explains why the customary "wrong" sign convention is used.
@@ -1409,18 +1517,18 @@ which shows the attenuation of signals at each frequency::
     plt.show()
 
     s21_deg_list = np.angle(s21_list, deg=True)
-    
+
     plt.figure()
     plt.plot(freq_list / 1e9, s21_deg_list, label='$S_{21}$ deg')
     plt.grid()
     plt.legend()
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('S21 Phase (deg)')
-    
+
     plt.show()
 
 From the simulation data, we can see that this parallel-plate waveguide's
-insertion loss is anomalously high, around 20 dB at 2 GHz. 
+insertion loss is anomalously high, around 20 dB at 2 GHz.
 This behavior contradicts expectations, as both lumped capacitors and
 transmission lines are typically lossless.
 Unusual results like
@@ -1447,7 +1555,7 @@ the expected behavior consistent with real-world measurements.
    (by multiplying all values by a factor of -1) when one is speaking of "loss".
    Otherwise, the proper term to seak of is "reflection coefficient", not
    "return loss".
-   
+
    This issue can sometimes be quite controversial. For example, *IEEE Antennas
    and Propagation Magazine* started rejecting the former convention to promote
    rigor as of 2009. While the author of this tutorial has no particular opinion,
@@ -1455,7 +1563,7 @@ the expected behavior consistent with real-world measurements.
    a compromise. Plots are labeled as "Return loss" and use the positive sign
    convention, but also with the Y axis inverted, so that resonances appear
    as familiar valleys.
-   
+
    For more information, see [1]_ [2]_.
 
 Plot Z-parameters (Impedances) via matplotlib
@@ -1482,7 +1590,7 @@ magnitude (absolute value) here::
 
     # derive impedance from S11
     z11_from_s11_list = np.abs(z0 * (1 + s11_list) / (1 - s11_list))
-    
+
     plt.figure()
     plt.plot(freq_list / 1e9, z11_list, label='$|Z_{11}|$ (Ω)')
     plt.plot(freq_list / 1e9, z11_from_s11_list, label='$|Z_{11}|$ (Ω)')
@@ -1490,7 +1598,7 @@ magnitude (absolute value) here::
     plt.legend()
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('Impedance Magnitude (Ω)')
-    
+
     plt.show()
 
 We find that the impedances derived from :math:`S_{11}` and from direct calculations
@@ -1526,7 +1634,7 @@ same steps::
         plt.legend()
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
-    
+
         # By convention, loss values increases downward on the Y axis.
         # This is consistent with the plot shapes on spectrum analyzers, and
         # perhaps explains why the customary "wrong" sign convention is used.
@@ -1725,104 +1833,116 @@ obtains if the previous instructions are followed::
     import sys
     import math
     import pathlib
-    
+
     import numpy as np
     from matplotlib import pyplot as plt
-    
+
     import CSXCAD
     import openEMS
     from openEMS.physical_constants import C0
-    
+
     # calculate mesh resolution according to simulation frequency
     unit = 1e-3
+    f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
-    
+    # use a smaller cell size around metal edge, not just the base mesh size
+    highres = res / 1.5
+
     # calculate frequency points
     points = 1000
-    freq_list = np.linspace(100e6, f_max, points)
-    
+    freq_list = np.linspace(f_min, f_max, points)
+
     # port impedance
     z0 = 50
-    
+
     # determine the simulation output path
-    
+
     # find the directory of the script itself
     filepath = pathlib.Path(__file__)
-    
+
     # use a directory named after the script, but without ".py"
     simdir = filepath.with_suffix("")
     simdir.mkdir(parents=True, exist_ok=True)
-    
+
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
-    
+
     # concat path
     xmlpath = simdir / xmlname
-    
-    
+
+
     def generate_structure(csx):
         """
         Generate and return the 3D structure used for simulation.
-    
+
         This function should return a CSXCAD instance, but without changing any
         simulation parameters.
         """
         # set unit of measurement in the CSXCAD drawing
         mesh = csx.GetGrid()
         mesh.SetDeltaUnit(unit)
-    
+
         # Create an instance of material named "plate".
         # AddMetal() creates a Perfect Electric Conductor.
         metal = csx.AddMetal('plate')
-    
+
         # Build two 3D shapes from -50 to 50 on the X/Y axes, located at Z = -8
         # and Z = 8 respectively. Note that the starting and stopping Z coordinates
         # of each plate are the same, so these metal plates have zero thickness.
         metal.AddBox(start=[-50, -50, -8], stop=[50, 50, -8])  # lower plate
         metal.AddBox(start=[-50, -50,  8], stop=[50, 50,  8])  # upper plate
-    
+
         mesh.AddLine('x', [-100, 100])  # two lines at -100, 100
         mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
         mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
-    
-        # strategically draw lines misaligned with the waveguide's left and right edges,
-        # so that the edge occupies a cell by 33%.
-        mesh.AddLine('x', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the X axis
-        mesh.AddLine('y', [-50 + res * 1/3, 50 - res * 1/3])  # apply 1/3-2/3 rule on the Y axis
-    
+
         # zero-thickness metal plates need mesh lines at their exact levels
         mesh.AddLine('z', [-8, 8])    # two lines at -8, 8
-    
+
+        # strategically draw lines misaligned with the waveguide's left and right edges,
+        # so that the edge occupies 33% space within a cell.
+        mesh.AddLine('x', [
+            # apply 1/3-2/3 rule on the X axis
+            -50 + highres * 1/3, -50 - highres * 2/3,  # left edge
+             50 - highres * 1/3,  50 + highres * 2/3   # right edge
+        ])
+
+        mesh.AddLine('y', [
+            # apply 1/3-2/3 rule on the Y axis
+            -50 + highres * 1/3, -50 - highres * 2/3,  # lower edge
+             50 - highres * 1/3,  50 + highres * 2/3   # upper edge
+        ])
+
         mesh.SmoothMeshLines('x', res)
         mesh.SmoothMeshLines('y', res)
         mesh.SmoothMeshLines('z', res)
-    
+
         return csx
-    
-    
+
+
     def setup_ports(fdtd, csx):
         """
         Create and return ports to inject and measure signals at a particular mesh
         location.
-    
+
         This function should only create ports, but without changing the structure
         or simulation parameters.
         """
         port = [None, None]
-        port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * res, -2.5, -8], [-50 + 1/3 * res, 2.5, 8], 'z', excite=1)
-        port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * res, -2.5, -8], [ 50 - 1/3 * res, 2.5, 8], 'z', excite=0)
+        port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
+        port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
         return port
-    
-    
+
+
     def simulate(fdtd, csx):
         """
         Setup boundary conditions, excitation signals, and finally run the
         simulator.
-    
+
         This function should run the simulator from the given "fdtd" and "csx"
         instance, without changing them.
         """
@@ -1831,8 +1951,8 @@ obtains if the previous instructions are followed::
         fdtd.SetGaussExcite(f_max / 2, f_max / 2)
         fdtd.SetBoundaryCond(["PML_8", "PML_8", "PML_8", "PML_8", "PML_8", "PML_8"])
         fdtd.Run(simdir)
-    
-    
+
+
     def postproc(port):
         """
         Process the data generated by a complete simulation. Only knowledge of ports
@@ -1841,27 +1961,27 @@ obtains if the previous instructions are followed::
         """
         for p in port:
             p.CalcPort(simdir, freq_list, ref_impedance=z0)
-    
+
         s11_list = port[0].uf_ref / port[0].uf_inc
         s21_list = port[1].uf_ref / port[0].uf_inc
-    
+
         # hack: assume symmetry and reciprocity, only correct for passive linear circuit!
         s22_list = s11_list
         s12_list = s21_list
-    
+
         s11_db_list = -10 * np.log10(np.abs(s11_list) ** 2)
         s21_db_list = -10 * np.log10(np.abs(s21_list) ** 2)
         plot_param(freq_list / 1e9, s11_db_list, '$S_{11}$ dB', 'Frequency (GHz)', 'Return Loss (dB)')
         plot_param(freq_list / 1e9, s21_db_list, '$S_{21}$ dB', 'Frequency (GHz)', 'Insertion Loss (dB)')
-    
+
         s11_deg_list = np.angle(s11_list, deg=True)
         s21_deg_list = np.angle(s21_list, deg=True)
         plot_param(freq_list / 1e9, s11_deg_list, '$S_{11}$ deg', 'Frequency (GHz)', 'S11 Phase')
         plot_param(freq_list / 1e9, s21_deg_list, '$S_{21}$ deg', 'Frequency (GHz)', 'S21 Phase')
-    
+
         z11_list = np.abs(port[0].uf_tot / port[0].if_tot)  # direct impedance calculation
         plot_param(freq_list / 1e9, z11_list, '$|Z_{11}|$ (Ω)', 'Frequency (GHz)', 'Impedance Magnitude (Ω)', invert_y=False)
-    
+
         plt.figure()
         plt.plot(port[0].u_data.ui_time[0][0:100], port[0].ut_tot[0:100], label="Input Voltage")
         plt.plot(port[1].u_data.ui_time[0][0:100], port[1].ut_tot[0:100], label="Output Voltage")
@@ -1870,10 +1990,10 @@ obtains if the previous instructions are followed::
         plt.xlabel('Time (s)')
         plt.ylabel('Voltage (V)')
         plt.show()
-    
+
         save_s2p(s11_list, s21_list, s12_list, s22_list)
-    
-    
+
+
     def plot_param(x_list, y_list, linelabel, xlabel, ylabel, invert_y=True):
         plt.figure()
         plt.plot(x_list, y_list, label=linelabel)
@@ -1881,7 +2001,7 @@ obtains if the previous instructions are followed::
         plt.legend()
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
-    
+
         # By convention, loss values increases downward on the Y axis.
         # This is consistent with the plot shapes on spectrum analyzers, and
         # perhaps explains why the customary "wrong" sign convention is used.
@@ -1894,14 +2014,14 @@ obtains if the previous instructions are followed::
     def save_s2p(s11_list, s21_list, s12_list, s22_list):
         # determine a file name
         s2pname = filepath.with_suffix(".s2p").name
-    
+
         # concat path
         s2ppath = simdir / s2pname
-    
+
         # write 2-port S-parameters
         with open(s2ppath, "w+") as touchstone:
             touchstone.write("# Hz S RI R %f\n" % z0)  # Touchstone metadata, not comment!
-    
+
             for idx, freq in enumerate(freq_list):
                 s11 = s11_list[idx]
                 s21 = s21_list[idx]
@@ -1914,10 +2034,10 @@ obtains if the previous instructions are followed::
     if __name__ == "__main__":
         csx = CSXCAD.ContinuousStructure()
         fdtd = openEMS.openEMS()
-    
+
         # associate CSXCAD structure with an openEMS simulation
         fdtd.SetCSX(csx)
-    
+
         if len(sys.argv) <= 1:
             print('No command given, expect "generate", "simulate", "postproc"')
         elif sys.argv[1] in ["generate", "simulate"]:
@@ -1925,7 +2045,7 @@ obtains if the previous instructions are followed::
             generate_structure(csx)
             setup_ports(fdtd, csx)
             csx.Write2XML(str(xmlpath))
-    
+
             if sys.argv[1] == "simulate":
                 # run simulator
                 simulate(fdtd, csx)
@@ -1937,7 +2057,7 @@ obtains if the previous instructions are followed::
             print("Unknown command %s" % sys.argv[1])
             exit(1)
 
-Third-Party Post-Processing 
+Third-Party Post-Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 At this point, we have nearly reached the limit of the built-in
@@ -1989,7 +2109,7 @@ engineering. This chart makes it easier to interpret the phase angle in
 the reflection coefficient and impedance by visually showing whether the
 the DUT is resistive, capacitive, or inductive. To do so in ``scikit-rf``,
 use the `plot_s_smith()` method of the `Network` object::
-    
+
     network.plot_s_smith()
     plt.show()
 
@@ -2028,7 +2148,7 @@ much faster than the manual method using only two lines of code for each chart::
 
     network.plot_s_db(m=0, n=0)
     plt.show()
-    
+
     network.plot_s_deg(m=0, n=0)
     plt.show()
 
@@ -2044,7 +2164,7 @@ Likewise, to plot :math:`S_{21}`::
 
     network.plot_s_db(m=1, n=0)
     plt.show()
-    
+
     network.plot_s_deg(m=1, n=0)
     plt.show()
 
@@ -2061,7 +2181,7 @@ as the scalar impedance::
 
     network.plot_z_mag(m=0, n=0)
     plt.show()
-   
+
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/z11_mag_sim_skrf.svg
    :width: 49%
 
@@ -2078,7 +2198,7 @@ identify using the Smith chart alone::
 
     # TDR requires the DC component to be physical
     network_dc = network.extrapolate_to_dc(kind='linear')
-    
+
     plt.figure()
     plt.title("Time Domain Reflectometry - Step")
     network_dc.s11.plot_z_time_step(window='hamming', label="impedance")
@@ -3013,7 +3133,7 @@ the line.
    :alt: A 50 Ω transmitter is connected to a 50 Ω receiver via a
          600 Ω transmission line with a length of 0.2λ, its input reflection
          coefficient is 1.0∠3.1°, its input impedance is 1789.4∠74.1° Ω.
-   
+
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-2.svg
    :width: 49%
    :alt: A 50 Ω transmitter is connected to a 50 Ω receiver via a
