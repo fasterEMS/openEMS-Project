@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Check Installation &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            openEMS
+            <a href="../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -90,9 +82,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Install</a></li>
-      <li class="breadcrumb-item active">Check Installation</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Install</a> &raquo;</li>
+      <li>Check Installation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/install/check.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,11 +95,11 @@
            <div itemprop="articleBody">
              
   <section id="check-installation">
-<span id="check-installation-src"></span><h1>Check Installation<a class="headerlink" href="#check-installation" title="Permalink to this heading"></a></h1>
+<span id="check-installation-src"></span><h1>Check Installation<a class="headerlink" href="#check-installation" title="Permalink to this headline"></a></h1>
 <p>In this tutorial we will check if openEMS is correctly installed.</p>
 <p>After completion of this tutorial, there is confidence in the correct installation of openEMS.</p>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Installed openEMS (refer to <a class="reference internal" href="clone-build-install.html#clone-build-install-src"><span class="std std-ref">Clone, Build and Install</span></a> and <a class="reference internal" href="package.html#install-readymade-package-src"><span class="std std-ref">Installing Ready-Made Packages</span></a>)</p></li>
 <li><p>Matlab / Octave</p></li>
@@ -115,11 +107,11 @@
 </ul>
 </section>
 <section id="openems-executable">
-<h2>openEMS executable<a class="headerlink" href="#openems-executable" title="Permalink to this heading"></a></h2>
+<h2>openEMS executable<a class="headerlink" href="#openems-executable" title="Permalink to this headline"></a></h2>
 <p>First lets check, if the openEMS executable is correctly installed (there may be
 missing dependencies or an incompatible architecture):</p>
 <section id="linux">
-<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this heading"></a></h3>
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this headline"></a></h3>
 <ol class="arabic simple">
 <li><p>Open a terminal window</p></li>
 <li><p>Invoke the openEMS solver</p></li>
@@ -139,7 +131,7 @@ missing dependencies or an incompatible architecture):</p>
 directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.</p>
 </section>
 <section id="windows">
-<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h3>
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h3>
 <ol class="arabic simple">
 <li><p>open a command window (“Start”-Button, type “cmd”)</p></li>
 <li><p>change the current folder to the openEMS installation directory</p></li>
@@ -159,13 +151,13 @@ directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.
 </section>
 </section>
 <section id="appcsxcad-executable">
-<h2>AppCSXCAD executable<a class="headerlink" href="#appcsxcad-executable" title="Permalink to this heading"></a></h2>
+<h2>AppCSXCAD executable<a class="headerlink" href="#appcsxcad-executable" title="Permalink to this headline"></a></h2>
 <p>The AppCSXCAD program graphically displays the structure built by
 Matlab/Octave or Python scripts. It is very useful to visualize the
 computational area and helps to find errors in the geometrical
 definition of the structure.</p>
 <section id="id1">
-<h3>Linux<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>Linux<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
 <ol class="arabic simple">
 <li><p>Open a terminal window</p></li>
 <li><p>Invoke AppCSXCAD</p></li>
@@ -178,7 +170,7 @@ definition of the structure.</p>
 directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.</p>
 </section>
 <section id="id2">
-<h3>Windows<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<h3>Windows<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
 <ol class="arabic simple">
 <li><p>open a command window (“Start”-Button, type “cmd”)</p></li>
 <li><p>change the current folder to the openEMS installation directory</p></li>
@@ -191,7 +183,7 @@ directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.
 </section>
 </section>
 <section id="matlab-octave-interface">
-<h2>Matlab/Octave Interface<a class="headerlink" href="#matlab-octave-interface" title="Permalink to this heading"></a></h2>
+<h2>Matlab/Octave Interface<a class="headerlink" href="#matlab-octave-interface" title="Permalink to this headline"></a></h2>
 <p>openEMS needs a xml-file to start the simulation. This file is normally generated by
 Matlab (or Octave).</p>
 <ul class="simple">
@@ -229,7 +221,7 @@ the install instructions:</p>
 the simulator executable and start it with the name of the xml-file.</p>
 </section>
 <section id="python-interface">
-<h2>Python interface<a class="headerlink" href="#python-interface" title="Permalink to this heading"></a></h2>
+<h2>Python interface<a class="headerlink" href="#python-interface" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>start Python</p></li>
 </ul>

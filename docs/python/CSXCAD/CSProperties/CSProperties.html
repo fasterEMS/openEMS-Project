@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSProperties (Base Class) &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -94,11 +86,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSProperties.html">CSProperties</a></li>
-      <li class="breadcrumb-item active">CSProperties (Base Class)</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="../CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+          <li><a href="../CSProperties.html">CSProperties</a> &raquo;</li>
+      <li>CSProperties (Base Class)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/python/CSXCAD/CSProperties/CSProperties.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -109,7 +101,7 @@
            <div itemprop="articleBody">
              
   <section id="csproperties-base-class">
-<span id="cspropertiesbase"></span><h1>CSProperties (Base Class)<a class="headerlink" href="#csproperties-base-class" title="Permalink to this heading"></a></h1>
+<span id="cspropertiesbase"></span><h1>CSProperties (Base Class)<a class="headerlink" href="#csproperties-base-class" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSProperties.CSProperties">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSProperties.</span></span><span class="sig-name descname"><span class="pre">CSProperties</span></span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties" title="Permalink to this definition"></a></dt>
@@ -120,7 +112,7 @@
 <span class="sig-name descname"><span class="pre">AddAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.AddAttribute" title="Permalink to this definition"></a></dt>
 <dd><p>Add an attribure and value</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – str – Attribute name</p></li>
 <li><p><strong>val</strong> – str – Attribute value</p></li>
@@ -303,10 +295,10 @@
 <span class="sig-name descname"><span class="pre">ExistAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.ExistAttribute" title="Permalink to this definition"></a></dt>
 <dd><p>Check if an attribute with the given <cite>name</cite> exists</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> – str – Attribute name</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -317,10 +309,10 @@
 <span class="sig-name descname"><span class="pre">GetAttributeValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.GetAttributeValue" title="Permalink to this definition"></a></dt>
 <dd><p>Get the value of the attribute with the given <cite>name</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> – str – Attribute name</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>str – Attribute value</p>
 </dd>
 </dl>
@@ -331,7 +323,7 @@
 <span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.GetName" title="Permalink to this definition"></a></dt>
 <dd><p>Get the name of this property</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>str – Name for this property</p>
 </dd>
 </dl>
@@ -348,7 +340,7 @@
 <span class="sig-name descname"><span class="pre">GetQtyPrimitives</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.GetQtyPrimitives" title="Permalink to this definition"></a></dt>
 <dd><p>Get the number of primitives assigned to this property</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – Number of primitives</p>
 </dd>
 </dl>
@@ -359,7 +351,7 @@
 <span class="sig-name descname"><span class="pre">GetType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.GetType" title="Permalink to this definition"></a></dt>
 <dd><p>Get the type of the property</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – Type ID of this property</p>
 </dd>
 </dl>
@@ -370,7 +362,7 @@
 <span class="sig-name descname"><span class="pre">GetTypeString</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.GetTypeString" title="Permalink to this definition"></a></dt>
 <dd><p>Get the type of the property as a string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>str – Type name of this property type</p>
 </dd>
 </dl>
@@ -381,7 +373,7 @@
 <span class="sig-name descname"><span class="pre">SetColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.SetColor" title="Permalink to this definition"></a></dt>
 <dd><p>Set the fill and edge color for this property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>color</strong> – hex color value</p></li>
 <li><p><strong>alpha</strong> – transparency value</p></li>
@@ -395,7 +387,7 @@
 <span class="sig-name descname"><span class="pre">SetEdgeColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.SetEdgeColor" title="Permalink to this definition"></a></dt>
 <dd><p>Set the edge color for this property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>color</strong> – hex color value</p></li>
 <li><p><strong>alpha</strong> – transparency value</p></li>
@@ -409,7 +401,7 @@
 <span class="sig-name descname"><span class="pre">SetFillColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.SetFillColor" title="Permalink to this definition"></a></dt>
 <dd><p>Set the fill color for this property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>color</strong> – hex color value</p></li>
 <li><p><strong>alpha</strong> – transparency value</p></li>
@@ -423,7 +415,7 @@
 <span class="sig-name descname"><span class="pre">SetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.SetName" title="Permalink to this definition"></a></dt>
 <dd><p>Set the name of this property</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params name<span class="colon">:</span></dt>
+<dt class="field-odd">Params name</dt>
 <dd class="field-odd"><p>str – Name for this property</p>
 </dd>
 </dl>
@@ -434,7 +426,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.fromType" title="Permalink to this definition"></a></dt>
 <dd><p>Create a property specified by the <cite>p_type</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_type</strong> – Property type</p></li>
 <li><p><strong>pset</strong> – ParameterSet to assign to the new primitive</p></li>
@@ -449,7 +441,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromTypeName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSProperties.fromTypeName" title="Permalink to this definition"></a></dt>
 <dd><p>Create a property specified by the <cite>type_str</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>type_str</strong> – Property type name string</p></li>
 <li><p><strong>pset</strong> – ParameterSet to assign to the new primitive</p></li>

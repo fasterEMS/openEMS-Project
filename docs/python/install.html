@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Install &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            openEMS
+            <a href="../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -87,9 +79,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="python.html">Python Interface</a></li>
-      <li class="breadcrumb-item active">Install</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="python.html">Python Interface</a> &raquo;</li>
+      <li>Install</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/python/install.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -100,10 +92,10 @@
            <div itemprop="articleBody">
              
   <section id="install">
-<span id="pyinstall"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this heading"></a></h1>
+<span id="pyinstall"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this headline"></a></h1>
 <p>Instructions how to install the <strong>CSXCAD &amp; openEMS python interface</strong>.</p>
 <section id="module-requirements">
-<h2>Module requirements<a class="headerlink" href="#module-requirements" title="Permalink to this heading"></a></h2>
+<h2>Module requirements<a class="headerlink" href="#module-requirements" title="Permalink to this headline"></a></h2>
 <p>Some python modules are required to run openEMS simulations and tutorials: numpy, h5py, matplotlib</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install numpy h5py matplotlib</span>
 </pre></div>
@@ -114,9 +106,9 @@
 </div>
 </section>
 <section id="linux">
-<span id="python-linux-install"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this heading"></a></h2>
+<span id="python-linux-install"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this headline"></a></h2>
 <section id="build-modules-automatically">
-<h3>Build Modules Automatically<a class="headerlink" href="#build-modules-automatically" title="Permalink to this heading"></a></h3>
+<h3>Build Modules Automatically<a class="headerlink" href="#build-modules-automatically" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Build or update <strong>CSXCAD</strong> and <strong>openEMS</strong> using the “–python” flag (Recommended). See <a class="reference internal" href="../install/index.html#install-src"><span class="std std-ref">Install from Source</span></a> for more details.</p></li>
 </ul>
@@ -125,7 +117,7 @@
 </div>
 </section>
 <section id="build-modules-from-source-manually">
-<h3>Build Modules From Source Manually<a class="headerlink" href="#build-modules-from-source-manually" title="Permalink to this heading"></a></h3>
+<h3>Build Modules From Source Manually<a class="headerlink" href="#build-modules-from-source-manually" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Alternative: Manual build and install (if installed to /usr/local):</p></li>
 </ul>
@@ -149,11 +141,11 @@
 </section>
 </section>
 <section id="windows">
-<span id="python-windows-install"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h2>
+<span id="python-windows-install"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h2>
 <p>The python interface for CSXCAD &amp; openEMS requires a build with a <a class="reference external" href="https://wiki.python.org/moin/WindowsCompilers">MS Visual Compiler</a>.
 Download the latest windows build with the “msvc” label: <a class="reference external" href="https://github.com/thliebig/openEMS-Project/releases">openEMS_win</a></p>
 <section id="install-pre-build-modules">
-<h3>Install Pre-build Modules<a class="headerlink" href="#install-pre-build-modules" title="Permalink to this heading"></a></h3>
+<h3>Install Pre-build Modules<a class="headerlink" href="#install-pre-build-modules" title="Permalink to this headline"></a></h3>
 <p>For some python versions, pre-build wheel files can be found in the python sub-directory. E.g. for python 3.10 (using pip):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd C:\opt\openEMS\python</span>
 <span class="go">pip install CSXCAD-0.6.2-cp310-cp310-win_amd64.whl</span>
@@ -162,7 +154,7 @@ Download the latest windows build with the “msvc” label: <a class="reference
 </div>
 </section>
 <section id="build-modules-from-source">
-<h3>Build Modules From Source<a class="headerlink" href="#build-modules-from-source" title="Permalink to this heading"></a></h3>
+<h3>Build Modules From Source<a class="headerlink" href="#build-modules-from-source" title="Permalink to this headline"></a></h3>
 <p>Download the sources using <a class="reference external" href="https://git-scm.com">git</a>. Assuming the MSVC binary build of openEMS is install at “C:\opt\openEMS”,
 run from a working python command prompt (e.g. using <a class="reference external" href="https://winpython.github.io/">WinPython</a>):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone --recursive https://github.com/thliebig/openEMS-Project.git</span>
@@ -177,7 +169,7 @@ run from a working python command prompt (e.g. using <a class="reference externa
 </div>
 </section>
 <section id="setup">
-<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h3>
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"></a></h3>
 <p><strong>Important Note:</strong> Python needs to find the dependent libraries (dll’s) during module import.
 To allow this, it is necessary to set an environment variable (permantently, terminal restart my be necessary):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">setx OPENEMS_INSTALL_PATH C:\opt\openEMS</span>

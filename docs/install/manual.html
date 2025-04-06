@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manual Build and Install &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            openEMS
+            <a href="../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -86,9 +78,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Install</a></li>
-      <li class="breadcrumb-item active">Manual Build and Install</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Install</a> &raquo;</li>
+      <li>Manual Build and Install</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/install/manual.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,7 +91,7 @@
            <div itemprop="articleBody">
              
   <section id="manual-build-and-install">
-<h1>Manual Build and Install<a class="headerlink" href="#manual-build-and-install" title="Permalink to this heading"></a></h1>
+<h1>Manual Build and Install<a class="headerlink" href="#manual-build-and-install" title="Permalink to this headline"></a></h1>
 <p>During development and testing, it’s often necessary to build and
 install openEMS manually. Such cases are encountered when creating
 a package of openEMS for a new system (especially with non-standard
@@ -109,11 +101,11 @@ all the git submodules.</p>
 <p>If you are an end-user, please refer to <a class="reference internal" href="clone-build-install.html#clone-build-install-src"><span class="std std-ref">Clone, Build and Install</span></a>
 and <a class="reference internal" href="package.html#install-readymade-package-src"><span class="std std-ref">Installing Ready-Made Packages</span></a> instead.</p>
 <section id="install-dependencies">
-<h2>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this heading"></a></h2>
+<h2>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline"></a></h2>
 <p>Refer to <a class="reference internal" href="requirements.html#install-requirements-src"><span class="std std-ref">Requirements</span></a> for a list of dependencies.</p>
 </section>
 <section id="install-basic-programs">
-<h2>Install Basic Programs<a class="headerlink" href="#install-basic-programs" title="Permalink to this heading"></a></h2>
+<h2>Install Basic Programs<a class="headerlink" href="#install-basic-programs" title="Permalink to this headline"></a></h2>
 <ol class="arabic simple">
 <li><p>Build fparser:</p></li>
 </ol>
@@ -156,7 +148,7 @@ of fparser and CSXCAD, which are usually the same as
 </div>
 </section>
 <section id="install-python-bindings-optional">
-<h2>Install Python bindings (optional)<a class="headerlink" href="#install-python-bindings-optional" title="Permalink to this heading"></a></h2>
+<h2>Install Python bindings (optional)<a class="headerlink" href="#install-python-bindings-optional" title="Permalink to this headline"></a></h2>
 <ol class="arabic simple">
 <li><p>Build CSXCAD’s Python extension.</p></li>
 </ol>
@@ -179,7 +171,7 @@ of fparser and CSXCAD, which are usually the same as
 </div>
 </section>
 <section id="install-appcsxcad-gui-optional">
-<h2>Install AppCSXCAD GUI (optional)<a class="headerlink" href="#install-appcsxcad-gui-optional" title="Permalink to this heading"></a></h2>
+<h2>Install AppCSXCAD GUI (optional)<a class="headerlink" href="#install-appcsxcad-gui-optional" title="Permalink to this headline"></a></h2>
 <ol class="arabic simple">
 <li><p>Build QCSXCAD:</p></li>
 </ol>
@@ -208,7 +200,7 @@ of fparser and CSXCAD, which are usually the same as
 </div>
 </section>
 <section id="openems-search-path">
-<h2>openEMS search path<a class="headerlink" href="#openems-search-path" title="Permalink to this heading"></a></h2>
+<h2>openEMS search path<a class="headerlink" href="#openems-search-path" title="Permalink to this headline"></a></h2>
 <p>After the build is complete, add <cite>~/openEMS/bin</cite> into your search
 path:</p>
 <blockquote>
@@ -217,7 +209,7 @@ path:</p>
 <p>You need to write this line into your shell’s profile, such as <cite>~/.bashrc</cite>
 or <cite>~/.zshrc</cite> to make this change persistent.</p>
 <section id="setup-the-octave-matlab-or-python-interfaces">
-<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#setup-the-octave-matlab-or-python-interfaces" title="Permalink to this heading"></a></h3>
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#setup-the-octave-matlab-or-python-interfaces" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="../octave/install.html#octave-windows-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
 <li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="../python/install.html#python-windows-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
@@ -225,8 +217,8 @@ or <cite>~/.zshrc</cite> to make this change persistent.</p>
 </section>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
-<p id="manual-freebsd-workaround-src">On FreeBSD, the default CMake has a bug, causing it unable to find
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h2>
+<p>On FreeBSD, the default CMake has a bug, causing it unable to find
 HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CMake Error at /usr/local/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:230 (message):</span>
 <span class="go">  Could NOT find HDF5 (missing: HDF5_LIBRARIES HDF5_HL_LIBRARIES) (found</span>

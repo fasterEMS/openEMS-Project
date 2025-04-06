@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSPropMaterial &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -94,11 +86,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSProperties.html">CSProperties</a></li>
-      <li class="breadcrumb-item active">CSPropMaterial</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="../CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+          <li><a href="../CSProperties.html">CSProperties</a> &raquo;</li>
+      <li>CSPropMaterial</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/python/CSXCAD/CSProperties/CSPropMaterial.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -109,29 +101,29 @@
            <div itemprop="articleBody">
              
   <section id="cspropmaterial">
-<span id="id1"></span><h1>CSPropMaterial<a class="headerlink" href="#cspropmaterial" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>CSPropMaterial<a class="headerlink" href="#cspropmaterial" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSProperties.CSPropMaterial">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSProperties.</span></span><span class="sig-name descname"><span class="pre">CSPropMaterial</span></span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="CSProperties.html#CSXCAD.CSProperties.CSProperties" title="CSXCAD.CSProperties.CSProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSProperties</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="CSProperties.html#CSXCAD.CSProperties.CSProperties" title="CSXCAD.CSProperties.CSProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSProperties</span></code></a></p>
 <p>General material property</p>
-<p>This is a material with options to define relative electric permeability
-(<cite>eplsilon</cite>), relative magnetic permittivity (<cite>mue</cite>), electric conductivity
+<p>This is a material with options to define relative electric permittivity
+(<cite>epsilon</cite>), relative magnetic permeability (<cite>mue</cite>), electric conductivity
 (<cite>kappa</cite>), magnetic conductivity (<cite>sigma</cite>) and <cite>density</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params epsilon<span class="colon">:</span></dt>
-<dd class="field-odd"><p>scalar or vector - relative electric permeability</p>
+<dt class="field-odd">Params epsilon</dt>
+<dd class="field-odd"><p>scalar or vector - relative electric permittivity</p>
 </dd>
-<dt class="field-even">Params mue<span class="colon">:</span></dt>
-<dd class="field-even"><p>scalar or vector - relative magnetic permittivity</p>
+<dt class="field-even">Params mue</dt>
+<dd class="field-even"><p>scalar or vector - relative magnetic permeability</p>
 </dd>
-<dt class="field-odd">Params kappa<span class="colon">:</span></dt>
-<dd class="field-odd"><p>scalar or vector - relectric conductivity</p>
+<dt class="field-odd">Params kappa</dt>
+<dd class="field-odd"><p>scalar or vector - electric conductivity</p>
 </dd>
-<dt class="field-even">Params sigma<span class="colon">:</span></dt>
+<dt class="field-even">Params sigma</dt>
 <dd class="field-even"><p>scalar or vector - magnetic conductivity</p>
 </dd>
-<dt class="field-odd">Params density<span class="colon">:</span></dt>
+<dt class="field-odd">Params density</dt>
 <dd class="field-odd"><p>float            - Density</p>
 </dd>
 </dl>
@@ -140,7 +132,7 @@
 <span class="sig-name descname"><span class="pre">GetIsotropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.GetIsotropy" title="Permalink to this definition"></a></dt>
 <dd><p>Get isotropy status for this material.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>bool – isotropy status</p>
 </dd>
 </dl>
@@ -148,14 +140,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CSXCAD.CSProperties.CSPropMaterial.GetMaterialProperty">
-<span class="sig-name descname"><span class="pre">GetMaterialProperty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.GetMaterialProperty" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">GetMaterialProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.GetMaterialProperty" title="Permalink to this definition"></a></dt>
 <dd><p>SetMaterialProperty(prop_name)
 Get the material property with of type <cite>prop_name</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params prop_name<span class="colon">:</span></dt>
+<dt class="field-odd">Params prop_name</dt>
 <dd class="field-odd"><p>str – material property type</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>float for isotropic material and <cite>density</cite> or else (3,) array</p>
 </dd>
 </dl>
@@ -166,10 +158,10 @@ Get the material property with of type <cite>prop_name</cite>.</p>
 <span class="sig-name descname"><span class="pre">GetMaterialWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.GetMaterialWeight" title="Permalink to this definition"></a></dt>
 <dd><p>Get the material weighting function(s).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params prop_name<span class="colon">:</span></dt>
+<dt class="field-odd">Params prop_name</dt>
 <dd class="field-odd"><p>str – material property type</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>str for isotropic material and <cite>density</cite> or else str array</p>
 </dd>
 </dl>
@@ -180,7 +172,7 @@ Get the material property with of type <cite>prop_name</cite>.</p>
 <span class="sig-name descname"><span class="pre">SetIsotropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.SetIsotropy" title="Permalink to this definition"></a></dt>
 <dd><p>Set isotropy status for this material.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>val</strong> – bool – enable/disable isotropy</p>
 </dd>
 </dl>
@@ -191,19 +183,19 @@ Get the material property with of type <cite>prop_name</cite>.</p>
 <span class="sig-name descname"><span class="pre">SetMaterialProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSProperties.CSPropMaterial.SetMaterialProperty" title="Permalink to this definition"></a></dt>
 <dd><p>Set the material properties.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params epsilon<span class="colon">:</span></dt>
-<dd class="field-odd"><p>scalar or vector - relative electric permeability</p>
+<dt class="field-odd">Params epsilon</dt>
+<dd class="field-odd"><p>scalar or vector - relative electric permittivity</p>
 </dd>
-<dt class="field-even">Params mue<span class="colon">:</span></dt>
-<dd class="field-even"><p>scalar or vector - relative magnetic permittivity</p>
+<dt class="field-even">Params mue</dt>
+<dd class="field-even"><p>scalar or vector - relative magnetic permeability</p>
 </dd>
-<dt class="field-odd">Params kappa<span class="colon">:</span></dt>
-<dd class="field-odd"><p>scalar or vector - relectric conductivity</p>
+<dt class="field-odd">Params kappa</dt>
+<dd class="field-odd"><p>scalar or vector - electric conductivity</p>
 </dd>
-<dt class="field-even">Params sigma<span class="colon">:</span></dt>
+<dt class="field-even">Params sigma</dt>
 <dd class="field-even"><p>scalar or vector - magnetic conductivity</p>
 </dd>
-<dt class="field-odd">Params density<span class="colon">:</span></dt>
+<dt class="field-odd">Params density</dt>
 <dd class="field-odd"><p>float            - Density</p>
 </dd>
 </dl>
@@ -217,24 +209,24 @@ Get the material property with of type <cite>prop_name</cite>.</p>
 <cite>x</cite>,`y`,`z`
 <cite>rho</cite> for the distance to z-axis
 <cite>r</cite>   for the distance to origin
-<cite>a</cite>   for alpha or phi (as in cylindircal and spherical coord systems)
+<cite>a</cite>   for alpha or phi (as in cylindrical and spherical coord systems)
 <cite>t</cite>   for theta (as in the spherical coord system</p>
 <p>all these variables are not weighted with the drawing unit defined by
 the grid</p>
 <dl class="field-list simple">
-<dt class="field-odd">Params epsilon<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str or str-vector - relative electric permeability</p>
+<dt class="field-odd">Params epsilon</dt>
+<dd class="field-odd"><p>str or str-vector - relative electric permittivity</p>
 </dd>
-<dt class="field-even">Params mue<span class="colon">:</span></dt>
-<dd class="field-even"><p>str or str-vector - relative magnetic permittivity</p>
+<dt class="field-even">Params mue</dt>
+<dd class="field-even"><p>str or str-vector - relative magnetic permeability</p>
 </dd>
-<dt class="field-odd">Params kappa<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str or str-vector - relectric conductivity</p>
+<dt class="field-odd">Params kappa</dt>
+<dd class="field-odd"><p>str or str-vector - electric conductivity</p>
 </dd>
-<dt class="field-even">Params sigma<span class="colon">:</span></dt>
+<dt class="field-even">Params sigma</dt>
 <dd class="field-even"><p>str or str-vector - magnetic conductivity</p>
 </dd>
-<dt class="field-odd">Params density<span class="colon">:</span></dt>
+<dt class="field-odd">Params density</dt>
 <dd class="field-odd"><p>str               - Density</p>
 </dd>
 </dl>

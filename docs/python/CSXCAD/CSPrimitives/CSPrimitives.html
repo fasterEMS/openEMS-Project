@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSPrimitives (Base Class) &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -100,11 +92,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSPrimitives.html">CSPrimitives</a></li>
-      <li class="breadcrumb-item active">CSPrimitives (Base Class)</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="../CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+          <li><a href="../CSPrimitives.html">CSPrimitives</a> &raquo;</li>
+      <li>CSPrimitives (Base Class)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/python/CSXCAD/CSPrimitives/CSPrimitives.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -115,12 +107,12 @@
            <div itemprop="articleBody">
              
   <section id="csprimitives-base-class">
-<span id="csprimitives-base"></span><h1>CSPrimitives (Base Class)<a class="headerlink" href="#csprimitives-base-class" title="Permalink to this heading"></a></h1>
+<span id="csprimitives-base"></span><h1>CSPrimitives (Base Class)<a class="headerlink" href="#csprimitives-base-class" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimitives">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSPrimitives.</span></span><span class="sig-name descname"><span class="pre">CSPrimitives</span></span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Virtual base class for all primives, cannot be created!</p>
+<p>Virtual base class for all primitives, cannot be created!</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimitives.AddTransform">
 <span class="sig-name descname"><span class="pre">AddTransform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.AddTransform" title="Permalink to this definition"></a></dt>
@@ -138,7 +130,7 @@
 <span class="sig-name descname"><span class="pre">GetBoundBox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetBoundBox" title="Permalink to this definition"></a></dt>
 <dd><p>Get the bounding box for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(2,3) ndarray – bounding box for this primitive</p>
 </dd>
 </dl>
@@ -148,7 +140,7 @@
 <dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimitives.GetCoordinateSystem">
 <span class="sig-name descname"><span class="pre">GetCoordinateSystem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetCoordinateSystem" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>coordinate system (0 : Cartesian, 1 : Cylindrical) or None</p>
 </dd>
 </dl>
@@ -159,7 +151,7 @@
 <span class="sig-name descname"><span class="pre">GetDimension</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetDimension" title="Permalink to this definition"></a></dt>
 <dd><p>Get the dimension of this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – dimension 0..3</p>
 </dd>
 </dl>
@@ -170,7 +162,7 @@
 <span class="sig-name descname"><span class="pre">GetID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetID" title="Permalink to this definition"></a></dt>
 <dd><p>Get the ID for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – ID for this primitive</p>
 </dd>
 </dl>
@@ -187,7 +179,7 @@
 <span class="sig-name descname"><span class="pre">GetPriority</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetPriority" title="Permalink to this definition"></a></dt>
 <dd><p>Get the priority for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – Priority for this primitive</p>
 </dd>
 </dl>
@@ -198,7 +190,7 @@
 <span class="sig-name descname"><span class="pre">GetProperty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetProperty" title="Permalink to this definition"></a></dt>
 <dd><p>Get the property for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>CSProperties.CSProperties</p>
 </dd>
 </dl>
@@ -210,7 +202,7 @@
 <dd><p>Get the transformation class assigned to this primitive.
 If this primitve does not have any, it will be created.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>CSTransform class</p>
 </dd>
 </dl>
@@ -227,7 +219,7 @@ If this primitve does not have any, it will be created.</p>
 <span class="sig-name descname"><span class="pre">GetType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetType" title="Permalink to this definition"></a></dt>
 <dd><p>Get the type as int for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>int – Type for this primitive (e.g. 0 –&gt; Point, 1 –&gt; Box, …)</p>
 </dd>
 </dl>
@@ -238,7 +230,7 @@ If this primitve does not have any, it will be created.</p>
 <span class="sig-name descname"><span class="pre">GetTypeName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.GetTypeName" title="Permalink to this definition"></a></dt>
 <dd><p>Get the type as string (UTF-8) for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>str – Type name for this primitive (“Point”, “Box”, …)</p>
 </dd>
 </dl>
@@ -250,7 +242,7 @@ If this primitve does not have any, it will be created.</p>
 <dd><p>Check if this primitive has a transformation attached.
 It will not create one if it does not.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -261,10 +253,10 @@ It will not create one if it does not.</p>
 <span class="sig-name descname"><span class="pre">IsInside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.IsInside" title="Permalink to this definition"></a></dt>
 <dd><p>Check if a given coordinate is inside this primitive.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>coord</strong> – (3,) array – coordinate</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -276,7 +268,7 @@ It will not create one if it does not.</p>
 <dd><p>Set the coordinate system type (Cartesian or cylindrical) for this primitive.
 If set to None, the mesh type of the assigned rect grid will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>cs_type</strong> – coordinate system (0 : Cartesian, 1 : Cylindrical) or None</p>
 </dd>
 </dl>
@@ -299,7 +291,7 @@ If set to None, the mesh type of the assigned rect grid will be used.</p>
 <span class="sig-name descname"><span class="pre">SetPriority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.SetPriority" title="Permalink to this definition"></a></dt>
 <dd><p>Set the priority for this primitive</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>val</strong> – int – Higher priority values will override primitives with a lower priority</p>
 </dd>
 </dl>
@@ -310,7 +302,7 @@ If set to None, the mesh type of the assigned rect grid will be used.</p>
 <span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.Update" title="Permalink to this definition"></a></dt>
 <dd><p>Trigger an internal update and report success and error message</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>bool, err_msg – success and error message (empty on success)</p>
 </dd>
 </dl>
@@ -321,7 +313,7 @@ If set to None, the mesh type of the assigned rect grid will be used.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prim_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimitives.fromType" title="Permalink to this definition"></a></dt>
 <dd><p>Create a primtive specified by the <cite>prim_type</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>prim_type</strong> – Primitive type</p></li>
 <li><p><strong>pset</strong> – ParameterSet to assign to the new primitive</p></li>

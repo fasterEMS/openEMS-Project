@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSRectGrid &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -56,10 +48,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CSProperties.html">CSProperties</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSPrimitives.html">CSPrimitives</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSTransform.html">CSTransform</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">CSRectGrid</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#CSXCAD.CSRectGrid.CSRectGrid"><code class="docutils literal notranslate"><span class="pre">CSRectGrid</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSRectGrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Mesh.html">Mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Utilities.html">Utilities</a></li>
 </ul>
@@ -85,10 +74,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
-      <li class="breadcrumb-item active">CSRectGrid</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+      <li>CSRectGrid</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/python/CSXCAD/CSRectGrid.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,7 +88,7 @@
            <div itemprop="articleBody">
              
   <section id="csrectgrid">
-<span id="id1"></span><h1>CSRectGrid<a class="headerlink" href="#csrectgrid" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>CSRectGrid<a class="headerlink" href="#csrectgrid" title="Permalink to this headline"></a></h1>
 <span class="target" id="module-CSXCAD.CSRectGrid"></span><p>Rectilinear Grid Class for CSXCAD</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CSRectGrid">
@@ -108,7 +97,7 @@
 or cylindrical mesh and can hold mesh lines in the 3 fundamental directions.
 E.g. x,y and z for the Cartesian and rho, a and z for the cylindrical mesh.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>CoordSystem</strong> – define the coordinate system (default 0 : Cartesian)</p>
 </dd>
 </dl>
@@ -118,7 +107,7 @@ E.g. x,y and z for the Cartesian and rho, a and z for the cylindrical mesh.</p>
 <dd><p>Add an array of lines. This will <em>not</em> clear the previous defined lines in
 the given direction.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – direction definition</p></li>
 <li><p><strong>lines</strong> – array – list of lines to be added in the given direction</p></li>
@@ -138,7 +127,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">ClearLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.ClearLines" title="Permalink to this definition"></a></dt>
 <dd><p>Clear all lines in a given direction <cite>ny</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ny</strong> – int or str – direction definition</p>
 </dd>
 </dl>
@@ -155,7 +144,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">GetLine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.GetLine" title="Permalink to this definition"></a></dt>
 <dd><p>Get the line in a given direction <cite>ny</cite> and index</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – direction definition</p></li>
 <li><p><strong>idx</strong> – int  – line index</p></li>
@@ -169,7 +158,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">GetLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.GetLines" title="Permalink to this definition"></a></dt>
 <dd><p>Get all lines in a given direction <cite>ny</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – direction definition</p></li>
 <li><p><strong>do_sort</strong> – bool  – sort lines</p></li>
@@ -187,7 +176,7 @@ the given direction.</p>
 <dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CSRectGrid.GetQtyLines">
 <span class="sig-name descname"><span class="pre">GetQtyLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.GetQtyLines" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ny</strong> – int or str – direction definition</p>
 </dd>
 </dl>
@@ -198,7 +187,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">GetSimArea</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.GetSimArea" title="Permalink to this definition"></a></dt>
 <dd><p>Get the simulation area as defined by the mesh.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(2,3) array – Simulation domain box</p>
 </dd>
 </dl>
@@ -222,7 +211,7 @@ the given direction.</p>
 <dd><p>Set an array of lines. This will clear all previous defined lines in
 the given direction.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – direction definition</p></li>
 <li><p><strong>lines</strong> – array – list of lines to be set in the given direction</p></li>
@@ -236,7 +225,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">SetMeshType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.SetMeshType" title="Permalink to this definition"></a></dt>
 <dd><p>Set the coordinate system type (Cartesian or cylindrical) for this mesh.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>cs_type</strong> – coordinate system (0 : Cartesian, 1 : Cylindrical)</p>
 </dd>
 </dl>
@@ -247,7 +236,7 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">SmoothMeshLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="Permalink to this definition"></a></dt>
 <dd><p>Smooth all mesh lines in the given direction with a max. allowed resolution.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – direction definition or ‘all’ for all directions</p></li>
 <li><p><strong>max_res</strong> – float – max. allowed resolution</p></li>
@@ -268,6 +257,27 @@ the given direction.</p>
 <span class="sig-name descname"><span class="pre">Sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CSRectGrid.Sort" title="Permalink to this definition"></a></dt>
 <dd><p>Sort mesh lines in the given direction or all directions.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CoordinateSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSRectGrid.</span></span><span class="sig-name descname"><span class="pre">CoordinateSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSRectGrid.CoordinateSystem" title="Permalink to this definition"></a></dt>
+<dd><p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CoordinateSystem.CARTESIAN">
+<span class="sig-name descname"><span class="pre">CARTESIAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#CSXCAD.CSRectGrid.CoordinateSystem.CARTESIAN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CoordinateSystem.CYLINDRICAL">
+<span class="sig-name descname"><span class="pre">CYLINDRICAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#CSXCAD.CSRectGrid.CoordinateSystem.CYLINDRICAL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CSXCAD.CSRectGrid.CoordinateSystem.UNDEFINED_CS">
+<span class="sig-name descname"><span class="pre">UNDEFINED_CS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#CSXCAD.CSRectGrid.CoordinateSystem.UNDEFINED_CS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSPrimPolyhedronReader &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -100,11 +92,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="../CSPrimitives.html">CSPrimitives</a></li>
-      <li class="breadcrumb-item active">CSPrimPolyhedronReader</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="../CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+          <li><a href="../CSPrimitives.html">CSPrimitives</a> &raquo;</li>
+      <li>CSPrimPolyhedronReader</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/python/CSXCAD/CSPrimitives/CSPrimPolyhedronReader.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -115,15 +107,15 @@
            <div itemprop="articleBody">
              
   <section id="csprimpolyhedronreader">
-<span id="id1"></span><h1>CSPrimPolyhedronReader<a class="headerlink" href="#csprimpolyhedronreader" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>CSPrimPolyhedronReader<a class="headerlink" href="#csprimpolyhedronreader" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolyhedronReader">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSPrimitives.</span></span><span class="sig-name descname"><span class="pre">CSPrimPolyhedronReader</span></span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron" title="CSXCAD.CSPrimitives.CSPrimPolyhedron"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPrimPolyhedron</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron" title="CSXCAD.CSPrimitives.CSPrimPolyhedron"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSXCAD.CSPrimitives.CSPrimPolyhedron</span></code></a></p>
 <p>Polyhedron Reader</p>
-<p>This primives creates a polyhedron by reading a STL or PLY file.</p>
+<p>This primitives creates a polyhedron by reading a STL or PLY file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>File name to read</p>
 </dd>
@@ -135,7 +127,7 @@
 <span class="sig-name descname"><span class="pre">GetFileType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.GetFileType" title="Permalink to this definition"></a></dt>
 <dd><p>Get the file type. 1 –&gt; STL-File, 2 –&gt; PLY, 0 –&gt; other/unknown</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return t<span class="colon">:</span></dt>
+<dt class="field-odd">Return t</dt>
 <dd class="field-odd"><p>int – File type (see above)</p>
 </dd>
 </dl>
@@ -146,7 +138,7 @@
 <span class="sig-name descname"><span class="pre">GetFilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.GetFilename" title="Permalink to this definition"></a></dt>
 <dd><p>Get the file name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns fn<span class="colon">:</span></dt>
+<dt class="field-odd">Returns fn</dt>
 <dd class="field-odd"><p>str – File name to read</p>
 </dd>
 </dl>
@@ -157,7 +149,7 @@
 <span class="sig-name descname"><span class="pre">ReadFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.ReadFile" title="Permalink to this definition"></a></dt>
 <dd><p>Issue to read the file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return succ<span class="colon">:</span></dt>
+<dt class="field-odd">Return succ</dt>
 <dd class="field-odd"><p>bool – True on successful read</p>
 </dd>
 </dl>
@@ -168,7 +160,7 @@
 <span class="sig-name descname"><span class="pre">SetFileType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.SetFileType" title="Permalink to this definition"></a></dt>
 <dd><p>Set the file type. 1 –&gt; STL-File, 2 –&gt; PLY, 0 –&gt; other/unknown</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>t</strong> – int – File type (see above)</p>
 </dd>
 </dl>
@@ -179,7 +171,7 @@
 <span class="sig-name descname"><span class="pre">SetFilename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.SetFilename" title="Permalink to this definition"></a></dt>
 <dd><p>Set the file name to read. This will try set the propper file type as well.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fn</strong> – str – File name to read</p>
 </dd>
 </dl>

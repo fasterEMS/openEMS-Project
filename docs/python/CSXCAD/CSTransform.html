@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSTransform &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,10 +47,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CSXCAD.html">CSXCAD</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSProperties.html">CSProperties</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSPrimitives.html">CSPrimitives</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">CSTransform</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#CSXCAD.CSTransform.CSTransform"><code class="docutils literal notranslate"><span class="pre">CSTransform</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSTransform</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSRectGrid.html">CSRectGrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Mesh.html">Mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Utilities.html">Utilities</a></li>
@@ -85,10 +74,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
-      <li class="breadcrumb-item active">CSTransform</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+      <li>CSTransform</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/python/CSXCAD/CSTransform.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,7 +88,7 @@
            <div itemprop="articleBody">
              
   <section id="cstransform">
-<span id="id1"></span><h1>CSTransform<a class="headerlink" href="#cstransform" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>CSTransform<a class="headerlink" href="#cstransform" title="Permalink to this headline"></a></h1>
 <span class="target" id="module-CSXCAD.CSTransform"></span><p>Affine Transformations for primitives</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.CSTransform.CSTransform">
@@ -132,7 +121,7 @@ the order of transformations is important.</p>
 <li><p>Matrix : A affine transformation matrix as (4,4) array</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>transform</strong> – str – transformation name or keyword.</p>
 </dd>
 </dl>
@@ -143,7 +132,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">GetMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.GetMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Get the full 4x4 transformation matrix used for transformation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(4,4) array – transformation matrix</p>
 </dd>
 </dl>
@@ -166,7 +155,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">RotateAxis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.RotateAxis" title="Permalink to this definition"></a></dt>
 <dd><p>Add a rotation transformation around a cartesian axis (x,y or z).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ny</strong> – int or str – translation axis vector 0/1/2 or ‘x’/’y’/’z.</p></li>
 <li><p><strong>angle</strong> – float – rotation angle (default in degrees)</p></li>
@@ -181,7 +170,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">RotateOrigin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.RotateOrigin" title="Permalink to this definition"></a></dt>
 <dd><p>Add a rotation transformation around an arbitrary axis.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vec</strong> – (3,) array – translation axis vector.</p></li>
 <li><p><strong>angle</strong> – float – rotation angle (default in degrees)</p></li>
@@ -196,7 +185,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">Scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.Scale" title="Permalink to this definition"></a></dt>
 <dd><p>Add a scaleing transformation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>scale</strong> – float or (3,) array – Scaling factor</p>
 </dd>
 </dl>
@@ -207,7 +196,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">SetMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.SetMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Add an arbitrary (invertable) trsanslation matrix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mat</strong> – (3,) array – translation vector</p>
 </dd>
 </dl>
@@ -230,13 +219,13 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.Transform" title="Permalink to this definition"></a></dt>
 <dd><p>Apply a transformation to the given coordinate.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coord</strong> – (3,) array – coordinate to transform</p></li>
 <li><p><strong>invers</strong> – bool – do an invers transformation</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(3,) array – transformed coordinates</p>
 </dd>
 </dl>
@@ -247,7 +236,7 @@ the order of transformations is important.</p>
 <span class="sig-name descname"><span class="pre">Translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSTransform.CSTransform.Translate" title="Permalink to this definition"></a></dt>
 <dd><p>Add a trsanslation transformation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vec</strong> – (3,) array – translation vector</p>
 </dd>
 </dl>

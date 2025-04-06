@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start from the Basics &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Parallel-Plate Capacitor and Waveguide" href="Parallel_Plate_Capacitor_Waveguide.html" />
+    <link rel="prev" title="First Lessons For Circuit Designers" href="First_Lessons.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="First_Lessons.html">First Lessons For Circuit Designers</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Start from the Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-of-fdtd">Workflow of FDTD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Parallel_Plate_Capacitor_Waveguide.html">Parallel-Plate Capacitor and Waveguide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+          <li><a href="First_Lessons.html">First Lessons For Circuit Designers</a> &raquo;</li>
+      <li>Start from the Basics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/openEMS/Tutorials/First_Lessons_Forewords.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="start-from-the-basics">
+<h1>Start from the Basics<a class="headerlink" href="#start-from-the-basics" title="Permalink to this headline"></a></h1>
+<p>Many newcomers to the field of electromagnetic wave simulation have a practical
+goal in mind, for example, the author of this tutorial’s goal was to understand
+signal and power integrity problems in circuit board design. However, the author
+must warn all readers that it’s impractical to start working on these big projects
+right away. It’s necessary to start from the basics first. The reason is twofold.</p>
+<p>Firstly, by modeling the simplest possible devices, it allows one to learn about
+the mechanics of openEMS and FDTD - what does it do, how to program it, and how
+to use the result - without additional complications.</p>
+<p>Secondly, simplified models are necessary not only in learning but in practical
+applications. While openEMS itself implements the general-purpose Finite-Difference
+Time Domain (FDTD) engine, which in principle has many applications and few
+limitations. But it’s an academic solver at its core. Unlike proprietary industrial
+tools, it knows only about materials and fields,
+without high-level concepts such as waveguides, circuit boards, connnectors, vias,
+etc. These are modeled from creating (or importing) geometrical shapes by programming.
+Similarly, analyzing or interpreting simulation data must be done by the users
+themselves in their own postprocessing code. Thankfully, once with a circuit’s
+frequency response (known as its S-parameters) is obtained, a wide variety of
+circuit tools are available to analyze and simulate them, which we will cover later.</p>
+<a class="reference internal image-reference" href="../../../_images/Design_Workflow.svg"><img alt="../../../_images/Design_Workflow.svg" src="../../../_images/Design_Workflow.svg" width="80%" /></a>
+<p>In the long run, high-level tools on top of openEMS may enable board-level modeling
+(in fact, several third-party tools or library tools already exist, albeit highly
+experimental). At the present stage, it’s important to proceed realistically:
+rather than simulating a full system, openEMS is best used when one reduces the
+problem at hand to its simplest form by creating virtual “test fixtures” or “test
+coupons” to test an isolated aspect of the design, such as line impedance or
+crosstalk at a given electrical spacing. Insights obtained from these tests
+can then be used to supply design data and rules for practical projects, this
+approach avoids the difficulties of simulating the full system, and is quite
+similar to how RF/microwave design was done in the old days, but now in a virtual
+lab in cyberspace. This can still provide significant time-saving in comparison
+to empirical experiments.</p>
+</section>
+<section id="workflow-of-fdtd">
+<h1>Workflow of FDTD<a class="headerlink" href="#workflow-of-fdtd" title="Permalink to this headline"></a></h1>
+<p>The workflow of any openEMS simulation boils down to the following.</p>
+<ol class="arabic simple">
+<li><p><strong>3D Modeling</strong>: First, create an empty simulation box and start building
+3D objects. Objects are built from simple geometrical shapes programmatically.</p></li>
+<li><p><strong>Meshing</strong>: Next, one creates a 3D Cartesian mesh, which determines how the
+simulation box is discretized into small rectangular cuboids, known as Yee’s
+cells. They’re the basic unit of computation in a simulation run. Correct and
+optimized mesh can ensure or improve numerical accuracy, while suboptimal or
+incorrect mesh can create a loss of precision or induce instability (blow-ups)
+in the simulation. Problem often occurs while trying to align the model and
+the mesh, so the model must be co-designed with mesh coordinates in mind. 3D
+modeling and meshing is usually the most labor-intensive part of the simulation.</p></li>
+<li><p><strong>Port and Excitation</strong>: Next, create one or more ports. At one port, apply
+the excitation signal of your choice. A Gaussian pulse is the standard here, as
+it provides a broadband signal without discontinuous jumps, which may create
+numerical problems. Once the frequency response is obtained, linear circuit
+tools can analyze their behaviors under other inputs, so there’s no loss of
+generality. Once the simulation is started, the electric or magnetic fields
+at the cells around the excitation port is filled with initial values which
+are then evolved over time.</p></li>
+<li><p><strong>Boundary Conditions</strong>: Furthermore, since the simulation box has a finite size,
+we must decide what to do once the E&amp;M field reaches the edge of the box by
+selecting the appropriate boundary conditions.</p></li>
+<li><p><strong>Simulation Run</strong>: Electromagnetic energy is injected by an excitation port
+until total energy in the box decays to zero. Time-domain waveforms are obtained
+after the simulation ends. Frequency responses (i.e. S-parameters) are then
+calculated from time-domain data. Although FDTD is a time-domain method, the
+wide use of S-parameters in RF/microwave circuit analysis often makes frequency
+domain data more useful.  Optionally, openEMS can also dump the raw 3D fields
+during the simulation, which can be used for visualization and debugging.</p></li>
+<li><p><strong>Data Analysis</strong>: openEMS itself is only a field solver, not a structure
+characterization or circuit analysis tool (with the exception of antenna
+radiation pattern analysis). It’s up to the users to interpret the data
+using various third-party libraries and tools, such as textbook formulas,
+numerical fitting, Python library <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code>, <strong class="program">SignalIntegrity</strong>
+software, <strong class="program">Qucs-S</strong> circuit simulator, etc.</p></li>
+</ol>
+<p>This is enough theory for our purpose. As the first lesson, let’s try modeling a
+parallel-plate capacitor to see how everything fits together.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="First_Lessons.html" class="btn btn-neutral float-left" title="First Lessons For Circuit Designers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Parallel_Plate_Capacitor_Waveguide.html" class="btn btn-neutral float-right" title="Parallel-Plate Capacitor and Waveguide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

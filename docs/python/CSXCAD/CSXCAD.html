@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSXCAD &mdash; openEMS 0.0.35 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -28,18 +24,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            openEMS
+            <a href="../../index.html" class="icon icon-home"> openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -52,10 +44,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">CSXCAD</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#CSXCAD.ContinuousStructure"><code class="docutils literal notranslate"><span class="pre">ContinuousStructure</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSXCAD</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSProperties.html">CSProperties</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSPrimitives.html">CSPrimitives</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CSTransform.html">CSTransform</a></li>
@@ -85,10 +74,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
-          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
-      <li class="breadcrumb-item active">CSXCAD</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../python.html">Python Interface</a> &raquo;</li>
+          <li><a href="CSXCAD_API.html">CSXCAD Python Interface</a> &raquo;</li>
+      <li>CSXCAD</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/python/CSXCAD/CSXCAD.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,7 +88,7 @@
            <div itemprop="articleBody">
              
   <section id="csxcad">
-<span id="id1"></span><h1>CSXCAD<a class="headerlink" href="#csxcad" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1>CSXCAD<a class="headerlink" href="#csxcad" title="Permalink to this headline"></a></h1>
 <span class="target" id="module-CSXCAD"></span><dl class="py class">
 <dt class="sig sig-object py" id="CSXCAD.ContinuousStructure">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.</span></span><span class="sig-name descname"><span class="pre">ContinuousStructure</span></span><a class="headerlink" href="#CSXCAD.ContinuousStructure" title="Permalink to this definition"></a></dt>
@@ -219,7 +208,7 @@ rectengular grid assigned.</p>
 <span class="sig-name descname"><span class="pre">DefineGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_mesh_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.DefineGrid" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a mesh lines to the grid assigned to this property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> – (3,) list of mesh lines</p></li>
 <li><p><strong>unit</strong> – float – drawing unit</p></li>
@@ -296,7 +285,7 @@ rectengular grid assigned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetQtyPrimitives">
-<span class="sig-name descname"><span class="pre">GetQtyPrimitives</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetQtyPrimitives" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">GetQtyPrimitives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PropertyType.ANY</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetQtyPrimitives" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -309,7 +298,7 @@ rectengular grid assigned.</p>
 <span class="sig-name descname"><span class="pre">ReadFromXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.ReadFromXML" title="Permalink to this definition"></a></dt>
 <dd><p>Read geometry from xml-file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fn</strong> – str – file name</p>
 </dd>
 </dl>
@@ -317,7 +306,7 @@ rectengular grid assigned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.SetMeshType">
-<span class="sig-name descname"><span class="pre">SetMeshType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.SetMeshType" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SetMeshType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.SetMeshType" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -330,7 +319,7 @@ rectengular grid assigned.</p>
 <span class="sig-name descname"><span class="pre">Write2XML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.Write2XML" title="Permalink to this definition"></a></dt>
 <dd><p>Write geometry to an xml-file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fn</strong> – str – file name</p>
 </dd>
 </dl>
