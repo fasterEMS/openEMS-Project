@@ -220,12 +220,14 @@ The speed of light in a medium is given by:
 
 .. math::
 
-   v \approx \frac{c_0}{\sqrt{\epsilon_r}}
+   v \approx \frac{c_0}{\sqrt{\epsilon_r\mue_r}}
 
 in which :math:`c_0` is the speed of light in vacuum, :math:`\epsilon_r`
 is the relative permittivity of the medium (in engineering, it's sometimes
 also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
-In vacuum, :math:`\epsilon_r = 1` exactly.
+In vacuum, :math:`\epsilon_r = 1` and :math:`\mue_r = 1` exactly. The
+:math:`\mue_r` term is usually omitted in engineering since most insulators
+(like plastics or fiberglass) is non-magnetic.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
 """"""""""""""""""""""""""""""""""""""""

@@ -60,9 +60,9 @@ The workflow of any openEMS simulation boils down to the following.
    the excitation signal of your choice. A Gaussian pulse is the standard here, as
    it provides a broadband signal without discontinuous jumps, which may create
    numerical problems. Once the frequency response is obtained, linear circuit
-   tools can analyze their behaviors under other inputs, so there's no loss of
+   tools can analyze circuit behaviors under other inputs, so there's no loss of
    generality. Once the simulation is started, the electric or magnetic fields
-   at the cells around the excitation port is filled with initial values which
+   at the cells around the excitation port is filled with initial values, which
    are then evolved over time.
 
 4. **Boundary Conditions**: Furthermore, since the simulation box has a finite size,

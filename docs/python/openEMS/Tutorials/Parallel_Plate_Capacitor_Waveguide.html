@@ -385,11 +385,13 @@ and <span class="math notranslate nohighlight">\(f_\mathrm{max}\)</span> is the 
 used in simulation.</p>
 <p>The speed of light in a medium is given by:</p>
 <div class="math notranslate nohighlight">
-\[v \approx \frac{c_0}{\sqrt{\epsilon_r}}\]</div>
+\[v \approx \frac{c_0}{\sqrt{\epsilon_r\mue_r}}\]</div>
 <p>in which <span class="math notranslate nohighlight">\(c_0\)</span> is the speed of light in vacuum, <span class="math notranslate nohighlight">\(\epsilon_r\)</span>
 is the relative permittivity of the medium (in engineering, it’s sometimes
 also denoted as a material’s dielectric constant <span class="math notranslate nohighlight">\(D_k = \epsilon_r\)</span>).
-In vacuum, <span class="math notranslate nohighlight">\(\epsilon_r = 1\)</span> exactly.</p>
+In vacuum, <span class="math notranslate nohighlight">\(\epsilon_r = 1\)</span> and <span class="math notranslate nohighlight">\(\mue_r = 1\)</span> exactly. The
+<span class="math notranslate nohighlight">\(\mue_r\)</span> term is usually omitted in engineering since most insulators
+(like plastics or fiberglass) is non-magnetic.</p>
 </section>
 <section id="courant-friedrichs-lewy-cfl-criterion">
 <h3>Courant-Friedrichs-Lewy (CFL) Criterion<a class="headerlink" href="#courant-friedrichs-lewy-cfl-criterion" title="Permalink to this headline"></a></h3>
