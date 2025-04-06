@@ -589,29 +589,37 @@ a probe is also created at the same location of the port, allowing it to
 provide a load for the signal, or to measure the voltage or current at
 this region.
 
-.. important::
+Select the Right Port Type
+""""""""""""""""""""""""""""
+
+A port creates a region of discontinuity, so they may introduce artifacts.
+Optimizing the placement and implementation of a port reduces artifacts.
+
+In addition to the generic lumped port
+(:meth:`~openEMS.openEMS.AddLumpedPort`), openEMS contains optimized
+ports for curved ports (``AddCurvePort.m``), microstrip
+(:meth:`~openEMS.ports.MSLPort`), stripline (``AddStripLinePort.m``),
+coplanar waveguide (``AddCPWPort.m``), and coax cables
+(``AddCoaxialPort.m``).
+Some of them are not, cough, *ported* to Python yet. But for now, the lumped
+ports suffice for our purpose.
+
+In some cases, special ports are required to excite the structure properly.
+In a rectangular or circular waveguide, there is only one conductor (unlike
+our parallel-plate waveguide, which has two), so one must use a special
+waveguide port to excite the TE-mode waves unique to them. This
+is why openEMS provides generic waveguides
+(:meth:`~openEMS.ports.WaveguidePort`), rectangular waveguides
+(:meth:`~openEMS.ports.RectWGPort`), and circular waveguides
+(``AddCircWaveGuidePort.m``) ports.
+
+.. note::
    Like physical ports on devices and instruments, they're not ideal in openEMS.
    A port creates a region of discontinuity, so they may introduce artifacts.
    Optimizing the placement and implementation of a port reduces artifacts.
-   For example, in addition to the generic lumped port
-   (:meth:`~openEMS.openEMS.AddLumpedPort`), openEMS contains optimized
-   ports for curved ports (``AddCurvePort.m``), microstrip
-   (:meth:`~openEMS.ports.MSLPort`), stripline (``AddStripLinePort.m``),
-   coplanar waveguide (``AddCPWPort.m``), coax cables
-   (``AddCoaxialPort.m``), generic waveguides
-   (:meth:`~openEMS.ports.WaveguidePort`), rectangular waveguides
-   (:meth:`~openEMS.ports.RectWGPort`), circular waveguides
-   (``AddCircWaveGuidePort.m``)
-
-   Some of them are not, cough, *ported* to Python yet. But for now, the lumped
-   ports suffice for our purpose. Alternatively, these artifacts sometimes
+   Alternatively, these artifacts sometimes
    can also be removed through calibration or de-embedding algorithms, an
    advanced topic not discussed here.
-
-   Sometimes, a port can't even excite the structure properly. For example,
-   in a rectangular waveguide has only one conductor (our TEM "waveguide"
-   have two like an ordinary transmission line), one must use a special
-   waveguide port to excite a TE-mode electromagnetic wave.
 
    .. figure:: images/Parallel_Plate_Capacitor_Waveguide/error-box.svg
       :class: with-border

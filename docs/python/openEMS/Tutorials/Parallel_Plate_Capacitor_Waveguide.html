@@ -68,6 +68,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="#optional-create-a-field-dump-box">Optional: Create A Field Dump Box</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#purpose-of-ports">Purpose of Ports</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#select-the-right-port-type">Select the Right Port Type</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#test-fixture-as-1-port-or-2-port-network">Test Fixture as 1-Port or 2-Port Network</a></li>
 </ul>
 </li>
@@ -701,28 +702,34 @@ initial conditions for the system. Simultaneously, a lumped resistor and
 a probe is also created at the same location of the port, allowing it to
 provide a load for the signal, or to measure the voltage or current at
 this region.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Like physical ports on devices and instruments, they’re not ideal in openEMS.
-A port creates a region of discontinuity, so they may introduce artifacts.
-Optimizing the placement and implementation of a port reduces artifacts.
-For example, in addition to the generic lumped port
+<section id="select-the-right-port-type">
+<h3>Select the Right Port Type<a class="headerlink" href="#select-the-right-port-type" title="Permalink to this headline"></a></h3>
+<p>A port creates a region of discontinuity, so they may introduce artifacts.
+Optimizing the placement and implementation of a port reduces artifacts.</p>
+<p>In addition to the generic lumped port
 (<a class="reference internal" href="../openEMS.html#openEMS.openEMS.AddLumpedPort" title="openEMS.openEMS.AddLumpedPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedPort()</span></code></a>), openEMS contains optimized
 ports for curved ports (<code class="docutils literal notranslate"><span class="pre">AddCurvePort.m</span></code>), microstrip
 (<a class="reference internal" href="../ports.html#openEMS.ports.MSLPort" title="openEMS.ports.MSLPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MSLPort()</span></code></a>), stripline (<code class="docutils literal notranslate"><span class="pre">AddStripLinePort.m</span></code>),
-coplanar waveguide (<code class="docutils literal notranslate"><span class="pre">AddCPWPort.m</span></code>), coax cables
-(<code class="docutils literal notranslate"><span class="pre">AddCoaxialPort.m</span></code>), generic waveguides
+coplanar waveguide (<code class="docutils literal notranslate"><span class="pre">AddCPWPort.m</span></code>), and coax cables
+(<code class="docutils literal notranslate"><span class="pre">AddCoaxialPort.m</span></code>).
+Some of them are not, cough, <em>ported</em> to Python yet. But for now, the lumped
+ports suffice for our purpose.</p>
+<p>In some cases, special ports are required to excite the structure properly.
+In a rectangular or circular waveguide, there is only one conductor (unlike
+our parallel-plate waveguide, which has two), so one must use a special
+waveguide port to excite the TE-mode waves unique to them. This
+is why openEMS provides generic waveguides
 (<a class="reference internal" href="../ports.html#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">WaveguidePort()</span></code></a>), rectangular waveguides
-(<a class="reference internal" href="../ports.html#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">RectWGPort()</span></code></a>), circular waveguides
-(<code class="docutils literal notranslate"><span class="pre">AddCircWaveGuidePort.m</span></code>)</p>
-<p>Some of them are not, cough, <em>ported</em> to Python yet. But for now, the lumped
-ports suffice for our purpose. Alternatively, these artifacts sometimes
+(<a class="reference internal" href="../ports.html#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">RectWGPort()</span></code></a>), and circular waveguides
+(<code class="docutils literal notranslate"><span class="pre">AddCircWaveGuidePort.m</span></code>) ports.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Like physical ports on devices and instruments, they’re not ideal in openEMS.
+A port creates a region of discontinuity, so they may introduce artifacts.
+Optimizing the placement and implementation of a port reduces artifacts.
+Alternatively, these artifacts sometimes
 can also be removed through calibration or de-embedding algorithms, an
 advanced topic not discussed here.</p>
-<p>Sometimes, a port can’t even excite the structure properly. For example,
-in a rectangular waveguide has only one conductor (our TEM “waveguide”
-have two like an ordinary transmission line), one must use a special
-waveguide port to excite a TE-mode electromagnetic wave.</p>
 <figure class="align-default" id="id24">
 <a class="with-border reference internal image-reference" href="../../../_images/error-box.svg"><img alt="../../../_images/error-box.svg" class="with-border" src="../../../_images/error-box.svg" width="60%" /></a>
 <figcaption>
@@ -740,6 +747,7 @@ under CC BY-SA 4.0).</span><a class="headerlink" href="#id24" title="Permalink t
 </figcaption>
 </figure>
 </div>
+</section>
 <section id="test-fixture-as-1-port-or-2-port-network">
 <h3>Test Fixture as 1-Port or 2-Port Network<a class="headerlink" href="#test-fixture-as-1-port-or-2-port-network" title="Permalink to this headline"></a></h3>
 <p>To analyze the frequency response of the DUT, both 1-port and 2-port
