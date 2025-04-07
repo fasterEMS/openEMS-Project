@@ -3107,8 +3107,18 @@ resonance at 500 MHz, the resonance at 1.5 GHz, and the 20 dB loss
 around 2 GHz. On the Smith chart, the :math:`S_{11}` phases also
 shows good correlations between from 100 MHz to 1.3 GHz.
 
-.. warning::
-   TODO: compare TDR responses.
+Using ``scikit-rf`` to compute the equivalent step-input TDR curves
+of the simulation and experiment, we create the following plot for
+comparison. Both curves show a high-impedance discontinuity at the
+first port, and another high-impedance discontinuity at the second
+port (with a weaker reflection). The peak impedance magnitudes are
+quantitative different in the simulation and experiment, 100 Ω and
+140 Ω respectively. The exact number is sensitive to the port/connector
+transition and geometry, and we didn't model the SMA RF connectors.
+But both results are qualitatively similar.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/experiment-tdr.svg
+   :width: 49%
 
 Therefore, the observed high-frequency loss is a real effect of the
 parallel-plate waveguide. What is its origin? We can make several educated
@@ -3233,11 +3243,11 @@ depending on how long the transmission line is.
          transmission line with a length of 0.4λ, its input reflection coefficient
          is 1.0∠167.2°, its input impedance is 68.5∠80.0° Ω.
 
-Since the load impedance remains constant regardless of the output
-impedance of the transmitter, when the line is :math:`\lambda / 2`,
+But the load impedance remains constant regardless of the output
+impedance of the transmitter. When the line is :math:`\lambda / 2`,
 we also get a *perfect* impedance match, as the overall input
-impedance of the :math:`\lambda / 2` transmission line is, again,
-exactly equal to the 50 Ω load.
+impedance of the :math:`\lambda / 2` transmission line is,
+exactly equal to the 50 Ω load again.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-6.svg
    :width: 49%
