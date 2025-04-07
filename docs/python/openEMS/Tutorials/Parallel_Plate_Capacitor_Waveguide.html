@@ -378,7 +378,8 @@ is the relative permittivity of the medium (in engineering, it’s sometimes
 also denoted as a material’s dielectric constant <span class="math notranslate nohighlight">\(D_k = \epsilon_r\)</span>).
 In vacuum, <span class="math notranslate nohighlight">\(\epsilon_r = 1\)</span> and <span class="math notranslate nohighlight">\(\mu_r = 1\)</span> exactly. The
 <span class="math notranslate nohighlight">\(\mu_r\)</span> term is usually omitted in engineering since most insulators
-(like plastics or fiberglass) is non-magnetic.</p>
+(like plastics or fiberglass) are non-magnetic, unless one’s dealing with
+inductors or circulators.</p>
 </section>
 <section id="courant-friedrichs-lewy-cfl-criterion">
 <h3>Courant-Friedrichs-Lewy (CFL) Criterion<a class="headerlink" href="#courant-friedrichs-lewy-cfl-criterion" title="Permalink to this headline"></a></h3>
@@ -412,7 +413,7 @@ no need to calculate the required timestep size, as it
 automatically calculates simulation timesteps
 using a modified criterion named <em>Rennings2</em>, not CFL
 (derived
-in the unpublished paper <a class="footnote-reference brackets" href="#id22" id="id1">11</a>, see
+in the unpublished paper <a class="footnote-reference brackets" href="#id23" id="id1">11</a>, see
 <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetTimeStepMethod" title="openEMS.openEMS.SetTimeStepMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetTimeStepMethod()</span></code></a>).
 But the general limitation still applies.</p>
 <p>If you really need small cells
@@ -656,13 +657,17 @@ field, and magnetic field (flux density), numbered from <code class="docutils li
 <p>For usage, see <a class="reference internal" href="../../CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddDump" title="CSXCAD.ContinuousStructure.AddDump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CSXCAD.ContinuousStructure.AddDump()</span></code></a>. For a detailed
 list of parameters, see <a class="reference internal" href="../../CSXCAD/CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox" title="CSXCAD.CSProperties.CSPropDumpBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropDumpBox</span></code></a>.</p>
 </div>
-<p>In this example, we will dump the total current density (<code class="docutils literal notranslate"><span class="pre">dump_type=3</span></code>) on
-the upper waveguide plate as a 2D surface, using the
+<p>In this example, we will dump the total current density (<code class="docutils literal notranslate"><span class="pre">dump_type=3</span></code>)
+on the upper waveguide plate as a 2D surface, using the
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">AddDump`()</span></code> function:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dump</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s2">&quot;curl_H_upper&quot;</span><span class="p">,</span> <span class="n">dump_type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>We do something slightly unusual here: The Z = 8 plane of the entire
+simulation box is dumped, not just the waveguide plate. This way,
+we can visualize the current both on the waveguide plates and in
+vacuum, allowing us to see free-space radiation.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>openEMS obtains the total current density by calculating
@@ -681,7 +686,7 @@ circuit boards, signal generators, oscilloscopes, and especially Vector
 Network Analyzers (VNA). It’s a lumped circuit with a negligible size.
 It acts as a voltage source with a resistive output impedance, and it
 can inject or measure a voltage at the Device-Under-Test (DUT).</p>
-<figure class="align-default" id="id23">
+<figure class="align-default" id="id25">
 <a class="with-border reference internal image-reference" href="../../../_images/vna_ports.svg"><img alt="../../../_images/vna_ports.svg" class="with-border" src="../../../_images/vna_ports.svg" width="49%" /></a>
 <figcaption>
 <p><span class="caption-text">The “port” in openEMS serves the same purpose similar to the physical
@@ -691,7 +696,7 @@ Device-Under-Test (DUT), and to measure what comes out at another point.
 The DUT is thus characterized as a blackbox. The internal implementations
 of ports are obviously different in the digital and physical worlds, though
 (image by Julien Hillairet, from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed
-under BSD-3, modified for clarity).</span><a class="headerlink" href="#id23" title="Permalink to this image"></a></p>
+under BSD-3, modified for clarity).</span><a class="headerlink" href="#id25" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Internally, it’s implemented by setting the electric fields in the Yee’s
@@ -730,7 +735,7 @@ Optimizing the placement and implementation of a port reduces artifacts.
 Alternatively, these artifacts sometimes
 can also be removed through calibration or de-embedding algorithms, an
 advanced topic not discussed here.</p>
-<figure class="align-default" id="id24">
+<figure class="align-default" id="id26">
 <a class="with-border reference internal image-reference" href="../../../_images/error-box.svg"><img alt="../../../_images/error-box.svg" class="with-border" src="../../../_images/error-box.svg" width="60%" /></a>
 <figcaption>
 <p><span class="caption-text">The artifacts introduced by a two-port measurement can be viewed
@@ -743,7 +748,7 @@ the measured response using linear algebra, a process known as
 calibration or de-embedding (image by Ziad Hatab, Michael Ernst Gadringer,
 and Wolfgang Bösch, from <em>Indirect Measurement of Switch
 Terms of a Vector Network Analyzer with Reciprocal Devices</em>, licensed
-under CC BY-SA 4.0).</span><a class="headerlink" href="#id24" title="Permalink to this image"></a></p>
+under CC BY-SA 4.0).</span><a class="headerlink" href="#id26" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </div>
@@ -760,10 +765,10 @@ A signal is injected into the DUT using a 50 Ω transmitter port, and the
 received signal is measured by the 50 Ω receiver port at the other side.
 The latter techniques are shown in the following circuit diagram (the
 impedance <code class="docutils literal notranslate"><span class="pre">Z</span></code> is a function of frequency).</p>
-<figure class="align-default" id="id25">
+<figure class="align-default" id="id27">
 <img alt="../../../_images/vna-shunt-thru-series.svg" class="with-border" src="../../../_images/vna-shunt-thru-series.svg" /><figcaption>
 <p><span class="caption-text">2-port shunt-through measurement (DUT in parallel), and 2-port series
-(DUT in series) measurement.</span><a class="headerlink" href="#id25" title="Permalink to this image"></a></p>
+(DUT in series) measurement.</span><a class="headerlink" href="#id27" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>In the real world, the 1-port measurement method is only accurate when
@@ -800,12 +805,12 @@ coordinates span from [-8, 8]. This matches the intuition of a
 circuit diagram, in which a lumped port is vertically connected
 across the horizontal transmission line. The port’s internal voltage
 source acting as both a wire and a source of electric field.</p>
-<figure class="align-default" id="id26">
+<figure class="align-default" id="id28">
 <img alt="../../../_images/lumped-port.svg" class="with-border" src="../../../_images/lumped-port.svg" /><figcaption>
 <p><span class="caption-text">An ideal lumped port is connected vertically across a horizontal
 circuit. Its internal voltage source acting as both a wire and a
 source of electric field. An lumped excitation port in openEMS
-works similarly here.</span><a class="headerlink" href="#id26" title="Permalink to this image"></a></p>
+works similarly here.</span><a class="headerlink" href="#id28" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>To complicate the issue further, a port must cross at least a mesh line, since
@@ -869,7 +874,7 @@ cause numerical problems like dispersion and unrealistic excitation
 of high-order modes. As a workaround, users can provide custom
 bandwidth-limited expressions to openEMS (no built-in implementations
 exist currently) via <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetCustomExcite" title="openEMS.openEMS.SetCustomExcite"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetCustomExcite()</span></code></a>. For an
-example, see <a class="footnote-reference brackets" href="#id18" id="id2">7</a>.  However, these pulses also suffer from rapid energy
+example, see <a class="footnote-reference brackets" href="#id19" id="id2">7</a>.  However, these pulses also suffer from rapid energy
 roll-off at high frequencies. The Gaussian pulse, by comparison,
 retains significant energy in both sidebands around the center carrier
 frequency.</p>
@@ -902,13 +907,13 @@ zero-overhead solution. They efficiently model structures inside metal
 enclosure, above a ground plane, or with an electric or magnetic field
 symmetry across a plane. No explicit modeling is necessary, the boundary
 conditions implicitly enforce these behaviors.</p>
-<figure class="align-default" id="id27">
+<figure class="align-default" id="id29">
 <a class="with-border reference internal image-reference" href="../../../_images/reverberation_chamber.jpg"><img alt="../../../_images/reverberation_chamber.jpg" class="with-border" src="../../../_images/reverberation_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure
 or a reverberation chamber, commonly used in EMC test labs. Image by Dr.
 Hans Georg Krauthäuser (Hgk at English Wikipedia), licensed under CC
-BY-SA 3.0.</span><a class="headerlink" href="#id27" title="Permalink to this image"></a></p>
+BY-SA 3.0.</span><a class="headerlink" href="#id29" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Perfect Electric Conductor (PEC)</strong>: The simplest treatment sets
@@ -946,12 +951,12 @@ the <em>Absorbing Boundary Conditions (ABC)</em>. First we create a simulation
 box larger than the device, allowing some fringe fields. Then, at the
 boundaries, the electromagnetic waves are absorbed without coming back
 to the box, creating the illusion of an infinite-size free space.</p>
-<figure class="align-default" id="id28">
+<figure class="align-default" id="id30">
 <a class="with-border reference internal image-reference" href="../../../_images/anechoic_chamber.jpg"><img alt="../../../_images/anechoic_chamber.jpg" class="with-border" src="../../../_images/anechoic_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PML at all boundaries acts like an anechoic chamber
 in an EMC test lab. Image by Adamantios (at English Wikipedia), licensed
-under CC BY-SA 3.0.</span><a class="headerlink" href="#id28" title="Permalink to this image"></a></p>
+under CC BY-SA 3.0.</span><a class="headerlink" href="#id30" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Two kinds of Absorbing Boundary Conditions are implemented in openEMS.</p>
@@ -1146,6 +1151,9 @@ last:</p>
 <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 
+<span class="n">dump</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s2">&quot;curl_H_upper&quot;</span><span class="p">,</span> <span class="n">dump_type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+
 <span class="n">port</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdtd</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">highres</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">highres</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdtd</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="p">[</span> <span class="mi">50</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">highres</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span> <span class="mi">50</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">highres</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1255,6 +1263,9 @@ build upon further:</p>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="n">dump</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s2">&quot;curl_H_upper&quot;</span><span class="p">,</span> <span class="n">dump_type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">csx</span>
 
@@ -1709,7 +1720,7 @@ to satisfy the potential nitpickers while following the tradition, here we use
 a compromise. Plots are labeled as “Return loss” and use the positive sign
 convention, but also with the Y axis inverted, so that resonances appear
 as familiar valleys.</p>
-<p>For more information, see <a class="footnote-reference brackets" href="#id12" id="id3">1</a> <a class="footnote-reference brackets" href="#id13" id="id4">2</a>.</p>
+<p>For more information, see <a class="footnote-reference brackets" href="#id13" id="id3">1</a> <a class="footnote-reference brackets" href="#id14" id="id4">2</a>.</p>
 </div>
 </section>
 <section id="plot-z-parameters-impedances-via-matplotlib">
@@ -1942,7 +1953,7 @@ writes a new line with parameters order of <code class="docutils literal notrans
 </pre></div>
 </div>
 <p>Finally, beware that for 3-port, 4-port, or more ports, the parameters order is
-different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id14" id="id5">3</a></p>
+different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id15" id="id5">3</a></p>
 </section>
 </section>
 <section id="code-checkpoint-3">
@@ -2039,6 +2050,9 @@ obtains if the previous instructions are followed:</p>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="n">dump</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s2">&quot;curl_H_upper&quot;</span><span class="p">,</span> <span class="n">dump_type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">csx</span>
 
@@ -2327,11 +2341,11 @@ input signals, so there’s no loss of generality. In fact, performing
 a time-domain transient simulation using frequency-domain S-parameters
 is a common feature in many proprietary commercial circuit simulators,
 such as <strong class="program">HyperLynx</strong>, <strong class="program">ADS</strong>, or <strong class="program">AWR</strong>. A
-third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id15" id="id6">4</a></p>
+third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id16" id="id6">4</a></p>
 <p>However, in the free and open source world, few (if any) free and
 open source circuit simulator have this capability. For example,
 NgSPICE supports S-parameter calculation but not transient
-simulation. <a class="footnote-reference brackets" href="#id16" id="id7">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
+simulation. <a class="footnote-reference brackets" href="#id17" id="id7">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
 simulation with S-parameters, although it’s possible to define
 devices using them.</p>
 <p>The Python package <strong class="program">SignalIntegrity</strong>, designed for signal
@@ -2341,7 +2355,7 @@ at LeCroy as a signal integrity expert.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>The software’s internal theory of operation is also published almost
-in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id17" id="id8">6</a>. Each
+in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id18" id="id8">6</a>. Each
 concept is accomplished by both formulas and executable code, making
 it an invaluable reference in this field. The author of this tutorial
 recommends everyone who simulates or measures RF/microwave devices to
@@ -2368,11 +2382,11 @@ local path). You should be able to start it via:</p>
 </div>
 <p>If not, you may need to add this local <code class="file docutils literal notranslate"><span class="pre">bin</span></code> directory into
 your shell’s search path.</p>
-<figure class="align-default" id="id29">
+<figure class="align-default" id="id31">
 <a class="with-border reference internal image-reference" href="../../../_images/si1.png"><img alt="../../../_images/si1.png" class="with-border" src="../../../_images/si1.png" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">The classic 1990s Tcl/Tk (Tkinter) GUI may look old-fashioned,
-but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id29" title="Permalink to this image"></a></p>
+but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>For the first example, let’s examine the circuit’s time-domain
@@ -2799,21 +2813,47 @@ values are used for references, the beginning of the visualization
 works okay. But in later timesteps, colors will be very shallow and
 difficult to see. Thus the color-grading scale is quite sensitive to
 the timestep at which the <span class="guilabel">Rescale to Visible Data Range</span>
-button is pressed. In additional to automatic adjustment, manual
-adjustiment may be necessary.</p>
+button is pressed.</p>
+<p><strong>Manual color scale.</strong> Another problem is that the excitation port
+always have strong fields and currents, so as long as ParaView’s
+color-grading is normalized to the magnitudes around a port, all currents
+and fields
+at other locations may appear dark and weak. Thus, manually overriding
+the color-grading may be necessary. To do so, press <span class="guilabel">Rescale
+to Custom Data Range</span>, enter a new value (such as <cite>0.001</cite>) and press
+<span class="guilabel">Rescale and disable automatic rescaling</span>.</p>
+<a class="reference internal image-reference" href="../../../_images/paraview-10.png"><img alt="../../../_images/paraview-10.png" src="../../../_images/paraview-10.png" style="width: 30%;" /></a>
+<a class="reference internal image-reference" href="../../../_images/paraview-9.png"><img alt="../../../_images/paraview-9.png" src="../../../_images/paraview-9.png" style="width: 30%;" /></a>
+<p><strong>Logarithmical color scale.</strong> For good visualization, an alternative
+solution is to color-grade the values logarithmically. It can be done
+by clicking <span class="guilabel">Edit Color Map</span>. In the <span class="guilabel">Color Map
+Editor</span> on the right, check <span class="guilabel">Use log scale when mapping data
+to colors</span>. A warning message may immediately appear, as the log of 0
+is undefined, but it’s safe to ignore.</p>
+<a class="reference internal image-reference" href="../../../_images/paraview-11.png"><img alt="../../../_images/paraview-11.png" src="../../../_images/paraview-11.png" style="width: 30%;" /></a>
+<a class="reference internal image-reference" href="../../../_images/paraview-12.png"><img alt="../../../_images/paraview-12.png" src="../../../_images/paraview-12.png" style="width: 30%;" /></a>
 <p><strong>Result.</strong> In this simulation, we find that rescaling at timestep
-9 obtains a satisfactory video below.</p>
+55 and enabling logarithmical color map allow us to obtain a
+satisfactory video below.</p>
 <div  class="sphinx-contrib-video-container align-left"><video controls="True" preload="auto"><source src="../../../_images/curlH.webm" type="video/webm"></video></div><div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>To correctly visualize the fields in ParaView, one must apply
 the corresponding Cell/Point Array, select the variable that
-represents the physical quantity, and Rescale the color-grading
-to match the data range. Otherwise, an empty box or a solid
-color appears on ParaView.</p>
+represents the physical quantity, rescale the color-grading
+(and optionally enable logarithmical scale) to match the data
+range. Otherwise, an empty box appears when the array is not
+selected. A solid color appears when the color map’s data range
+is saturated.</p>
 <p>Also, 3D dump boxs are tricky to visualize. By default it’s
 rendered as an empty box. It’s possible to render a 2D slice
 of the data, or possibly a 3D vector field. But it’s beyond
 the scope of this tutorial.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>ParaView is a large program used in many scientific applications,
+it’s impossible to cover all of aspects here. See the full manual
+<a class="footnote-reference brackets" href="#id24" id="id9">12</a> for usage.</p>
 </div>
 </section>
 </section>
@@ -2900,7 +2940,7 @@ waveguide is given by <span class="math notranslate nohighlight">\(\lambda = 2d 
 v / \lambda\)</span>, in which <span class="math notranslate nohighlight">\(d\)</span> is the separation between the
 plates, <span class="math notranslate nohighlight">\(m = 1, 2, 3...\)</span> is the waveguide mode index,
 <span class="math notranslate nohighlight">\(v\)</span> is the speed of light in the medium, <span class="math notranslate nohighlight">\(\lambda\)</span> is
-the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id20" id="id9">9</a>
+the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id21" id="id10">9</a>
 Using this calculation, we find that multimoding appears at 9.3 GHz
 and above, so it indeed plays a small role.</p>
 </li>
@@ -2925,7 +2965,7 @@ ports in many cases, not just those found in analytic solutions.</p></li>
 <p class="admonition-title">Important</p>
 <p>Nearly everything can be an RF waveguide or resonator
 when the excitation frequency is high enough. For example,
-the book <a class="footnote-reference brackets" href="#id21" id="id10">10</a> lists four possible high-order microstrip modes.
+the book <a class="footnote-reference brackets" href="#id22" id="id11">10</a> lists four possible high-order microstrip modes.
 In fact, unrealistic excitation of high-order modes is fairly common
 in E&amp;M field solvers as unphysical excitation signals or
 port placements are easily created. Be sure to watch for it,
@@ -2979,7 +3019,7 @@ waveguide.</p>
 <p><strong>Quarter-Wave Impedance Transformer</strong> - This half-wave
 transmission line is a special case of the powerful
 quarter-wave impendance transformer. Learn more about
-it at <a class="footnote-reference brackets" href="#id19" id="id11">8</a>.</p>
+it at <a class="footnote-reference brackets" href="#id20" id="id12">8</a>.</p>
 <p><strong>Port Discontinuities</strong> - This shows why an optimized
 port transition, or the use of de-embedding or calibration
 is crucial in both simulations and measurements. Otherwise
@@ -3182,46 +3222,49 @@ to <span class="guilabel">Qucsator</span> by clicking it.</p>
 <section id="bibliography">
 <h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline"></a></h2>
 <dl class="footnote brackets">
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
 <dd><p>T. S. Bird, <a class="reference external" href="https://ieeexplore.ieee.org/document/5162049">“Definition and Misuse of Return Loss [Report of the
 Transactions Editor-in-Chief],”</a>
 in IEEE Antennas and Propagation Magazine, vol. 51, no. 2, pp. 166-167,
 April 2009, doi: 10.1109/MAP.2009.5162049.</p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/loss-or-gain">Microwaves101: Loss or Gain?</a></p>
 </dd>
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/snp-format">Microwaves101: SNP Format</a></p>
 </dd>
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id6">4</a></span></dt>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id6">4</a></span></dt>
 <dd><p>Russell Carroll, <a class="reference external" href="https://emisleuth.com/Articles/How_to_Use_S-parameter_Models_in_PSpice_5-28-2024.pdf">How to Use S-parameter Models in PSpice</a></p>
 </dd>
-<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id7">5</a></span></dt>
+<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id7">5</a></span></dt>
 <dd><p>Giles Atkinson, <a class="reference external" href="https://sourceforge.net/p/ngspice/discussion/120973/thread/3bce0daf1c/#fffd">Reply to “How to perform transient simulation with S parameter file”</a></p>
 </dd>
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id8">6</a></span></dt>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id8">6</a></span></dt>
 <dd><p>Peter J. Pupalaikis, <a class="reference external" href="https://www.cambridge.org/core/books/sparameters-for-signal-integrity/2FD44B994CD054E4B844B358E8903A09">S-parameters for Signal Integrity.</a>
 Cambridge University Press, 2020.</p>
 </dd>
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id2">7</a></span></dt>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id2">7</a></span></dt>
 <dd><p>Ted Yapo, <a class="reference external" href="https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf">A Note on Gaussian Steps in openEMS.</a></p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id11">8</a></span></dt>
+<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id12">8</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/quarter-wave-tricks">Quarter-wave Tricks</a></p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id9">9</a></span></dt>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id10">9</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/06%3A_Waveguides/6.03%3A_Parallel-Plate_Waveguide">Microwave and RF Design II - Transmission Lines,
 6.3: Parallel-Plate Waveguide</a></p>
 </dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id10">10</a></span></dt>
+<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id11">10</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/04%3A_Extraordinary_Transmission_Line_Effects/4.06%3A_Microstrip_Operating_Frequency_Limitations">Microwave and RF Design II - Transmission Lines,
 4.6: Microstrip Operating Frequency Limitations</a></p>
 </dd>
-<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
+<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
 <dd><p>Andreas Rennings, Elektromagnetische Zeitbereichssimulationen innovativer
 Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
 2008, pp. 76, eq. 4.77</p>
+</dd>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id9">12</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.paraview.org/">ParaView Manual</a>.</p>
 </dd>
 </dl>
 </section>

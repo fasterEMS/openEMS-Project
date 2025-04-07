@@ -237,7 +237,8 @@ is the relative permittivity of the medium (in engineering, it's sometimes
 also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
 In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly. The
 :math:`\mu_r` term is usually omitted in engineering since most insulators
-(like plastics or fiberglass) is non-magnetic.
+(like plastics or fiberglass) are non-magnetic, unless one's dealing with
+inductors or circulators.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
 """"""""""""""""""""""""""""""""""""""""
@@ -538,12 +539,17 @@ Several kinds of dump boxes exist.
    For usage, see :meth:`CSXCAD.ContinuousStructure.AddDump`. For a detailed
    list of parameters, see :class:`CSXCAD.CSProperties.CSPropDumpBox`.
 
-In this example, we will dump the total current density (``dump_type=3``) on
-the upper waveguide plate as a 2D surface, using the
+In this example, we will dump the total current density (``dump_type=3``)
+on the upper waveguide plate as a 2D surface, using the
 :meth:`~CSX.ContinuousStructure.AddDump`` function::
 
     dump = csx.AddDump("curl_H_upper", dump_type=3)
-    dump.AddBox(start=[-50, -50, 8], stop=[50, 50, 8])
+    dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
+
+We do something slightly unusual here: The Z = 8 plane of the entire
+simulation box is dumped, not just the waveguide plate. This way,
+we can visualize the current both on the waveguide plates and in
+vacuum, allowing us to see free-space radiation.
 
 .. note::
 
@@ -1033,7 +1039,10 @@ last::
     mesh.SmoothMeshLines('x', res)
     mesh.SmoothMeshLines('y', res)
     mesh.SmoothMeshLines('z', res)
-    
+
+    dump = csx.AddDump("curl_H_upper", dump_type=3)
+    dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
+
     port = [None, None]
     port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
     port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
@@ -1144,6 +1153,9 @@ build upon further::
         mesh.SmoothMeshLines('x', res)
         mesh.SmoothMeshLines('y', res)
         mesh.SmoothMeshLines('z', res)
+
+        dump = csx.AddDump("curl_H_upper", dump_type=3)
+        dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
     
         return csx
     
@@ -1928,6 +1940,9 @@ obtains if the previous instructions are followed::
         mesh.SmoothMeshLines('x', res)
         mesh.SmoothMeshLines('y', res)
         mesh.SmoothMeshLines('z', res)
+
+        dump = csx.AddDump("curl_H_upper", dump_type=3)
+        dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
 
         return csx
 
@@ -2950,11 +2965,37 @@ values are used for references, the beginning of the visualization
 works okay. But in later timesteps, colors will be very shallow and
 difficult to see. Thus the color-grading scale is quite sensitive to
 the timestep at which the :guilabel:`Rescale to Visible Data Range`
-button is pressed. In additional to automatic adjustment, manual
-adjustiment may be necessary.
+button is pressed.
+
+**Manual color scale.** Another problem is that the excitation port
+always have strong fields and currents, so as long as ParaView's
+color-grading is normalized to the magnitudes around a port, all currents
+and fields
+at other locations may appear dark and weak. Thus, manually overriding
+the color-grading may be necessary. To do so, press :guilabel:`Rescale
+to Custom Data Range`, enter a new value (such as `0.001`) and press
+:guilabel:`Rescale and disable automatic rescaling`.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/paraview-10.png
+   :width: 30%
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/paraview-9.png
+   :width: 30%
+
+**Logarithmical color scale.** For good visualization, an alternative
+solution is to color-grade the values logarithmically. It can be done
+by clicking :guilabel:`Edit Color Map`. In the :guilabel:`Color Map
+Editor` on the right, check :guilabel:`Use log scale when mapping data
+to colors`. A warning message may immediately appear, as the log of 0
+is undefined, but it's safe to ignore.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/paraview-11.png
+   :width: 30%
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/paraview-12.png
+   :width: 30%
 
 **Result.** In this simulation, we find that rescaling at timestep
-9 obtains a satisfactory video below.
+55 and enabling logarithmical color map allow us to obtain a
+satisfactory video below.
 
 .. video:: images/Parallel_Plate_Capacitor_Waveguide/curlH.webm
 
@@ -2962,14 +3003,21 @@ adjustiment may be necessary.
 
    To correctly visualize the fields in ParaView, one must apply
    the corresponding Cell/Point Array, select the variable that
-   represents the physical quantity, and Rescale the color-grading
-   to match the data range. Otherwise, an empty box or a solid
-   color appears on ParaView.
+   represents the physical quantity, rescale the color-grading
+   (and optionally enable logarithmical scale) to match the data
+   range. Otherwise, an empty box appears when the array is not
+   selected. A solid color appears when the color map's data range
+   is saturated.
 
    Also, 3D dump boxs are tricky to visualize. By default it's
    rendered as an empty box. It's possible to render a 2D slice
    of the data, or possibly a 3D vector field. But it's beyond
    the scope of this tutorial.
+
+.. seealso::
+   ParaView is a large program used in many scientific applications,
+   it's impossible to cover all of aspects here. See the full manual
+   [12]_ for usage.
 
 Experimental Validation and Discussion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3459,3 +3507,5 @@ Bibliography
 .. [11] Andreas Rennings, Elektromagnetische Zeitbereichssimulationen innovativer
    Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
    2008, pp. 76, eq. 4.77
+
+.. [12] `ParaView Manual <https://docs.paraview.org/>`_.
