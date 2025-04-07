@@ -738,11 +738,15 @@ future processing::
 
     z0 = 50
     port = [None, None]
-    port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * res, -2.5, -8], [-50 + 1/3 * res, 2.5, 8], 'z', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * res, -2.5, -8], [ 50 - 1/3 * res, 2.5, 8], 'z', excite=0)
+    port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
+    port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
 
-.. warning::
-   TODO: add AppCSXCAD screenshots here.
+The following images show the ports we just created.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/capacitor_ports.png
+   :width: 49%
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/capacitor_ports_2.png
+   :width: 49%
 
 Create Excitation
 ^^^^^^^^^^^^^^^^^^^
@@ -2255,8 +2259,10 @@ or time-gating. However, in this simulation, the mismatches are
 intentionally introduced to demonstrate openEMS's ability to
 accurately model real-world effects.
 
-.. warning::
-   TODO: instruct users to view ``scikit-rf`` documentation.
+.. seealso::
+   The features introduced in this manual is only the tip of the
+   iceberg, it's possible to cover all of its aspects here. See
+   the full manual [12]_ for usage.
 
 Transient Analysis via ``SignalIntegrity``
 """"""""""""""""""""""""""""""""""""""""""""
@@ -3016,8 +3022,8 @@ satisfactory video below.
 
 .. seealso::
    ParaView is a large program used in many scientific applications,
-   it's impossible to cover all of aspects here. See the full manual
-   [12]_ for usage.
+   it's impossible to cover all of its aspects here. See the full
+   manual [13]_ for usage.
 
 Experimental Validation and Discussion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3508,4 +3514,6 @@ Bibliography
    Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
    2008, pp. 76, eq. 4.77
 
-.. [12] `ParaView Manual <https://docs.paraview.org/>`_.
+.. [12] `scikit-rf Manual <https://scikit-rf.readthedocs.io/en/latest/>`_.
+
+.. [13] `ParaView Manual <https://docs.paraview.org/>`_.
