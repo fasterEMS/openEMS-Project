@@ -820,10 +820,13 @@ conditions implicitly enforce these behaviors.
    :class: with-border
    :width: 60%
 
-   A simulation box with PEC at all boundaries acts like a shielded enclosure
-   or a reverberation chamber, commonly used in EMC test labs. Image by Dr.
-   Hans Georg Krauthäuser (Hgk at English Wikipedia), licensed under CC
-   BY-SA 3.0.
+   A simulation box with PEC at all boundaries acts like a shielded enclosure.
+   EMC test labs use room-sized metal enclosures to create reverberation
+   chambers. Taking advantage of the standing waves due to reflections,
+   one can create strong electric fields at selected positions to generate
+   eletromagnetic interference.
+   Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
+   licensed under CC BY-SA 3.0.
 
 **Perfect Electric Conductor (PEC)**: The simplest treatment sets
 the (tangential) electric field at the boundary to 0.
@@ -1807,7 +1810,7 @@ code::
     s2ppath = simdir / s2pname
 
     # write 2-port S-parameters
-    with open(s2ppath, "w+") as touchstone:
+    with open(s2ppath, "w") as touchstone:
         touchstone.write("# Hz S RI R %f\n" % z0)  # Touchstone metadata, not comment!
 
         for idx, freq in enumerate(freq_list):
@@ -1834,7 +1837,7 @@ writes a new line with parameters order of ``frequency``, ``s11_real``,
     s1ppath = simdir / s1pname
 
     # write 1-port S-parameters
-    with open(s1ppath, "w+") as touchstone:
+    with open(s1ppath, "w") as touchstone:
         touchstone.write("# Hz S RI R %f\n" % z0)  # Touchstone metadata, not comment!
 
         for idx, freq in enumerate(freq_list):
@@ -2046,7 +2049,7 @@ obtains if the previous instructions are followed::
         s2ppath = simdir / s2pname
 
         # write 2-port S-parameters
-        with open(s2ppath, "w+") as touchstone:
+        with open(s2ppath, "w") as touchstone:
             touchstone.write("# Hz S RI R %f\n" % z0)  # Touchstone metadata, not comment!
 
             for idx, freq in enumerate(freq_list):
@@ -3167,11 +3170,11 @@ or an artifact from the non-ideal ports?
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_db_sim_skrf.svg
    :width: 49%
 
-This can be revealed by a simple calculation. In vacuum or air, the wavelength
-of an electromagnetic signal at 500 MHz is approximately 600 mm. At 1.5 GHz,
-the wavelength is approximately 200 mm. Both are integer multiples of the
-length of our parallel-plate waveguide, suggesting it's an impedance
-transformation.
+This can be revealed by a simple calculation. In vacuum or air, the
+wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
+At 1.5 GHz, the wavelength is approximately 200 mm. Both are integer
+multiples of the length of our 100 mm parallel-plate waveguide,
+suggesting it's an impedance transformation.
 
 In transmission line theory, a remarkable observation is the following:
 if the length of a lossless transmission line is a multiple of
@@ -3183,24 +3186,23 @@ The implication is that when a mismatched line with a length of
 both ports have real and identical impedances (i.e. they're
 mismatched the same way), *any* transmission line can be used
 regardless of its characteristic impedance.
-
-We can show this from a simple argument. Consider a 600 Ω transmission
-line, connected to a 50 Ω receiver. If we measure its impedance using a
-600 Ω transmitter at a fixed frequency, we would find its reflection
+We can show this from a simple argument. Consider a 50 Ω transmission
+line, connected to a 600 Ω receiver. If we measure its impedance using a
+50 Ω transmitter at a fixed frequency, we would find its reflection
 coefficient has a phase shift that changes depending on the length of
 the line.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-1.svg
    :width: 49%
-   :alt: A 50 Ω transmitter is connected to a 50 Ω receiver via a
-         600 Ω transmission line with a length of 0.2λ, its input reflection
-         coefficient is 1.0∠3.1°, its input impedance is 1789.4∠74.1° Ω.
+   :alt: A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.2λ, its input reflection coefficient
+         is 0.8∠-144.0°, its input impedance is 16.8∠-74.1° Ω.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-2.svg
    :width: 49%
-   :alt: A 50 Ω transmitter is connected to a 50 Ω receiver via a
-         600 Ω transmission line with a length of 0.4λ, its input reflection
-         coefficient is 1.0∠-12.8°, its input impedance is 438.0∠-80.0° Ω.
+   :alt: A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.4λ, its input reflection coefficient
+         is 0.8∠72.0°, its input impedance is 68.5∠80.0° Ω.
 
 But when the line is :math:`\lambda / 2`, the phase
 shift is zero, since the signal has shifted 180 degrees going forward,
@@ -3211,14 +3213,37 @@ an imaginary part.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-3.svg
    :width: 49%
-   :alt: A 50 Ω transmitter is connected to a 50 Ω receiver via a
-         600 Ω transmission line with a length of 0.5λ, its input reflection
-         coefficient is 0.0∠0.0°, its input impedance is 50.0∠0.0° Ω.
+   :alt: A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.5λ, its input reflection coefficient
+         is 0.8∠0.0°, its input impedance is 600.0∠0.0° Ω.
 
-If we run the same 600 Ω transmission line using a 50 Ω transmitter
-instead, we'd find that we still have a *perfect* impedance match,
-since the overall input impedance of the transmission line is exactly
-equal to the 50 Ω load.
+If we run the same 50 Ω transmission line using a 600 Ω transmitter
+instead, we find the same conclusion. Due to phase shifts of the
+reflection coefficient, the measured impedance changes dramatically
+depending on how long the transmission line is.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-4.svg
+   :width: 49%
+   :alt: A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.2λ, its input reflection coefficient
+         is 1.0∠-176.9°, its input impedance is 16.8∠-74.1° Ω.
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-5.svg
+   :width: 49%
+   :alt: A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.4λ, its input reflection coefficient
+         is 1.0∠167.2°, its input impedance is 68.5∠80.0° Ω.
+
+Since the load impedance remains constant regardless of the output
+impedance of the transmitter, when the line is :math:`\lambda / 2`,
+we also get a *perfect* impedance match, as the overall input
+impedance of the :math:`\lambda / 2` transmission line is, again,
+exactly equal to the 50 Ω load.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/half-wave-6.svg
+   :width: 49%
+   :alt: A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω
+         transmission line with a length of 0.5λ, its input reflection coefficient
+         is 0.0∠0.0°, its input impedance is 600.0∠0.0° Ω.
 
 Therefore, we can conclude the 500 MHz and 1500 MHz resonances are
 effects of the mismatched ports resonating with the transmission line

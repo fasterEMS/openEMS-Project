@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-04-07T09:52:13.192664</dc:date>
+    <dc:date>2025-04-07T09:52:18.149978</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -41,7 +41,7 @@ C 32.556 91.853656 34.452594 96.432438 37.828078 99.807922
 C 41.203562 103.183406 45.782344 105.08 50.556 105.08 
 L 50.556 105.08 
 z
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 185.556 33.08 
@@ -61,7 +61,7 @@ C 180.865122 43.88 181.567348 43.600637 182.222491 43.057899
 C 182.877633 42.515161 183.472952 41.719602 183.974377 40.716753 
 C 184.475801 39.713904 184.87358 38.523267 185.144949 37.212981 
 C 185.416319 35.902695 185.556 34.498243 185.556 33.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 244.956 43.88 
@@ -69,7 +69,7 @@ C 246.38762 43.88 247.762069 42.741369 248.774377 40.716753
 C 249.786685 38.692137 250.356 35.94324 250.356 33.08 
 C 250.356 30.21676 249.786685 27.467863 248.774377 25.443247 
 C 247.762069 23.418631 246.38762 22.28 244.956 22.28 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
    </g>
    <g id="line2d_1">
     <path d="M 50.556 141.08 
@@ -78,22 +78,22 @@ L 50.556 105.08
 M 50.556 69.08 
 L 50.556 69.08 
 L 50.556 33.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_2">
     <path d="M 54.156 96.08 
 L 46.956 96.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_3">
     <path d="M 50.556 81.68 
 L 50.556 74.48 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_4">
     <path d="M 54.156 78.08 
 L 46.956 78.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_5">
     <path d="M 50.556 33.08 
@@ -106,24 +106,24 @@ L 113.556 24.08
 L 119.556 42.08 
 L 122.556 33.08 
 L 158.556 33.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_6">
     <path d="M 158.556 33.08 
 L 180.156 33.08 
 M 250.356 33.08 
 L 266.556 33.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_7">
     <path d="M 180.156 22.28 
 L 244.956 22.28 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_8">
     <path d="M 180.156 43.88 
 L 244.956 43.88 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_9">
     <path d="M 266.556 33.08 
@@ -136,13 +136,13 @@ L 275.556 96.08
 L 257.556 102.08 
 L 266.556 105.08 
 L 266.556 141.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_10">
     <path d="M 266.556 141.08 
 L 158.556 141.08 
 L 50.556 141.08 
-" clip-path="url(#pb5f8221449)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#peb05f346e2)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="text_1">
     <!-- $V_G$ -->
@@ -163,10 +163,10 @@ L 50.556 141.08
     </g>
    </g>
    <g id="text_3">
-    <!-- $50\Omega$ -->
-    <g transform="translate(90.276 56.317812)">
+    <!-- $600\Omega$ -->
+    <g transform="translate(85.796 56.317812)">
      <text>
-      <tspan style="font: 14px 'DejaVu Sans'" x="0 8.907227 17.814453" y="-0.609375">50Ω</tspan>
+      <tspan style="font: 14px 'DejaVu Sans'" x="0 8.907227 17.814453 26.72168" y="-0.609375">600Ω</tspan>
      </text>
     </g>
    </g>
@@ -179,11 +179,11 @@ L 50.556 141.08
     </g>
    </g>
    <g id="text_5">
-    <!-- $0.2\lambda$ -->
-    <g transform="translate(197.646 58.117812)">
+    <!-- $0.4\lambda$ -->
+    <g transform="translate(197.226 58.117812)">
      <text>
-      <tspan style="font: 14px 'DejaVu Sans'" x="0 8.907227 12.607422" y="-0.359375">0.2</tspan>
-      <tspan style="font: oblique 14px 'DejaVu Sans'" x="21.514648" y="-0.359375">λ</tspan>
+      <tspan style="font: 14px 'DejaVu Sans'" x="0 8.907227 13.357422" y="-0.359375">0.4</tspan>
+      <tspan style="font: oblique 14px 'DejaVu Sans'" x="22.264648" y="-0.359375">λ</tspan>
      </text>
     </g>
    </g>
@@ -215,30 +215,30 @@ C 156.140489 31.677134 155.856 32.363952 155.856 33.08
 C 155.856 33.796048 156.140489 34.482866 156.646812 34.989188 
 C 157.153134 35.495511 157.839952 35.78 158.556 35.78 
 z
-" clip-path="url(#pb5f8221449)" style="stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
+" clip-path="url(#peb05f346e2)" style="stroke: #000000; stroke-width: 2; stroke-linejoin: miter"/>
    </g>
    <g id="text_8">
-    <!-- $\Gamma= 0.8\angle-144.0^\circ$ -->
-    <g transform="translate(94.926 85.919062)">
+    <!-- $\Gamma= 1.0\angle167.2^\circ$ -->
+    <g transform="translate(103.326 85.919062)">
      <text>
-      <tspan style="font: 14px 'DejaVu Sans'" x="0 10.527344 24.985352 33.892578 37.967773 46.875 62.15332 76.611328 85.518555 94.425781 103.333008 107.783203" y="-0.609375">Γ=0.8∠−144.0</tspan>
-      <tspan style="font: 9.8px 'DejaVu Sans'" x="118.733691" y="-5.96875">∘</tspan>
+      <tspan style="font: 14px 'DejaVu Sans'" x="0 10.527344 24.985352 33.892578 38.342773 47.25 59.800781 68.708008 77.615234 86.522461 90.972656" y="-0.609375">Γ=1.0∠167.2</tspan>
+      <tspan style="font: 9.8px 'DejaVu Sans'" x="101.923145" y="-5.96875">∘</tspan>
      </text>
     </g>
-    <!-- $Z_{in} = 16.8\angle-74.1^\circ \Omega$ -->
-    <g transform="translate(84.006 99.468437)">
+    <!-- $Z_{in} = 68.5\angle80.0^\circ \Omega$ -->
+    <g transform="translate(92.476 99.468437)">
      <text>
       <tspan style="font: oblique 14px 'DejaVu Sans'" x="0" y="-0.609375">Z</tspan>
       <tspan style="font: oblique 9.8px 'DejaVu Sans'" x="9.59082 12.313574" y="1.6875">in</tspan>
-      <tspan style="font: 14px 'DejaVu Sans'" x="21.635059 36.093066 45.000293 53.90752 57.982715 66.889941 82.168262 96.62627 105.533496 114.440723 118.890918 138.268066" y="-0.609375">=16.8∠−74.1Ω</tspan>
-      <tspan style="font: 9.8px 'DejaVu Sans'" x="129.841406" y="-5.96875">∘</tspan>
+      <tspan style="font: 14px 'DejaVu Sans'" x="21.635059 36.093066 45.000293 53.90752 58.357715 67.264941 79.815723 88.722949 97.630176 102.080371 121.45752" y="-0.609375">=68.5∠80.0Ω</tspan>
+      <tspan style="font: 9.8px 'DejaVu Sans'" x="113.030859" y="-5.96875">∘</tspan>
      </text>
     </g>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pb5f8221449">
+  <clipPath id="peb05f346e2">
    <rect x="0" y="0" width="319.536" height="145.76"/>
   </clipPath>
  </defs>

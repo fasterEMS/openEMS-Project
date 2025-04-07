@@ -909,10 +909,13 @@ conditions implicitly enforce these behaviors.</p>
 <figure class="align-default" id="id31">
 <a class="with-border reference internal image-reference" href="../../../_images/reverberation_chamber.jpg"><img alt="../../../_images/reverberation_chamber.jpg" class="with-border" src="../../../_images/reverberation_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
-<p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure
-or a reverberation chamber, commonly used in EMC test labs. Image by Dr.
-Hans Georg Krauthäuser (Hgk at English Wikipedia), licensed under CC
-BY-SA 3.0.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
+<p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure.
+EMC test labs use room-sized metal enclosures to create reverberation
+chambers. Taking advantage of the standing waves due to reflections,
+one can create strong electric fields at selected positions to generate
+eletromagnetic interference.
+Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
+licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Perfect Electric Conductor (PEC)</strong>: The simplest treatment sets
@@ -1917,7 +1920,7 @@ code:</p>
 <span class="n">s2ppath</span> <span class="o">=</span> <span class="n">simdir</span> <span class="o">/</span> <span class="n">s2pname</span>
 
 <span class="c1"># write 2-port S-parameters</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s2ppath</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s2ppath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
     <span class="n">touchstone</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Hz S RI R </span><span class="si">%f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">z0</span><span class="p">)</span>  <span class="c1"># Touchstone metadata, not comment!</span>
 
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">freq_list</span><span class="p">):</span>
@@ -1942,7 +1945,7 @@ writes a new line with parameters order of <code class="docutils literal notrans
 <span class="n">s1ppath</span> <span class="o">=</span> <span class="n">simdir</span> <span class="o">/</span> <span class="n">s1pname</span>
 
 <span class="c1"># write 1-port S-parameters</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s1ppath</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s1ppath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
     <span class="n">touchstone</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Hz S RI R </span><span class="si">%f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">z0</span><span class="p">)</span>  <span class="c1"># Touchstone metadata, not comment!</span>
 
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">freq_list</span><span class="p">):</span>
@@ -2151,7 +2154,7 @@ obtains if the previous instructions are followed:</p>
     <span class="n">s2ppath</span> <span class="o">=</span> <span class="n">simdir</span> <span class="o">/</span> <span class="n">s2pname</span>
 
     <span class="c1"># write 2-port S-parameters</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s2ppath</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">s2ppath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">touchstone</span><span class="p">:</span>
         <span class="n">touchstone</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Hz S RI R </span><span class="si">%f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">z0</span><span class="p">)</span>  <span class="c1"># Touchstone metadata, not comment!</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">freq_list</span><span class="p">):</span>
@@ -2979,11 +2982,11 @@ if the simulation results don’t seem to make sense.</p>
 MHz and 1.5 GHz. Is it an intrinsic resonance caused by the waveguide itself,
 or an artifact from the non-ideal ports?</p>
 <a class="reference internal image-reference" href="../../../_images/s11_db_sim_skrf.svg"><img alt="../../../_images/s11_db_sim_skrf.svg" src="../../../_images/s11_db_sim_skrf.svg" width="49%" /></a>
-<p>This can be revealed by a simple calculation. In vacuum or air, the wavelength
-of an electromagnetic signal at 500 MHz is approximately 600 mm. At 1.5 GHz,
-the wavelength is approximately 200 mm. Both are integer multiples of the
-length of our parallel-plate waveguide, suggesting it’s an impedance
-transformation.</p>
+<p>This can be revealed by a simple calculation. In vacuum or air, the
+wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
+At 1.5 GHz, the wavelength is approximately 200 mm. Both are integer
+multiples of the length of our 100 mm parallel-plate waveguide,
+suggesting it’s an impedance transformation.</p>
 <p>In transmission line theory, a remarkable observation is the following:
 if the length of a lossless transmission line is a multiple of
 <span class="math notranslate nohighlight">\(\lambda / 2\)</span>, its input impedance is <em>exactly</em> equal to the load
@@ -2992,25 +2995,33 @@ impedance, regardless of its characteristic impedance!</p>
 <span class="math notranslate nohighlight">\(\lambda / 2\)</span> is used to connect a transmitter and a receiver, if
 both ports have real and identical impedances (i.e. they’re
 mismatched the same way), <em>any</em> transmission line can be used
-regardless of its characteristic impedance.</p>
-<p>We can show this from a simple argument. Consider a 600 Ω transmission
-line, connected to a 50 Ω receiver. If we measure its impedance using a
-600 Ω transmitter at a fixed frequency, we would find its reflection
+regardless of its characteristic impedance.
+We can show this from a simple argument. Consider a 50 Ω transmission
+line, connected to a 600 Ω receiver. If we measure its impedance using a
+50 Ω transmitter at a fixed frequency, we would find its reflection
 coefficient has a phase shift that changes depending on the length of
 the line.</p>
-<a class="reference internal image-reference" href="../../../_images/half-wave-1.svg"><img alt="A 50 Ω transmitter is connected to a 50 Ω receiver via a 600 Ω transmission line with a length of 0.2λ, its input reflection coefficient is 1.0∠3.1°, its input impedance is 1789.4∠74.1° Ω." src="../../../_images/half-wave-1.svg" width="49%" /></a>
-<a class="reference internal image-reference" href="../../../_images/half-wave-2.svg"><img alt="A 50 Ω transmitter is connected to a 50 Ω receiver via a 600 Ω transmission line with a length of 0.4λ, its input reflection coefficient is 1.0∠-12.8°, its input impedance is 438.0∠-80.0° Ω." src="../../../_images/half-wave-2.svg" width="49%" /></a>
+<a class="reference internal image-reference" href="../../../_images/half-wave-1.svg"><img alt="A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.2λ, its input reflection coefficient is 0.8∠-144.0°, its input impedance is 16.8∠-74.1° Ω." src="../../../_images/half-wave-1.svg" width="49%" /></a>
+<a class="reference internal image-reference" href="../../../_images/half-wave-2.svg"><img alt="A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.4λ, its input reflection coefficient is 0.8∠72.0°, its input impedance is 68.5∠80.0° Ω." src="../../../_images/half-wave-2.svg" width="49%" /></a>
 <p>But when the line is <span class="math notranslate nohighlight">\(\lambda / 2\)</span>, the phase
 shift is zero, since the signal has shifted 180 degrees going forward,
 and 180 degrees going back. As a result, the measured reflection
 coefficient has a zero phase angle. Thus, the input impedance looking
 into the beginning of the transmission line is exactly 600 Ω, without
 an imaginary part.</p>
-<a class="reference internal image-reference" href="../../../_images/half-wave-3.svg"><img alt="A 50 Ω transmitter is connected to a 50 Ω receiver via a 600 Ω transmission line with a length of 0.5λ, its input reflection coefficient is 0.0∠0.0°, its input impedance is 50.0∠0.0° Ω." src="../../../_images/half-wave-3.svg" width="49%" /></a>
-<p>If we run the same 600 Ω transmission line using a 50 Ω transmitter
-instead, we’d find that we still have a <em>perfect</em> impedance match,
-since the overall input impedance of the transmission line is exactly
-equal to the 50 Ω load.</p>
+<a class="reference internal image-reference" href="../../../_images/half-wave-3.svg"><img alt="A 50 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.5λ, its input reflection coefficient is 0.8∠0.0°, its input impedance is 600.0∠0.0° Ω." src="../../../_images/half-wave-3.svg" width="49%" /></a>
+<p>If we run the same 50 Ω transmission line using a 600 Ω transmitter
+instead, we find the same conclusion. Due to phase shifts of the
+reflection coefficient, the measured impedance changes dramatically
+depending on how long the transmission line is.</p>
+<a class="reference internal image-reference" href="../../../_images/half-wave-4.svg"><img alt="A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.2λ, its input reflection coefficient is 1.0∠-176.9°, its input impedance is 16.8∠-74.1° Ω." src="../../../_images/half-wave-4.svg" width="49%" /></a>
+<a class="reference internal image-reference" href="../../../_images/half-wave-5.svg"><img alt="A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.4λ, its input reflection coefficient is 1.0∠167.2°, its input impedance is 68.5∠80.0° Ω." src="../../../_images/half-wave-5.svg" width="49%" /></a>
+<p>Since the load impedance remains constant regardless of the output
+impedance of the transmitter, when the line is <span class="math notranslate nohighlight">\(\lambda / 2\)</span>,
+we also get a <em>perfect</em> impedance match, as the overall input
+impedance of the <span class="math notranslate nohighlight">\(\lambda / 2\)</span> transmission line is, again,
+exactly equal to the 50 Ω load.</p>
+<a class="reference internal image-reference" href="../../../_images/half-wave-6.svg"><img alt="A 600 Ω transmitter is connected to a 600 Ω receiver via a 50 Ω transmission line with a length of 0.5λ, its input reflection coefficient is 0.0∠0.0°, its input impedance is 600.0∠0.0° Ω." src="../../../_images/half-wave-6.svg" width="49%" /></a>
 <p>Therefore, we can conclude the 500 MHz and 1500 MHz resonances are
 effects of the mismatched ports resonating with the transmission line
 due to its length, not the intrinsic characteristics of the parallel-plate
