@@ -35,10 +35,10 @@ This tutorial covers
        via ``scikit-rf``.
 
      * Simulate the waveguide's time-domain response and eye diagrams via the Python
-       package ``SignalIntegrity``
+       package :program:`SignalIntegrity`
 
-     * Plot the S-parameters using Qucs, compare our results with an ideal microstrip
-       transmission line, and with experimental data.
+     * Plot the S-parameters using :program:`Qucs-S`, compare our results with an ideal
+       microstrip transmission line, and with experimental data.
 
      * Visualize electromagnetic fields using ParaView.
 
@@ -2515,7 +2515,7 @@ of interest.  One can see that the overshoots, undershoots and
 rise-time degradation is similar to the previous impulse signal
 analysis.
 
-S-Parameters Analysis via Qucs
+S-Parameters Analysis via Qucs-S
 """"""""""""""""""""""""""""""""
 
 Qucs is a free and open source circuit simulator for RF/microwave
@@ -2570,8 +2570,6 @@ Download ``Qucs-S-25.1.0-linux-x86_64.AppImage``, and grant it
 execution permission::
 
     chmod +x Qucs-S-25.1.0-linux-x86_64.AppImage
-
-.. _qucsator:
 
 Enable Qucsator
 ...................
@@ -3174,17 +3172,25 @@ Impedance Transformation
 """""""""""""""""""""""""
 
 Another notable effect worth paying attention to is the resonance at 500
-MHz and 1.5 GHz. Is it an intrinsic resonance caused by the waveguide itself,
-or an artifact from the non-ideal ports?
+MHz and 1.5 GHz.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_db_sim_skrf.svg
    :width: 49%
+
+Curiously, even the microstrip transmission line simulation in
+:program:`Qucs-S` shows a resonance at 1.5 GHz as well.
+
+.. image:: images/Parallel_Plate_Capacitor_Waveguide/qucs-microstrip-15.png
+   :width: 60%
+
+Is it an intrinsic resonance caused by the waveguide or transmission line
+itself, or an artifact from the non-ideal ports?
 
 This can be revealed by a simple calculation. In vacuum or air, the
 wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
 At 1.5 GHz, the wavelength is approximately 200 mm. Both are integer
 multiples of the length of our 100 mm parallel-plate waveguide,
-suggesting it's an impedance transformation.
+suggesting it's related to the quarter-wave impedance transformer effect.
 
 In transmission line theory, a remarkable observation is the following:
 if the length of a lossless transmission line is a multiple of

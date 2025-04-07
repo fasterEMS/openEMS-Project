@@ -102,7 +102,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#third-party-post-processing">Third-Party Post-Processing</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#s-parameters-analysis-via-scikit-rf">S-parameters Analysis via <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="#transient-analysis-via-signalintegrity">Transient Analysis via <code class="docutils literal notranslate"><span class="pre">SignalIntegrity</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#s-parameters-analysis-via-qucs">S-Parameters Analysis via Qucs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#s-parameters-analysis-via-qucs-s">S-Parameters Analysis via Qucs-S</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#field-dumps-analysis-via-paraview">Field Dumps Analysis via ParaView</a></li>
 </ul>
 </li>
@@ -201,9 +201,9 @@ physics. The physics is open to interpretation.</p></li>
 <li><p>Plot S-parameters on Smith, line charts, and calculate Time-Domain Reflectometry
 via <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code>.</p></li>
 <li><p>Simulate the waveguide’s time-domain response and eye diagrams via the Python
-package <code class="docutils literal notranslate"><span class="pre">SignalIntegrity</span></code></p></li>
-<li><p>Plot the S-parameters using Qucs, compare our results with an ideal microstrip
-transmission line, and with experimental data.</p></li>
+package <strong class="program">SignalIntegrity</strong></p></li>
+<li><p>Plot the S-parameters using <strong class="program">Qucs-S</strong>, compare our results with an ideal
+microstrip transmission line, and with experimental data.</p></li>
 <li><p>Visualize electromagnetic fields using ParaView.</p></li>
 </ul>
 </div></blockquote>
@@ -2507,8 +2507,8 @@ of interest.  One can see that the overshoots, undershoots and
 rise-time degradation is similar to the previous impulse signal
 analysis.</p>
 </section>
-<section id="s-parameters-analysis-via-qucs">
-<h3>S-Parameters Analysis via Qucs<a class="headerlink" href="#s-parameters-analysis-via-qucs" title="Permalink to this headline"></a></h3>
+<section id="s-parameters-analysis-via-qucs-s">
+<h3>S-Parameters Analysis via Qucs-S<a class="headerlink" href="#s-parameters-analysis-via-qucs-s" title="Permalink to this headline"></a></h3>
 <p>Qucs is a free and open source circuit simulator for RF/microwave
 engineering, it’s capable of simulating circuits in both time and
 frequency domains.</p>
@@ -2985,14 +2985,18 @@ if the simulation results don’t seem to make sense.</p>
 <section id="impedance-transformation">
 <h3>Impedance Transformation<a class="headerlink" href="#impedance-transformation" title="Permalink to this headline"></a></h3>
 <p>Another notable effect worth paying attention to is the resonance at 500
-MHz and 1.5 GHz. Is it an intrinsic resonance caused by the waveguide itself,
-or an artifact from the non-ideal ports?</p>
+MHz and 1.5 GHz.</p>
 <a class="reference internal image-reference" href="../../../_images/s11_db_sim_skrf.svg"><img alt="../../../_images/s11_db_sim_skrf.svg" src="../../../_images/s11_db_sim_skrf.svg" width="49%" /></a>
+<p>Curiously, even the microstrip transmission line simulation in
+<strong class="program">Qucs-S</strong> shows a resonance at 1.5 GHz as well.</p>
+<a class="reference internal image-reference" href="../../../_images/qucs-microstrip-15.png"><img alt="../../../_images/qucs-microstrip-15.png" src="../../../_images/qucs-microstrip-15.png" style="width: 60%;" /></a>
+<p>Is it an intrinsic resonance caused by the waveguide or transmission line
+itself, or an artifact from the non-ideal ports?</p>
 <p>This can be revealed by a simple calculation. In vacuum or air, the
 wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
 At 1.5 GHz, the wavelength is approximately 200 mm. Both are integer
 multiples of the length of our 100 mm parallel-plate waveguide,
-suggesting it’s an impedance transformation.</p>
+suggesting it’s related to the quarter-wave impedance transformer effect.</p>
 <p>In transmission line theory, a remarkable observation is the following:
 if the length of a lossless transmission line is a multiple of
 <span class="math notranslate nohighlight">\(\lambda / 2\)</span>, its input impedance is <em>exactly</em> equal to the load
