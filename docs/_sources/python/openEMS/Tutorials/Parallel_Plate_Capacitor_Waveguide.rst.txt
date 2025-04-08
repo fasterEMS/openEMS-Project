@@ -7,7 +7,7 @@ This tutorial covers
 * **Model**: Learn how to set up the components of a basic 3D FDTD model, including:
 
     * Create conductors in the simulation box.
-    * Create a Cartesian mesh (Yee's cells) and correctly apply the 1/3-2/3 rule to
+    * Create a Cartesian mesh (Yee cells) and correctly apply the 1/3-2/3 rule to
       ensure accuracy.
     * Add an excitation port with signal.
     * Inspect the finished 3D model with AppCSXCAD.
@@ -28,7 +28,7 @@ This tutorial covers
 * **Third-Party Post-Processing**: Know the common tools for data analysis.
 
      * Understand that S-parameters are the parameters that characterize a linear
-       circuit's frequency response as a blackbox without knowledge of the underlying
+       circuit's frequency response as a black box without knowledge of the underlying
        physics. The physics is open to interpretation.
 
      * Plot S-parameters on Smith, line charts, and calculate Time-Domain Reflectometry
@@ -50,26 +50,38 @@ This tutorial covers
 Problem
 ^^^^^^^^
 
-A rectangular parallel-plate capacitor in a vacuum is a staple in
-physics classes, but the physics involved is far more complex than an ideal
-capacitor in introductory books. In the RF/microwave regime, the signal's
-wavelength is comparable or smaller than the physical size of the capacitor,
-the plates form a two-conductor transmission line, known as a *parallel-plate
-waveguide*. A real waveguide with a finite size also complicates the
-problem due to fringe field, neglected in most theoretical treatments. The
-large plate separation makes the problem even harder due to radiation loss
-and multimoding. It's easy for the signal to escape from the structures.
-acting as an antenna. Moreover, this structure supports both the familiar
-TEM-mode waves in two-conductor transmission lines such as ordinary cables,
-and the TE/TM-mode waves in an enclosed one-conductor waveguide.
+A rectangular parallel-plate capacitor in a vacuum is a staple of
+physics classes, but the physics involved is far more complex than
+an ideal capacitor in introductory textbooks. In the RF/microwave
+regime, the signal's wavelength becomes comparable to or even
+smaller that the physical size of the capacitor. The plates
+form a two-conductor transmission line, known as a *parallel-plate
+waveguide*.
 
-By numerically solving Maxwell's equations from scratch, a 3D full-wave
-field solver like openEMS is the most practical way to predict its behavior.
+However, the ideal parallel-plate waveguide is just a simplified model,
+much like the ideal parallel-plate capacitor. A real, finite-size
+waveguide still exhibits a fringe field, typically neglected in
+theoretical treatments. The large plate separation further complicates
+the situation; it's easy for the signal to escape from the plates
+because of radiation loss. This is especially problematic when a signal
+is injected by a bare wire without a smooth transition - strong
+reflections occur right at the connector before the signal can even
+enter the structure.
 
-Our task is to find the frequency response of this rectangular parallel-plate
-waveguide. The plates are 100 mm x 100 mm rectangular metal plates with
-negligible resistance, negligible thickness, and separated by 16 mm of
-vacuum.
+Multimoding is another challenge - in addition to the familiar signal
+mode that travels along two-conductor cables (TEM wave), the non-uniform
+electric field across the plate may allow TE/TM-mode waves to propagate,
+typically found in enclosed, single-conductor waveguides.
+
+Given these complexities, a 3D full-wave field solver like openEMS
+is the most practical way to predict the behavior of a real,
+non-ideal parallel-plate waveguide. It does so by numerically
+solving Maxwell's equations, the first principles of electromagnetism.
+
+Our task is to find the frequency response of the rectangular
+parallel-plate waveguide shown below. It's formed by two metal
+sheets each measuring 100 mm x 100 mm, with negligible resistance
+and thickness, separated by 16 mm of vacuum.
 
 The 2D cross-section of the 3D waveguide is the following:
 
@@ -86,7 +98,7 @@ structure called ``csx``::
 
     csx = CSXCAD.ContinuousStructure()
 
-The next step is to create an instance of material to build an object. Since we're
+The next step is to create an instance of a material to build an object. Since we're
 modeling metal plates with negligible resistance, we use the CSXCAD function
 :meth:`~CSXCAD.ContinuousStructure.AddMetal` to obtain an instance of a Perfect
 Electric Conductor (PEC)::
@@ -97,17 +109,17 @@ Electric Conductor (PEC)::
 
 .. note::
    Internally, PEC is implemented by forcing the tangential electric field in this 
-   region be zero, which is the behavior of an ideal conductor that can't be penetrated
+   region be zero, which is characteristic of an ideal conductor that can't be penetrated
    by electric field lines. If resistive losses are unimportant, one can use PEC
    rather than a realistic material model for simplicity and efficiency.
 
    To add a general material (defined by a permittivity, permeability, electric
    conductivity, magnetic conductivity) such as dielectrics, use
    :meth:`~CSXCAD.ContinuousStructure.AddMaterial`. In principle, it works for
-   3D metals as well. But thin metal sheets are challenging for FDTD, to capture
+   3D metals as well. But thin metal sheets are challenging in FDTD: to capture
    effects like surface current (skin effect) requires an impractically high
    resolution mesh. Thus, it's recommended to use
-   :meth:`~CSXCAD.ContinuousStructure.AddConductingSheet` which mimicks the
+   :meth:`~CSXCAD.ContinuousStructure.AddConductingSheet` which mimics the
    resistive loss in metals using a simplified model that still treats metals
    as zero-thickness 2D planes, modeling the observed loss rather than the full
    physics.
@@ -131,7 +143,7 @@ means these metal plates have no thickness::
 Now it's a good time to take a look at the structure that we've just created
 by saving the CSXCAD structure as a file. It's best to keep a call to
 :meth:`~CSXCAD.ContinuousStructure.Write2XML` always at the bottom of a script
-during development, so the model can be inspected at any time::
+during development, so that we can readily review the model during development::
 
     import sys
     import pathlib
@@ -146,7 +158,7 @@ during development, so the model can be inspected at any time::
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
 
-    # concat path
+    # concat two paths
     xmlpath = simdir / xmlname
 
     csx.Write2XML(str(xmlpath))  # convert Path object to string
@@ -156,7 +168,8 @@ to visualize the model::
 
     $ AppCSXCAD Parallel_Plate_Capacitor_Waveguide.xml
 
-One can inspect the 3D model by dragging its 3D view with a mouse.
+One can inspect the model by mouse drags, looking at it from different camera
+angles::
 
 .. important::
    If you're using Wayland, AppCSXCAD may not work correctly, see :ref:`wayland`.
@@ -175,13 +188,13 @@ At this point, the 3D object itself is materialized. In the next step, we
 create a mesh to partition the continuous 3D box into discrete rectangular
 cuboids. In the Finite-Difference Time-Domain (FDTD) algorithm, these
 cuboids discretize the 3D space and form the basic unit of electromagnetic
-calculations. They're known as Yee's cells (named after Kane S. Yee's 1966
+calculations. These are known as Yee cells (named after Kane S. Yee's 1966
 algorithm).
 
 General Requirements
 """""""""""""""""""""
 
-In general, the mesh must satisfy three requirements:
+In general, the mesh must satisfy four requirements:
 
 #. **Temporal Resolution**. Its interval must be small enough to resolve the
    shortest wavelength (highest
@@ -194,15 +207,16 @@ In general, the mesh must satisfy three requirements:
    need at least a few cells around the important shapes (such as the waveguide 
    plates) of the structure. openEMS uses a rectilinear mesh with variable
    spacing. To save time, only use a fine mesh interval around details within
-   a structure, use a coarse mesh for the rest.
+   a structure; use a coarse mesh for the rest.
 
 #. **Smoothness**. Its interval should change smoothly, not by a sudden jump.
-   It's recommended to keep the spacing change within a factor of 1.5 between
-   adjacent mesh lines.
+   It's recommended that the mesh spacing vary by no more than a factor of
+   1.5 between adjacent lines.
 
-#. **1/3-2/3 Rule.**  Ideally, around a metal conductor's edges, the metal
-   should occupy 1/3 of a cell, while the vacuum or insulator occupies 2/3 of
-   a cell. More on that later.
+#. **1/3-2/3 Rule**. The edges of a conductor have singularities with strong
+   electric field. To improve FDTD accuracy, ideally, around the metal edge,
+   the metal should occupy 1/3 of a cell, while the vacuum or insulator
+   occupies 2/3 of a cell. More on that later.
 
 As a rule of thumb, we want a mesh resolution of at least:
 
@@ -237,7 +251,7 @@ is the relative permittivity of the medium (in engineering, it's sometimes
 also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
 In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly. The
 :math:`\mu_r` term is usually omitted in engineering since most insulators
-(like plastics or fiberglass) are non-magnetic, unless one's dealing with
+(like plastics or fiberglass) are non-magnetic, unless one is dealing with
 inductors or circulators.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
@@ -253,23 +267,24 @@ larger than:
   {1 \over {\Delta x^2}} + {1 \over {\Delta y^2}} + {1 \over {\Delta z^2}}
   }}
 
-in which :math:`v` is the wave speed, :math:`\Delta x`,
+where :math:`v` is the wave speed, :math:`\Delta x`,
 :math:`\Delta y`, :math:`\Delta z` are the distances between mesh
 lines.
 
 This creates a peculiar limitation: the simulation timestep must
-both be small enough to resolve the shortest wavelength, and to
-resolve the smallest mesh cell.
+both be small enough to resolve the shortest wavelength, and resolve
+the smallest mesh cell.
 
 Even for simulations at low frequencies, as long as the simulated
 structure has small features (i.e. mesh distance is short), we
-must use very small timesteps, iterating simulation box several
-nanoseconds at a time. Below the shortwave band under 30 MHz, the
-number of iterations grows to an impractical number. This means
-openEMS (and other textbook FDTD solvers) are unsuitable if
-there's a large mismatch between the signal wavelength and the
-physical size of the structure, such as a 10 cm circuit board at
-1 MHz (300 m in vacuum).
+must use very small timesteps, advancing the simulation only a few
+nanoseconds per iteration. Under 100 MHz, at the bottom of the VHF
+band or below the shortwave band, the required number of iterations
+becomes impractically large. This means openEMS (and other textbook
+FDTD solvers) is unsuitable if there's a large mismatch between the
+signal wavelength and the physical size of the structure, such as a
+10 cm circuit board operating at 1 MHz, where the wavelength is
+300 m in vacuum.
 
 .. note::
    In openEMS, just ensure the mesh itself is correct. There's
@@ -286,8 +301,9 @@ physical size of the structure, such as a 10 cm circuit board at
    will have to live with long execution times, or perhaps FDTD is
    not the right method for your problem. As a workaround, one may
    also try extracting the circuit parameters using a higher signal
-   frequency, general linear circuit simulators can subsequently
-   simulate this equivalent circuit at low frequencies.
+   frequency, then using those equivalent-circuit parameters in a
+   low-frequency simulation with a general-purpose linear circuit
+   simulator.
 
 Create a Mesh
 ^^^^^^^^^^^^^^
@@ -314,7 +330,7 @@ mesh resolution via the following code::
     from openEMS.physical_constants import C0
 
     f_min = 100e6  # post-processing only, not used in simulation
-    f_max = 10e9
+    f_max = 10e9   # determines mesh size
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
@@ -324,7 +340,7 @@ A Simple But Flawed Mesh
 """"""""""""""""""""""""""
 
 Now, the most straightforward way of meshing the model is to draw some lines
-between (-50, 50) on the X and Y axis, and some lines from (-8, 8) on the Z axis.
+between [-50, 50] on the X and Y axes, and some lines between [-8, 8] on the Z axis.
 This is best done by drawing two lines at the beginning and end of each axis,
 using the :meth:`~CSX.ContinuousStructure.AddLine` method::
 
@@ -335,23 +351,23 @@ using the :meth:`~CSX.ContinuousStructure.AddLine` method::
 Once we have two lines per axis, one can ask CSXCAD to automatically smooth
 the mesh based on all existing lines via
 :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines`. Its second argument
-is the minimum spacing between the lines, here we let it to be ``res``. This is the
+is the minimum spacing between the lines, here we set it be ``res``. This is the
 desired mesh resolution we've just calculated::
 
     mesh.SmoothMeshLines('x', res)
     mesh.SmoothMeshLines('y', res)
     mesh.SmoothMeshLines('z', res)
 
-Now it's a good time to rerun the script and inspect the 3D model again in AppCSXCAD.
+Now is a good time to rerun the script and inspect the 3D model again in AppCSXCAD.
 
 .. hint::
-   You possibly can't see the mesh lines in AppCSXCAD, as they're made invisible due to
-   their overlaps with the object. If it happens, it's necessary to view the model from
+   You may be unable to see the mesh lines in AppCSXCAD, as they may be blocked by the
+   object due to their overlaps. If it happens, it's necessary to view the model from
    an angle or a different direction (e.g. if there are no mesh lines when viewed from
-   the top, try dragging the model to view it from with a slight angle). It's also useful
+   the top, try dragging the model to view it with a slight angle). It's also useful
    to change the "Grid opacity" slider to the maximum (but it still requires viewing from
-   an angle). AppCSXCAD can only display 2D and 3D cells, if only one axis of the
-   simulation box is meshed, no lines will be shown.
+   an angle). AppCSXCAD only renders 2D and 3D cells, if only one axis has mesh lines,
+   no lines will be displayed.
    
    .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-opacity-slider.png
 
@@ -371,13 +387,13 @@ incorrect results due to several problems.
 Simulation Box Size
 '''''''''''''''''''
 
-Our simulation box is as large as the waveguide, there's no empty
+Our simulation box is as large as the waveguide; there's no empty
 space around the waveguide in the simulation box, so the electric
 field around the waveguide is not modeled correctly. To be fair,
-there are legitimate use cases for this model, such as when modeling an
-infinite-length waveguide, or a capacitor stuck in a metal box. But
-here, we are modeling a finite waveguide with realistic behaviors,
-including fringe fields and radiation.
+there are legitimate use cases if the surrounding field is irrelevant,
+such as when modeling an infinite-length waveguide, or a capacitor
+stuck in a metal box. But here, we are modeling a finite waveguide
+with realistic behaviors, including fringe fields and radiation.
 
 As a quick fix to the problem, one can make the simulation box several
 times as big in volume in comparison to the waveguide, giving plenty of
@@ -399,16 +415,19 @@ the following::
 
 .. important::
    If it's necessary to capture fringe fields, increase the
-   size of the simulation box beyond the object. 
+   size of the simulation box beyond the object. The first
+   and line mesh lines on each axis defines the simulation
+   box's boundary.
 
 Zero-Thickness Metal Alignment
 ''''''''''''''''''''''''''''''
 
 The Z mesh lines are now going from -50 to 50, and we're going to
-rely on automation to fill the gaps with additional lines.
+rely on automation (by :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines`)
+to fill the gaps with additional lines.
 The lack of guaranteed mesh line alignment becomes a problem.
 Zero-thickness objects like the metal plates must align to an exact mesh
-lines, otherwise these objects can't be simulated. Thus, we create two
+line, otherwise these objects can't be simulated. Thus, we create two
 mesh lines on the Z axis at the exact level of the plates::
 
     # zero-thickness metal plates need mesh lines at their exact levels
@@ -421,24 +440,24 @@ mesh lines on the Z axis at the exact level of the plates::
 1/3-2/3 Rule
 '''''''''''''
 
-After solving the misalignment on the Z plane, ironically we
-have an opposite problem on the X and Y planes. On both planes, the mesh
+After solving the misalignment on the Z axis, ironically, we
+have an opposite problem on the XY plane. On both planes, the mesh
 is perfectly aligned with the edges of the waveguide plates, which
-is a problem.
+introduces numerical inaccuracies.
 
 In FDTD, a fundamental error source is the singularities around metal
 edges, which have strong electric fields that are difficult to calculate
 properly. As long as the mesh line and metal edge are aligned exactly,
 the simulation accuracy is degraded unnecessarily - increasing the
-mesh resolution is inefficient and ineffective - it's wasteful and
+mesh resolution is inefficient and ineffective. It's wasteful and
 only has a marginal effect.
 
 To mitigate this technical limitation, the mesh should be intentionally
 misaligned with metal edges. For the best results, we introduce additional
-cells with different sizes around the edge, creating an overall rectilinear
-mesh of non-uniform size. Around the metal edge, the metal occupies 1/3 of
-a cell, while the vacuum or insulator occupies 2/3 of a cell. This is known
-as the **1/3-2/3 rule**.
+cells with different sizes around the edge, creating an non-uniform
+rectilinear with variable mesh spacing. Around the metal edge, the metal
+occupies 1/3 of a cell, while the vacuum or insulator occupies 2/3 of a
+cell. This is known as the **1/3-2/3 rule**.
 
 Let's apply the rule to the X and Y axis::
 
@@ -465,10 +484,10 @@ factor of `1.5`. This is a workaround: If the same mesh resolution is
 used for all cells, when we later smooth the mesh,
 :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` may add additional mesh
 lines within our handcrafted cells, effectively undoing the 1/3-2/3 rule.
-Use an interval `highres` works around the problem, since
-:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` is not allowed to add cells
-smaller than ``res``. A factor of 1.5 is recommended to preserve mesh
-smoothness.
+Using an interval `highres` works around the problem, since
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` is not allowed to
+subdivide an interval smaller than ``res``. A factor of 1.5 is recommended to
+preserve mesh smoothness.
 
 Finally we resmooth the mesh::
 
@@ -486,7 +505,7 @@ Now let's inspect the model again, it's now much better.
 .. hint::
    **Perspective.** The mesh line alignment may look misleading in AppCSXCAD
    due to different camera angle and perspective when looking at the 3D scene.
-   Click the :guilabel:`2D` button for a planer view.
+   Click the :guilabel:`2D` button for a planar view.
 
    .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-2d-button.png
    .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-opacity-slider.png
@@ -495,16 +514,16 @@ Now let's inspect the model again, it's now much better.
    (or call :meth:`~CSXCAD.CSRectGrid.CSRectGrid.GetLines()`) to check mesh
    coordinates manually.
 
-   **Mesh Interval.** Use a smaller mesh interval ``highres = res / 1.5``
+   **Mesh interval.** Use a smaller mesh interval ``highres = res / 1.5``
    for cells with
    1/3-2/3 rules to prevent :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines`
    from undoing it. Alternatively, one may avoid calling this function by
    adding mesh lines one by one manually, or by extracting all generated
-   lines and removing unwanted one, or by moving the whole simulated
+   lines and removing unwanted ones, or by moving the whole simulated
    structure by an offset. For our purpose, the ``highres`` workaround
    is the most convenient solution.
 
-   **Imperfect Rule is Still Better Than No Rule.** If the
+   **Imperfect rule is still better than no rule.** If the
    simulated structure is complicated, making it difficult to enforce the
    1/3-2/3 rule, at least try avoiding an exact alignment between metal
    edge and the mesh. This won't be as accurate as the 1/3-2/3 rule, but
@@ -517,8 +536,8 @@ Optional: Create A Field Dump Box
 
 Some applications make use of the raw electromagnetic fields, not just the
 input and output signals. We can do this by creating a dump box to save raw
-fields samples to disk. For troubleshooting malfunctioning simulations, this
-is quite helpful as one can identify the problematic region directly by
+field samples to disk. For troubleshooting malfunctioning setups, this
+is quite helpful as one can identify the problematic region through direct
 visualization.
 
 Several kinds of dump boxes exist.
@@ -533,7 +552,8 @@ Several kinds of dump boxes exist.
    field, and magnetic field (flux density), numbered from ``10`` to ``15``.
 #. Specific Absorption Rate (SAR) for E&M radiation exposure analysis.
 #. Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
-   (special, must use :meth:`openEMS.openEMS.CreateNF2FFBox`).
+   (special, requires :meth:`openEMS.openEMS.CreateNF2FFBox` and a separate
+   post-processing tool).
 
 .. seealso::
    For usage, see :meth:`CSXCAD.ContinuousStructure.AddDump`. For a detailed
@@ -541,15 +561,15 @@ Several kinds of dump boxes exist.
 
 In this example, we will dump the total current density (``dump_type=3``)
 on the upper waveguide plate as a 2D surface, using the
-:meth:`~CSX.ContinuousStructure.AddDump`` function::
+:meth:`~CSX.ContinuousStructure.AddDump` function::
 
     dump = csx.AddDump("curl_H_upper", dump_type=3)
     dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
 
-We do something slightly unusual here: The Z = 8 plane of the entire
-simulation box is dumped, not just the waveguide plate. This way,
-we can visualize the current both on the waveguide plates and in
-vacuum, allowing us to see free-space radiation.
+We do something slightly unusual here: The XY plane of the entire
+simulation box is dumped at Z = 8, not just the waveguide plate.
+This way, we can visualize the current both on the waveguide plates
+and in vacuum, allowing us to see radiation into free space.
 
 .. note::
 
@@ -566,66 +586,81 @@ Purpose of Ports
 The bulk of the 3D modeling work is nearly complete. The final step is
 introducing a port and its excitation signal.
 
-Ports are best understood as the 3D virtual equivalent of physical ports
-on RF/microwave components, such as the 50 Ω input or output ports on
-circuit boards, signal generators, oscilloscopes, and especially Vector
-Network Analyzers (VNA). It's a lumped circuit with a negligible size.
-It acts as a voltage source with a resistive output impedance, and it
-can inject or measure a voltage at the Device-Under-Test (DUT).
+Ports are best understood as the virtual 3D counterpart of physical ports
+on RF/microwave components, such as the standard 50 Ω input or output ports
+on circuit boards, signal generators, oscilloscopes, and especially Vector
+Network Analyzers (VNA). A port is treated as a lumped circuit, located
+at a defined position. It acts as a voltage source or load with a
+resistive impedance. It can inject a signal at the Device-Under-Test (DUT)
+or measure a response, either from its own signal or from another port.
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/vna_ports.svg
    :class: with-border
    :width: 49%
 
-   The "port" in openEMS serves the same purpose similar to the physical
-   ports on Vector Network Analyzers and circuit boards, both kinds of
-   ports are used to inject an input signal at a particular point of the
+   The "port" in openEMS serves a purpose similar to the physical
+   ports on Vector Network Analyzers and circuit boards. Both kinds of
+   ports are used to inject an input signal at a particular point in the
    Device-Under-Test (DUT), and to measure what comes out at another point.
-   The DUT is thus characterized as a blackbox. The internal implementations
-   of ports are obviously different in the digital and physical worlds, though
-   (image by Julien Hillairet, from the ``scikit-rf`` project, licensed
-   under BSD-3, modified for clarity).
+   The DUT is thus characterized as a black box, solely represented using
+   its input-output relationships without an internal structure.
+   Note that port implementations are fundamentally different in
+   physical instruments (via circuits) and in openEMS simulations
+   (by loading numerical values into Yee cells). Image by Julien Hillairet,
+   from the ``scikit-rf`` project, licensed under BSD-3, modified for clarity.
 
-Internally, it's implemented by setting the electric fields in the Yee's
-cells located at positions occupied by the port, according to the waveform
-of the excitation signal. Thus it can be physically understood as a source
-that injects electromagnetic energy into the simulation, providing the
+Internally, a port is implemented by locating the Yee cells occupied
+by the port, and setting the numerical values of the electric fields in
+these cells based on the excitation waveform. Thus, a port can be understood
+as a source that injects electromagnetic energy into the simulation, helping
+establish
 initial conditions for the system. Simultaneously, a lumped resistor and
-a probe is also created at the same location of the port, allowing it to
-provide a load for the signal, or to measure the voltage or current at
-this region.
+a probe are also created at the same location as the port, allowing it to
+provide a matched load for the signal, or to measure the voltage or current
+at this region.
 
 Select the Right Port Type
 """"""""""""""""""""""""""""
 
-A port creates a region of discontinuity, so they may introduce artifacts.
-Optimizing the placement and implementation of a port reduces artifacts.
+In openEMS, ports are ideal sources of E&M fields, but they are not ideal
+*launchers* of E&M waves into structures. If port placement is not optimized,
+it creates a region of discontinuity, which may introduce artifacts such
+as reflections or excitation of spurious modes. Optimizing the placement
+and implementation of a port reduces these artifacts. This can be done
+by using smooth transitions or by shaping the electric fields initially
+injected by the port.
 
-In addition to the generic lumped port
-(:meth:`~openEMS.openEMS.AddLumpedPort`), openEMS contains optimized
-ports for curved ports (``AddCurvePort.m``), microstrip
-(:meth:`~openEMS.ports.MSLPort`), stripline (``AddStripLinePort.m``),
-coplanar waveguide (``AddCPWPort.m``), and coax cables
-(``AddCoaxialPort.m``).
-Some of them are not, cough, *ported* to Python yet. But for now, the lumped
-ports suffice for our purpose.
-
-In some cases, special ports are required to excite the structure properly.
-In a rectangular or circular waveguide, there is only one conductor (unlike
-our parallel-plate waveguide, which has two), so one must use a special
-waveguide port to excite the TE-mode waves unique to them. This
-is why openEMS provides generic waveguides
-(:meth:`~openEMS.ports.WaveguidePort`), rectangular waveguides
-(:meth:`~openEMS.ports.RectWGPort`), and circular waveguides
-(``AddCircWaveGuidePort.m``) ports.
+In openEMS, the standard port is the lumped port
+(:meth:`~openEMS.openEMS.AddLumpedPort`) that works with most structures.
+If an optimal transition is needed, openEMS also provides optimized implementations
+of curved ports (``AddCurvePort.m``), microstrip (:meth:`~openEMS.ports.MSLPort`),
+stripline (``AddStripLinePort.m``), coplanar waveguide (``AddCPWPort.m``),
+and coax cables (``AddCoaxialPort.m``). For now, the lumped ports suffice
+for our purpose.
 
 .. note::
-   Like physical ports on devices and instruments, they're not ideal in openEMS.
-   A port creates a region of discontinuity, so they may introduce artifacts.
+   Some port types are not *ported* (no pun intended) to Python yet.
+
+Most specialized ports in openEMS are signal integrity optimizations rather
+than strict requirements. However, in some cases, specialized ports are *required*
+to excite the structure properly. In a rectangular or circular waveguide,
+there is only one conductor. An ordinary port can't excite it correctly,
+as the waveguide is essentially a DC short circuit (unlike our parallel-plate
+waveguide, which has two conductors). Enclosed waveguides require
+special waveguide ports to excite the unique TE-mode waves. This is why
+openEMS provides generic waveguides (:meth:`~openEMS.ports.WaveguidePort`),
+rectangular waveguides (:meth:`~openEMS.ports.RectWGPort`), and circular
+waveguides (``AddCircWaveGuidePort.m``) ports.
+
+.. note::
+   Like physical ports on real devices, the virtual ports in openEMS are not
+   perfect. They're ideal sources of E&M fields, but they are not ideal
+   *launchers* of E&M waves into structures. A port creates a region of
+   discontinuity, so they may introduce artifacts.
    Optimizing the placement and implementation of a port reduces artifacts.
-   Alternatively, these artifacts sometimes
-   can also be removed through calibration or de-embedding algorithms, an
-   advanced topic not discussed here.
+   Alternatively, these artifacts
+   can be removed through calibration or de-embedding algorithms, an
+   advanced topic beyond the scope of this tutorial.
 
    .. figure:: images/Parallel_Plate_Capacitor_Waveguide/error-box.svg
       :class: with-border
@@ -635,7 +670,7 @@ is why openEMS provides generic waveguides
       as two linear circuits (left error box, right error box) cascaded in
       series with the DUT. All three circuits are represented as three matrices,
       called their S-parameters. Measurement error can be reduced by making
-      error boxes close to unity with optimized port transitions.
+      error boxes nearly transparent using optimized port transitions.
       Alternatively, by mathematically removing the port's contributions from
       the measured response using linear algebra, a process known as
       calibration or de-embedding (image by Ziad Hatab, Michael Ernst Gadringer,
@@ -654,7 +689,7 @@ connected either in series (*series* method) or parallel (*shunt-through*
 method) between the transmitter and receiver.
 A signal is injected into the DUT using a 50 Ω transmitter port, and the
 received signal is measured by the 50 Ω receiver port at the other side.
-The latter techniques are shown in the following circuit diagram (the
+The 2-port techniques are shown in the following circuit diagram (the
 impedance ``Z`` is a function of frequency).
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/vna-shunt-thru-series.svg
@@ -665,15 +700,15 @@ impedance ``Z`` is a function of frequency).
 
 In the real world, the 1-port measurement method is only accurate when
 the DUT's impedance is close to the system impedance. If the impedance
-of the DUT too high or too low, almost all energy is reflected back.
+of the DUT is too high or too low, almost all energy is reflected back.
 Small differences between strong reflections are hard to distinguish.
 For low-impedance DUTs, results are also sensitive to the port's contact
 resistance. Both result in significant measurement errors.
 
 Instead, two-port measurements detect the weak signal transmitted across
-DUT ("filtered" by a large series impedance or a low parallel impedance),
+the DUT ("filtered" by a large series impedance or a low parallel impedance),
 taking advantage of the sensitive radio receiver in the VNA. This allows
-us to solve the DUT's impedance.
+us to determine the DUT's impedance.
 
 To illustrate the general principle of two-port networks and S-parameters
 in microwave measurements, we follow the 2-port method here.
@@ -682,39 +717,39 @@ Create Ports
 ^^^^^^^^^^^^^
 
 Ports and excitations are related to the FDTD simulation, not just the
-3D structure, so they can be added only after associating our CSXCAD
+3D structure, so they must be added only after associating our CSXCAD
 structure with the FDTD simulation::
 
     import openEMS
     fdtd = openEMS.openEMS()
     fdtd.SetCSX(csx)
 
-To use a lumped port, call ``openEMS`` object's
+To use a lumped port, call the ``openEMS`` object's
 :meth:`~openEMS.openEMS.AddLumpedPort` method. 
 
 Let's create two ports at the leftmost and rightmost sides of the
-waveguide. Port 1 should be centered at x = -50, y = 0, and the Port 2
+waveguide. Port 1 should be centered at x = -50, y = 0, and Port 2
 should be centered at x = 50, y = 0. Lumped ports should touch both
 waveguide plates, as the port is connected across them, so their Z
 coordinates span from [-8, 8]. This matches the intuition of a
 circuit diagram, in which a lumped port is vertically connected
 across the horizontal transmission line. The port's internal voltage
-source acting as both a wire and a source of electric field.
+source acts as both a wire and a source of electric field.
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/lumped-port.svg
    :class: with-border
 
    An ideal lumped port is connected vertically across a horizontal
    circuit. Its internal voltage source acting as both a wire and a
-   source of electric field. An lumped excitation port in openEMS
+   source of electric field. A lumped excitation port in openEMS
    works similarly here.
 
 To complicate the issue further, a port must cross at least a mesh line, since
 excitation is implemented by setting the electric field at the corresponding
-Yee's cells. Since we have enforced the 1/3-2/3 rule, if the port is placed
+Yee cells. Since we have enforced the 1/3-2/3 rule, if the port is placed
 exactly at the edge of the plate, no mesh lines pass through the port. Thus,
-as a compromise, we shift the port's location to the nearest mesh lines instead,
-this may introduce a small error due to shifted measurement plane. But these
+as a compromise, we shift the port's location to the nearest mesh lines instead.
+This may introduce a small error due to a measurement plane. But these
 issues are negligible for this demo. 
 
 .. important::
@@ -722,11 +757,12 @@ issues are negligible for this demo.
    it can't be simulated.
 
 Another question is whether the port should have a length and width. For
-transmission line simulations, the answer is often yes (especially for
-transmission line simulation) - the port should have a width as wide as the
+transmission line simulations, the answer is often yes - the port should
+have a width as wide as the
 transmission line to minimize discontinuity. On the other hand, one can usually
 keep the length 0. Here to make the problem more interesting, we simulate a
-port with a 5 mm width - much smaller than the width of the plates.
+port much smaller than the width of the plates to study the consequences
+of impedance mismatch. We choose to create a port with a 5 mm width.
 
 Both ports have an input (or output) impedance of 50 Ω, but only the first
 port is used for excitation (input), so we set Port 1's ``excite`` attribute
@@ -757,7 +793,7 @@ In FDTD simulations, a Gaussian pulse is normally used as it provides a
 wideband and smooth signal without discontinuous jumps. In openEMS,
 the Gaussian pulse is implemented as a sinusoidal carrier at the center
 frequency, with its amplitude modulated by a Gaussian function. This signal
-produces an optimized spectrum with a wide range of frequencies in both
+produces an well-distributed spectrum with a wide range of frequencies in both
 sidebands around the carrier. This relatively clean spectrum enables
 openEMS to accurately extract the DUT's frequency response in the
 frequency domain.
@@ -774,7 +810,7 @@ no loss of generality.
 .. note::
    In contrast, pulses such as the Dirac impulse
    (:meth:`~openEMS.openEMS.SetDiracExcite`) or the Heaviside step
-   function (:meth:`~openEMS.openEMS.SetStepExcite`) has discontinuous
+   function (:meth:`~openEMS.openEMS.SetStepExcite`) have discontinuous
    jumps, reaching the full value in just a single timestep. This can
    cause numerical problems like dispersion and unrealistic excitation
    of high-order modes. As a workaround, users can provide custom
@@ -785,23 +821,24 @@ no loss of generality.
    retains significant energy in both sidebands around the center carrier
    frequency.
 
-To apply a Gaussian excitation, we call :meth:`~openEMS.openEMS.SetGaussExcite`
-of the ``openEMS`` object. The first argument is its center frequency,
+To apply a Gaussian excitation, we call the
+:meth:`~openEMS.openEMS.SetGaussExcite` method of the ``openEMS`` object.
+The first argument is its center frequency,
 the second argument is its -20 dB bandwidth, defining the signal's
 spectral "spread". For a wideband simulation, both arguments should
-be set to 1/2 of the simulation's upper frequency target:::
+be set to 1/2 of the simulation's upper frequency target::
 
     # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
-    # Lower sideband covers 0 - 5 GHz, upper sideband cover 5 - 10 GHz.
+    # Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.
     fdtd.SetGaussExcite(f_max / 2, f_max / 2)
 
 Specify the Boundary Conditions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In openEMS, all physical phenomena occur in a small simulation box, so
-we're forced to decide what happens to the electromagnetic fields at its
-edges. This is known as the *boundary conditions* of Partial Differential
-Equations (PDE). To create an effective simulation, we must select the
+we must decide what happens to the electromagnetic fields at its edges.
+These are known as the *boundary conditions* of Partial Differential
+Equations (PDEs). To create an effective simulation, we must select the
 appropriate boundary conditions. There are six in total, located at
 the six faces of the box: ``x_min``, ``x_max``, ``y_min``, ``y_max``,
 ``z_min``, ``z_max``.
@@ -812,8 +849,8 @@ Reflecting (Dirichlet) Boundary Conditions
 If the finite nature of the simulation box and the reflection of E&M waves at
 the boundaries are acceptable, reflecting boundary conditions offer a simple
 zero-overhead solution. They efficiently model structures inside metal
-enclosure, above a ground plane, or with an electric or magnetic field
-symmetry across a plane. No explicit modeling is necessary, the boundary
+enclosures, above a ground plane, or with an electric or magnetic field
+symmetry across a plane. No explicit modeling is necessary; the boundary
 conditions implicitly enforce these behaviors.
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/reverberation_chamber.jpg
@@ -823,8 +860,8 @@ conditions implicitly enforce these behaviors.
    A simulation box with PEC at all boundaries acts like a shielded enclosure.
    EMC test labs use room-sized metal enclosures to create reverberation
    chambers. Taking advantage of the standing waves due to reflections,
-   one can create strong electric fields at selected positions to generate
-   eletromagnetic interference.
+   one can create strong electric fields at localized regions to generate
+   electromagnetic interference for testing.
    Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
    licensed under CC BY-SA 3.0.
 
@@ -842,41 +879,42 @@ the magnetic field lines can't penetrate. It's equivalent to a Perfect
 Magnetic Conductor (PMC) with infinite permeability, also known as the
 Magnetic Wall. All incoming waves are fully reflected back as well,
 but with a phase opposite to that of the PEC, analogous to a 1D
-transmission line terminated by an open circuit. No material in the
-real world approximates a PMC, so it's used as a mathematical tool
-for structures with symmetry across a plane.
+transmission line terminated by an open circuit. It's used mainly as
+a mathematical tool for structures with field symmetry across a plane,
+as no natural material in the real world behaves like a PMC.
 
-Mathematically, both PEC and PMC are Dirichlet boundary conditions,
-enforce fixed field values (e.g. zero).
+Mathematically, both PEC and PMC are Dirichlet boundary conditions
+that enforce fixed field values (e.g. zero).
 
 .. note::
    For our simulation, instead of explicitly modeling metal
    plates, we can model a vacuum with nothing inside, taking advantage
    of the PEC boundary conditions at ``z_min`` and ``z_max`` for
-   fast computation. But this is out of the scope of this tutorial, and it
-   won't capture the fringe fields above and below. So we will not use
-   PEC or PMC for any boundaries in this example.
+   fast computation. However, this is out of the scope of this tutorial,
+   and it won't capture the fringe fields above and below. We won't use
+   PEC or PMC in this example.
 
 Absorbing Boundary Conditions (ABC)
 """""""""""""""""""""""""""""""""""
 
-For this demo, the most intuitive kind of boundary conditions here are
-the *Absorbing Boundary Conditions (ABC)*. First we create a simulation
+For this demo, the most intuitive type of boundary here is
+the *Absorbing Boundary Conditions (ABC)*. First, we create a simulation
 box larger than the device, allowing some fringe fields. Then, at the
-boundaries, the electromagnetic waves are absorbed without coming back
-to the box, creating the illusion of an infinite-size free space.
+boundaries, the electromagnetic waves are absorbed and dissipated without
+reflecting back into the box, creating the illusion of an infinitely large
+free space.
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/anechoic_chamber.jpg
    :class: with-border
    :width: 60%
 
    A simulation box with PML at all boundaries acts like an anechoic chamber
-   in an EMC test lab. Image by Adamantios (at English Wikipedia), licensed
-   under CC BY-SA 3.0.
+   in an EMC test lab, mimicking an infinitely large free space. Image by
+   Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.
 
 Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
 
-#. *Mur's Boundary Condition (MUR)*. Mur's Boundary Condition is a
+#. **Mur's Boundary Condition (MUR)**. This is a
    first-generation boundary condition purely defined by differential
    equations, originally invented by Gerrit Mur in the 1980s. It has
    a moderate computational overhead, but it works only if the E&M wave
@@ -884,13 +922,13 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
    (e.g. the speed of light). Thus, reflections may cause errors if
    strong radiation exists due to imperfect absorption.
 
-#. *Perfect Matched Layer (PML)*. Perfect Matched Layer is the
+#. **Perfectly Matched Layer (PML)**. This is the
    second-generation boundary condition proposed in the 1990s, modeling
    the behavior of a hypothetical E&M wave-absorbing material. Unlike
    Mur's ABC, PML occupies some physical cells in the simulation box
-   (the actual boundary at the true edge remains PEC.).
-   This mimics the foams on the wall of an anechoic chamber in EMC test
-   labs.
+   (the actual boundary at the true edge remains PEC).
+   This mimics the wave-absorbing foam on the wall of an anechoic chamber
+   in EMC test labs.
 
    PML is a more effective absorber and is easy to use, but it has the
    highest computational overhead (especially in openEMS, due to suboptimal
@@ -898,15 +936,15 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
    PML at the simulation box's face directly hit by radiation, and use
    MUR for other boundaries). Intrusion of fringe fields and evanescent
    waves into the PML can destabilize it. Radiating structures must be kept
-   a distance of :math:`\lambda / 4`.
+   at a distance of :math:`\lambda / 4`.
 
 .. important::
    In openEMS, ``PML_8`` is commonly used, meaning the nearest 8 mesh lines
    of the simulation box are dedicated to the PML. This is an assumption made
-   by the simulator and not visible in AppCSXCAD. Ensure your structure do not
+   by the simulator and not visible in AppCSXCAD. Ensure your structures do not
    overlap with edge cells (unless intentionally terminating a region with
-   the PML). Radiating structures must be kept a distance of :math:`\lambda / 4`
-   from PML as intrusion of fringe fields and evanescent waves can create
+   the PML). Radiating structures must be kept at a distance of :math:`\lambda / 4`
+   from PML as intrusion of evanescent waves (fringe fields) can create
    numerical instability.
 
 Set Boundary Conditions
@@ -914,9 +952,9 @@ Set Boundary Conditions
 
 To set the boundary conditions of the simulator, use
 :meth:`openEMS.openEMS.SetBoundaryCond()` of the ``openEMS`` class. Its syntax is:
-``SetBoundaryCond(bc)`` in which ``bc`` is a list with 6 elements with the order
+``SetBoundaryCond(bc)`` where ``bc`` is a list with 6 elements with the order
 of ``[x_min, x_max, y_min, y_max, z_min, z_max]``. Each element is a string or
-integer according to the following table. Note that the use of integers are
+integer according to the following table. Note that the use of integers is
 discouraged due to poor readability, but one may encounter them in older examples.
 
 +-----------------------------+-----------+----+-------------------------------------------------+
@@ -932,7 +970,7 @@ discouraged due to poor readability, but one may encounter them in older example
 |                             |           |    |                                                 |
 |                             |           |    | Named after Gerrit Mur.                         |
 +-----------------------------+-----------+----+-------------------------------------------------+
-|  Perfect Matched Layer      | ``PML_8`` | 3  | Absorbing. Slowest.                             |
+|  Perfectly Matched Laye     | ``PML_8`` | 3  | Absorbing. Slowest.                             |
 |                             |           |    |                                                 |
 |                             | ``PML_x`` |    | ``x`` has a range [6, 20], 8 by default.        |
 |                             |           |    |                                                 |
@@ -999,7 +1037,7 @@ last::
     simdir.mkdir(parents=True, exist_ok=True)
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
-    # concat path
+    # concat two paths
     xmlpath = simdir / xmlname
     
     csx = CSXCAD.ContinuousStructure()
@@ -1111,7 +1149,7 @@ build upon further::
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
     
-    # concat path
+    # concat two paths
     xmlpath = simdir / xmlname
     
     
@@ -1303,10 +1341,10 @@ respective solution.
 Built-In Post-Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By now, the electromagnetic field simulation is complete. It's up to us analyze
-and interpret the data.
+By now, the electromagnetic field simulation is complete. It's up to us to
+analyze and interpret the data.
 
-To analyze the frequency response of the structure, one would need to specify a
+To analyze the frequency response of the structure, we need to specify a
 discrete list of frequencies of interest. One can generate such a list with the
 help of numpy's ``linspace()`` function. The following code creates a ``freq_list``
 with 1000 evenly-spaced elements from 100 MHz to 10 GHz::
@@ -1316,9 +1354,9 @@ with 1000 evenly-spaced elements from 100 MHz to 10 GHz::
     points = 1000
     freq_list = np.linspace(f_min, f_max, points)
 
-Then, call the :meth:`~openEMS.Port.CalcPort` function at each port object one
+Then, call the :meth:`~openEMS.Port.CalcPort` function on each port object one
 by one to calculate its response. This is the reason that we've chosen to
-append each port object into a list called ``port``, instead of leaving them
+append each port object to a list called ``port``, instead of leaving them
 as individual variables::
 
     for p in port:
@@ -1379,8 +1417,8 @@ Introduction to S-parameters
 
 In radio and high-speed digital electronics engineering, the *S-parameters*
 are the universal language to express the characteristics of a linear circuit,
-allowing one to treat the an circuit as a blackbox with several *ports*, with
-their input-output relationships parameterized.
+allowing one to treat the circuit as a black box with several *ports*, defined
+by their input-output relationships.
 
 For a two-port measurement, the circuit is modeled by a 2x2 matrix with 4
 complex numbers at each frequency of interest. These parameters can be interpreted
@@ -1407,13 +1445,13 @@ as the transmission and reflection of voltage waves in a transmission line.
   +--------------------------------------+-----------------------------------------------------------------+
   | S-parameters can be understood as the transmitted and reflected signals (voltage waves) at the         |
   |                                                                                                        |
-  | port of a DUT. The DUT itself is seen as a blackbox, defined only by their input-output relationship   |
+  | port of a DUT. The DUT itself is seen as a black box, defined only by their input-output relationship  |
   |                                                                                                        |
   | Image by Charly Whisky, licensed under CC BY-SA 4.0.                                                   |
   +--------------------------------------------------------------------------------------------------------+
 
 At Port 1, its total voltage can be seen as a superposition of two parts:
-an incident voltage wave transmitted from port 1, and a reflected wave going back
+an incident voltage wave injected at port 1, and a reflected wave going back
 to port 1. Their ratio :math:`V_\mathrm{ref} / V_\mathrm{inc}` is the parameter
 :math:`S_{11}`. This parameter has several other names: the reflection
 coefficient :math:`\Gamma = S_{11}`. When its magnitude is plotted on a log
@@ -1421,10 +1459,10 @@ scale, it's called the return loss :math:`-10 \cdot \log_{10}(|S_{11}|^2)`.
 
 At Port 2, its voltage can also be seen as a ratio of two parts: Voltage
 wave transmitted from port 1 and going to port 2, called :math:`S_{21}`.
-This parameter is also known as transmission coefficient. when its magnitude
-is plotted on the log scale, its called the insertion loss
-:math:`-10 \cdot \log_{10}(|S_{21}|^2)`. This corresponds the attenuation of a
-cable or a filter.
+This parameter is also known as transmission coefficient. When its magnitude
+is plotted on the log scale, it's called the insertion loss
+:math:`-10 \cdot \log_{10}(|S_{21}|^2)`. This corresponds to the attenuation
+of a cable or a filter.
 
 Since a circuit may modify both the amplitude and the phase of a voltage
 wave, all S-parameters are complex numbers.
@@ -1433,25 +1471,26 @@ Calculate S-parameters
 """""""""""""""""""""""
 
 In openEMS, after calling ``CalcPort()`` on a port object, its incident and reflected
-voltages can be accessed via its `uf_inc` and `uf_ref` attributes, which is a `numpy`
-list with the same number of elements as ``freq_list`` (which we previously passed to
+voltages can be accessed via its `uf_inc` and `uf_ref` attributes, which are a `numpy`
+lists with the same number of elements as ``freq_list`` (which we previously passed to
 ``CalcPort()``).
 
-Thus, the definition, one can calculate :math:`S_{11}` and :math:`S_{21}` as the
+Thus, by definition, one can calculate :math:`S_{11}` and :math:`S_{21}` as the
 following::
 
     s11_list = port[0].uf_ref / port[0].uf_inc
     s21_list = port[1].uf_ref / port[0].uf_inc
 
-We utilize `numpy`'s broadcasting feature here. The quantities ``uf_ref`` and
-``uf_inc`` are all frequency-dependent, thus they’re arrays, not scalars. But
-instead of looping over each frequency explicitly and adding them to an array,
-here, element-wise division is done automatically between every element within
-the two ``numpy.array``. We will use this feature extensively throughout the
-rest of this tutorial.
+.. hint::
+  We utilize `numpy`'s broadcasting feature here. The quantities ``uf_ref`` and
+  ``uf_inc`` are all frequency-dependent, thus they’re arrays, not scalars. But
+  instead of looping over each frequency explicitly and adding them to an array,
+  here, element-wise division is done automatically between every element within
+  the two ``numpy`` arrays. We will use this feature extensively throughout the
+  rest of this tutorial.
 
 Two S-parameters :math:`S_{12}` and :math:`S_{22}` are still missing here. The
-correct way of doing so is restarting the simulation again, but with port 2 as
+correct way of doing so is restarting the simulation, but with port 2 as
 the excitation port instead of port 1. This means that in the general case, we
 must refactor our code to move the port creation and simulation logic into separate
 functions.
@@ -1460,7 +1499,8 @@ But here, since our parallel-plate waveguide is symmetric and reciprocal, it
 doesn't matter if we excite the left side and terminate the right side, or vice
 versa, so we can assume :math:`S_{12} = S_{21}` and :math:`S_{11} = S_{22}`::
 
-    # hack: assume symmetry and reciprocity, only correct for passive linear circuit!
+    # hack: assume symmetry and reciprocity
+    # This only correct for passive linear reciprocal circuit!
     s22_list = s11_list
     s12_list = s21_list
 
@@ -1473,12 +1513,12 @@ quick look at the S-parameters we've obtained, using `matplotlib`::
     from matplotlib import pyplot as plt
 
 Here, we're interested in two types of graphs that all RF/microwave
-engineers cares about (Smith charts and more sophisticated analysis
+engineers care about (Smith charts and more sophisticated analysis
 will be introduced later, using third-party software).
 
 The scalar return loss (magnitude of :math:`S_{11}` in decibels) on
 a line chart shows how much power is reflected by the DUT back to
-the input port at each frequencies. A high loss like 20 dB implies no
+the input port at each frequency. A high loss like 20 dB implies no
 reflection, indicating a good impedance match or a resonance frequency::
 
     s11_db_list = -10 * np.log10(np.abs(s11_list) ** 2)
@@ -1490,7 +1530,7 @@ reflection, indicating a good impedance match or a resonance frequency::
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('Return Loss (dB)')
 
-    # By convention, return loss values increases downward on the Y axis.
+    # By convention, return loss values increase downward on the Y axis.
     # This is consistent with the plot shapes on spectrum analyzers, and
     # perhaps explains why the customary "wrong" sign convention is used.
     plt.gca().invert_yaxis()
@@ -1537,7 +1577,7 @@ which shows the attenuation of signals at each frequency::
     plt.xlabel('Frequency (GHz)')
     plt.ylabel('Insertion Loss (dB)')
 
-    # By convention, insertion loss values increases downward on the Y axis.
+    # By convention, insertion loss values increase downward on the Y axis.
     # This is consistent with the plot shapes on spectrum analyzers, and
     # perhaps explains why the customary "wrong" sign convention is used.
     plt.gca().invert_yaxis()
@@ -1560,7 +1600,7 @@ This behavior contradicts expectations, as both lumped capacitors and
 transmission lines are typically lossless.
 Unusual results like
 this one may indicate a modeling mistake that either causes unphysical
-behavior or the excitation of theoretical but unrealistic physical effects.
+behavior or shows theoretically-possible but unrealistic physical effects.
 Alternatively, it may reveal actual physics rarely discussed in circuit
 textbooks, so it can be "new" to us. We will discuss this issue later.
 
@@ -1580,7 +1620,7 @@ the expected behavior consistent with real-world measurements.
    a gain. This convention is technically incorrect but usually tolerated and
    widely used. On the other hand, its critics insist on inverting the sign
    (by multiplying all values by a factor of -1) when one is speaking of "loss".
-   Otherwise, the proper term to seak of is "reflection coefficient", not
+   Otherwise, the proper term to speak of is "reflection coefficient", not
    "return loss".
 
    This issue can sometimes be quite controversial. For example, *IEEE Antennas
@@ -1596,20 +1636,21 @@ the expected behavior consistent with real-world measurements.
 Plot Z-parameters (Impedances) via matplotlib
 """"""""""""""""""""""""""""""""""""""""""""""
 
-It's trivial to transform S-parameters to Z-parameters (impedances) using
-well-known formulas, so a separate calculation is not necessary.
+It's straightforward to transform S-parameters to Z-parameters (impedances) using
+well-known formulas, so saving a redundant set of Z-parameters is unnecessary.
 If :math:`Z0` is the port impedance, :math:`S_{11}` (also known as the
-reflection coefficient :math:`\Gamma`) is related to the DUT impedance
-via:
+reflection coefficient :math:`\Gamma`) is related to the load impedance
+seen at the port via:
 
 .. math::
 
    Z = Z_0 \frac{1 + \Gamma }{1 - \Gamma}
 
-Nevetheless, directly calculating the impedance seen by a port via the total
-voltage ``uf_tot`` and total current ``if_tot`` attributes of the port object.
-The following example plot the impedance seen by port 1. Like S-parameters,
-all impedances are also complex numbers, so we are only looking at its
+Nevertheless, it's possible to directly calculate the impedance seen by
+a port via the total voltage ``uf_tot`` and total current ``if_tot`` attributes
+as well.
+The following example plots the impedance seen by port 1. Like S-parameters,
+all impedances are also complex numbers, so we are only looking at their
 magnitude (absolute value) here::
 
     # direct impedance calculation
@@ -1635,16 +1676,15 @@ are indistinguishable.
    :width: 49%
 
 .. important::
-   We shall repeat the warning that was already given in the :ref:`port`
+   We repeat the warning that was already given in the :ref:`port`
    section. Beware that the impedance :math:`Z_{11}` is not the actual impedance
-   of the DUT, such as this parallel-plate waveguide. It's only the impedance seen
-   by the port, affected by the same factors that would affect :math:`S_{11}`,
-   such as port mismatches, test fixture reflections, imperfect terminations and
-   other factors, creating frequency-dependent artifacts. The DUT impedance can't
-   be read from :math:`Z_{11}` without solving this problem by eliminating
-   discontinuities or separating the contributions from both parts via
-   de-embedding, calibration, or time gating. These are advanced topics not
-   discussed here.
+   of the DUT, such as this parallel-plate waveguide. It's only the total impedance
+   seen by the port, including the contribution of both the DUT and port
+   imperfections, which can lead to frequency-dependent artifacts. The DUT impedance
+   can't be read from :math:`Z_{11}` without removing measurement artifacts. This
+   can be achieved by eliminating port discontinuities or separating the contributions
+   from both parts via de-embedding, calibration, or time gating. These are
+   advanced topics not discussed here.
 
 Code Checkpoint 2: Eliminate Repetitions in ``matplotlib`` Code
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1662,7 +1702,7 @@ same steps::
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
 
-        # By convention, loss values increases downward on the Y axis.
+        # By convention, loss values increase downward on the Y axis.
         # This is consistent with the plot shapes on spectrum analyzers, and
         # perhaps explains why the customary "wrong" sign convention is used.
         if invert_y:
@@ -1683,7 +1723,8 @@ same steps::
         s11_list = port[0].uf_ref / port[0].uf_inc
         s21_list = port[1].uf_ref / port[0].uf_inc
 
-        # hack: assume symmetry and reciprocity, only correct for passive linear circuit!
+        # hack: assume symmetry and reciprocity
+        # This only correct for passive linear reciprocal circuit!
         s22_list = s11_list
         s12_list = s21_list
 
@@ -1705,14 +1746,14 @@ Plot Time-Domain Waveforms via matplotlib
 """"""""""""""""""""""""""""""""""""""""""
 
 FDTD is fundamentally a time-domain field solver. In some cases it's
-desirable to create custom excitations and observe transient resposes
+desirable to create custom excitations and observe transient responses
 directly. For example, it allows one to truncate a simulation early
-without waiting for convergence. It may help avoiding violations of
+without waiting for convergence. It may help avoid violations of
 passivity and causality in S-parameters due to numerical artifacts,
 which is problematic in some transient simulations.
 
 To obtain the time-domain waveforms at a port, we can use these port
-attributes: ``u_data.ut_tot`` total voltage), ``u_data.ui_time[0]`` (time
+attributes: ``u_data.ut_tot`` (total voltage), ``u_data.ui_time[0]`` (time
 of voltage samples), ``i_data.it_tot`` (total current), ``i_data.ui_time[0]``
 (time of current samples).
 
@@ -1729,13 +1770,16 @@ For the first try, let's plot the voltages at port 1 and port 2::
 
 The excitation signal is a sinusoid at the center frequency, with its amplitude
 modulated by a Gaussian function. This is difficult to make sense of, since the
-Gaussian function decays rapidly but the simulator keeps running until all energy
-has decayed below 60 dB, so the waveform is a spike followed by a flatline near 0.
+Gaussian function decays rapidly, but the simulator continues running until the
+total energy has decayed below 60 dB. As a result, the waveform is a spike followed
+by a flatline near 0. The tail of the waveform is almost invisible, because its
+amplitude is many orders of magnitude smaller than the leading edge.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/port1_vt.svg
    :width: 49%
 
-Let's try again, focusing only on the first 100 samples::
+Let's try again, focusing only on the first 100 samples to improve
+clarity::
 
     plt.figure()
     plt.plot(port[0].u_data.ui_time[0][0:100], port[0].ut_tot[0:100], label="Input Voltage")
@@ -1747,19 +1791,19 @@ Let's try again, focusing only on the first 100 samples::
     plt.show()
 
 This is much better. The Gaussian modulation of the input signal is
-clearly visible. There's also a noticeable time delay before it reaches
-the output, with an attenuation by one or two orders of magnitude. Both
+evident. There's also a noticeable time delay before it reaches
+the output, with an attenuation of one or two orders of magnitude. Both
 are expected.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/port1_vt_early.svg
    :width: 49%
 
-Time-domain usage of openEMS is best-suited with custom excitation signals.
+Time-domain usage of openEMS is most useful for custom excitation signals.
 For example, one use case is to study the Time-Domain Transmission and
-Time-Domain Reflection (TDT/TDR) characteristics of the DUT directly in time
-domain, which is out of the scope of this tutorial. Hence, this tutorial
-advocates for relying on mature frequency-domain analysis tools based on
-S-parameters (which are possible to use in time-domain transient simulations
+Time-Domain Reflection (TDT/TDR) characteristics of the DUT directly in the
+time domain, which is beyond the scope of this tutorial. Hence, this tutorial
+advocates relying on mature frequency-domain analysis tools based on
+S-parameters (which can also be used in time-domain transient simulations
 as well), as FDTD typically uses wideband Gaussian excitation signals that
 are difficult to interpret in the time domain anyway.
 
@@ -1767,25 +1811,25 @@ are difficult to interpret in the time domain anyway.
 
    The raw time-domain voltages and currents at all ports are also available
    in the simulation directory as ``port_ut_1``, ``port_ut_2``, ``port_it_1``
-   and ``port_it_2``, which can be used by external programs.
+   and ``port_it_2``, which can be analyzed by external programs.
 
 Export S-parameters to Touchstone
 """"""""""""""""""""""""""""""""""
 
 At this point, we have nearly reached the limit of the built-in
 post-processing capabilities of openEMS.
-To bring our analysis futher, it's now necessary to use third-party
+To bring our analysis further, it's now necessary to use third-party
 software. Therefore we must save our S-parameters to an external file
-to use them in other tools. In the RF/microwave industry, S-parameters
-are encoded in a de-facto standard file format called a *Touchstone*
+to be used in other tools. In the RF/microwave industry, S-parameters
+are encoded in a de facto standard file format called a *Touchstone*
 file.
 
 A 2-port Touchstone file has the file extension ``.s2p``, the first line
 is its metadata.
 
-The hash (``#``) symbol denotes a metadata line, not a comment line,
-this line is not optional (the real comment line begins with ``!``).
-Letter ``S`` letter means the file contains S-parameters, keyword
+The hash (``#``) symbol denotes a metadata line, not a comment line.
+This line is mandatory (the real comment line begins with ``!``).
+Letter ``S`` means the file contains S-parameters, keyword
 ``RI`` means the complex S-parameters are in the real-imaginary format,
 and the final ``R 50`` means the port impedance for this measurement
 is 50 Ω::
@@ -1795,7 +1839,7 @@ is 50 Ω::
 ``.s2p`` file
 .............
 
-In an ``.s2p`` file, the following lines define the S-parameters at each frequency
+In an ``.s2p`` file, each additional line defines the S-parameters at a new frequency
 point, with the
 order of ``frequency``, ``s11_real``, ``s11_imag``, ``s21_real``, ``s21_imag``, ``s12_real``,
 ``s12_imag``, ``s22_real``, ``s22_imag``.  All variables are floating-point numbers.
@@ -1806,7 +1850,7 @@ code::
     # determine a file name
     s2pname = filepath.with_suffix(".s2p").name
 
-    # concat path
+    # concat two paths
     s2ppath = simdir / s2pname
 
     # write 2-port S-parameters
@@ -1824,16 +1868,17 @@ code::
 ``.s1p`` file
 ..............
 The ``.s2p`` file already contains the S-parameter :math:`S_{11}`, so
-there's no need to create a separate 1-port Touchstone file. But for
-completeness, the Touchstone file for 1-port measurements has the
+there's no need to create a separate 1-port Touchstone file. It's only
+used for 1-port measurement data. For completeness, the Touchstone file
+for 1-port measurements has the
 suffix ``.s1p``. Its format is similar: at each frequency point, one
-writes a new line with parameters order of ``frequency``, ``s11_real``,
+writes a new line with parameter order of ``frequency``, ``s11_real``,
 ``s11_imag``::
 
     # determine a file name
     s1pname = filepath.with_suffix(".s1p").name
 
-    # concat path
+    # concat two paths
     s1ppath = simdir / s1pname
 
     # write 1-port S-parameters
@@ -1898,7 +1943,7 @@ obtains if the previous instructions are followed::
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
 
-    # concat path
+    # concat two paths
     xmlpath = simdir / xmlname
 
 
@@ -1995,7 +2040,8 @@ obtains if the previous instructions are followed::
         s11_list = port[0].uf_ref / port[0].uf_inc
         s21_list = port[1].uf_ref / port[0].uf_inc
 
-        # hack: assume symmetry and reciprocity, only correct for passive linear circuit!
+        # hack: assume symmetry and reciprocity
+        # This only correct for passive linear reciprocal circuit!
         s22_list = s11_list
         s12_list = s21_list
 
@@ -2032,7 +2078,7 @@ obtains if the previous instructions are followed::
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
 
-        # By convention, loss values increases downward on the Y axis.
+        # By convention, loss values increase downward on the Y axis.
         # This is consistent with the plot shapes on spectrum analyzers, and
         # perhaps explains why the customary "wrong" sign convention is used.
         if invert_y:
@@ -2045,7 +2091,7 @@ obtains if the previous instructions are followed::
         # determine a file name
         s2pname = filepath.with_suffix(".s2p").name
 
-        # concat path
+        # concat two paths
         s2ppath = simdir / s2pname
 
         # write 2-port S-parameters
@@ -2096,7 +2142,7 @@ features we haven't used are Near-Field to Far-Field Transformation
 (NF2FF) for antenna analysis, and Specific Absorption Rate (SAR)
 analysis, but both are irrelevant for this simulation.
 
-To bring our analysis futher, it's now necessary to use third-party
+To bring our analysis further, it's now necessary to use third-party
 software with the S-parameters we've saved.
 
 S-parameters Analysis via ``scikit-rf``
@@ -2108,7 +2154,7 @@ analysis, calibration, reading and writing data.
 
 Install and Import
 ...................
-One can install it via ``pip3`` to your home directory (or another ``venv``
+One can install it via ``pip3`` in your home directory (or another ``venv``
 environment you prefer)::
 
     pip3 install scikit-rf --user
@@ -2160,11 +2206,11 @@ abrupt transition from the port to the waveguide.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_smith_sim.svg
 
-An alternative way to plot :math:`S_{11}` is to slice a multi-port network
-to obtain a 1-port network using the ``s11`` attribute (or ``s21``, ``s22``,
-etc). But note that doing would create a new 1-port network, so all
-charts will be labeled ``S11`` regardless of the parameter plotted.
-Hence plotting a sliced network is not recommended::
+An alternative way to plot :math:`S_{11}` is to create a 1-port network 
+by extracting it from a multi-port network, using the ``s11`` attribute
+(or ``s21``, ``s22``, etc). But note that doing this would create a new 1-port
+network, so all charts will be labeled ``S11`` regardless of the parameter
+plotted. Hence plotting a sliced network is not recommended::
 
     network.s11.plot_s_smith()
     plt.show()
@@ -2173,7 +2219,7 @@ Plot Magnitude-Phase Charts
 ................................
 
 We can also plot other familiar charts via ``scikit-rf`` automatically, such
-as the scalar :math:`S_{11}` plot in decibles and phase angles. This is
+as the scalar :math:`S_{11}` plot in decibels and phase angles. This is
 much faster than the manual method using only two lines of code for each chart::
 
     network.plot_s_db(m=0, n=0)
@@ -2190,7 +2236,7 @@ calculations. All is derived from S-parameters by scikit-rf automatically.
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_deg_sim_skrf.svg
    :width: 49%
 
-Likewise, to plot :math:`S_{21}`::
+Likewise, to plot :math:`S_{21}` using the same method::
 
     network.plot_s_db(m=1, n=0)
     plt.show()
@@ -2206,7 +2252,7 @@ Likewise, to plot :math:`S_{21}`::
 Plot Impedance Chart
 .....................
 
-`scikit-rf` also provides several routines to Z-parameters charts, such
+`scikit-rf` also provides several routines to plot Z-parameters charts, such
 as the scalar impedance::
 
     network.plot_z_mag(m=0, n=0)
@@ -2219,8 +2265,8 @@ Time Domain Reflectometry
 ..........................
 
 And now for something completely different: going from the frequency
-domain back to the time domain. By an inverse Fourier transform on
-the existing S-parameters (without running new FDTD simulations),
+domain back to the time domain. By applying an inverse Fourier transform
+to the existing S-parameters (without needing to run new FDTD simulations),
 ``scikit-rf`` can directly calculate the DUT's equivalent transient
 impulse and step impedance from :math:`S_{11}`. This enables capturing
 impedance discontinuities that are difficult if not impossible to
@@ -2280,16 +2326,16 @@ such as :program:`HyperLynx`, :program:`ADS`, or :program:`AWR`. A
 third-party tool also exists for PSpice. [4]_
 
 However, in the free and open source world, few (if any) free and
-open source circuit simulator have this capability. For example,
-NgSPICE supports S-parameter calculation but not transient
+open source circuit simulators have this capability. For example,
+Ngspice supports S-parameter calculation but not transient
 simulation. [5]_ :program:`Qucs`, too, doesn't support transient
 simulation with S-parameters, although it's possible to define
 devices using them.
 
 The Python package :program:`SignalIntegrity`, designed for signal
 integrity and eye diagram simulations from the ground up, is a rare
-exception.  It's designed by Pete Pupalaikis, who previously worked
-at LeCroy as a signal integrity expert.
+exception.  It's developed by Pete Pupalaikis, a former signal
+integrity expert at LeCroy.
 
 .. seealso::
    The software's internal theory of operation is also published almost
@@ -2431,7 +2477,7 @@ see the pulse response of the DUT.
 **Results.** As expected, the +/- 1 V input signal (+/- 0.5 V with 50 Ω
 output and input impedance) has severe overshoots and undershoots due to
 port impedance mismatches, while the output shows significant rise
-time degradation due to high insertios loss above 2 GHz.
+time degradation due to high insertion loss above 2 GHz.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/transient_sim_20.png
    :width: 60%
@@ -2863,10 +2909,10 @@ Change parameter :guilabel:`h` (height) to ``16 mm``.
 
 Change its formulas to the following::
 
-    dBS21 = dB(S[2.1])
-    dBS11 = dB(S[1.1])
-    dBS33 = dB(S[3.3])
-    dBS43 = dB(S[4.3])
+    dBS21 = dB(S[2,1])
+    dBS11 = dB(S[1,1])
+    dBS33 = dB(S[3,3])
+    dBS43 = dB(S[4,3])
 
 .. important::
    Make sure ``S[3,3]`` and ``S[4,3]`` matches the actual port numbers
@@ -3033,9 +3079,9 @@ Motivation
 """""""""""
 
 As shown in earlier sections using different methods, the presented
-frequency response of this parallel-plate waveguide have anomalous
+frequency response of this parallel-plate waveguide has anomalous
 losses at high frequencies, around 20 dB at 8 GHz. This behavior
-runs against our expectation for both lumped capacitors and transmission
+runs against our expectation for lumped capacitors and transmission
 lines, both are essentially lossless.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s21_db_sim_skrf.svg
@@ -3043,22 +3089,23 @@ lines, both are essentially lossless.
 
 Unusual results like this one may indicate a modeling mistake that
 either causes unphysical behavior or the excitation of theoretical
-but unrealistic physical effects. Alternatively, it may reveal actual
-physics rarely discussed in circuit textbooks, so it can be “new” to
-us.
+but theoretically-possible but unrealistic effects. Alternatively,
+it may reveal actual physics rarely discussed in circuit textbooks,
+so it can be “new” to us.
 
 Experiment
 """""""""""
 
-Thus, this result calls for a validation. To test the validity of
+Thus, this result requires validation. To test the validity of
 this simulation result empirically, the author of this tutorial performed
-an experiment using a self-built parallel-plate waveguide test fixture,
+an experiment using a self-built parallel-plate waveguide test fixture.
+The fixture is
 made of two brass plates with a thickness of 0.5 mm. Two SMA coax
-connectors are installed on both sides. Conveniently, these
+connectors are mounted on the left and right edges. Conveniently, these
 special connectors have lengthened inner conductors (meant for
 connections to air lines). The connectors are screwed onto the upper
-plate, while their inner conductors touches the lower plate below.
-The plates are held to position using Nylon screws at four corners,
+plate, while their inner conductors touch the lower plate below.
+The plates are held in position using Nylon screws at four corners,
 with a spacing of 16 mm.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/experiment-fixture.svg
@@ -3067,10 +3114,11 @@ with a spacing of 16 mm.
    :width: 49%
 
 Air is the only dielectric of this parallel-plate waveguide, so this
-test fixture's frequency response is sensitive to all conductors and
-insulators nearby. To minimize interference, plastic zip ties were used
-to suspend the fixture in free air. Care was made to ensure the zip ties
-to minimize their passing through the gap between plates.
+test fixture's frequency response is sensitive to nearby conductors and
+insulators. To minimize interference, plastic zip ties were used
+to suspend the fixture in free air, ensuring a reasonable clearance
+from nearby objects. Care was made to minimize the zip ties' passing
+through the gap between the plates.
 
 Its frequency response is measured by a 2-port Vector Network Analyzer
 (VNA) from 100 MHz to 4.4 GHz.
@@ -3083,14 +3131,15 @@ Its frequency response is measured by a 2-port Vector Network Analyzer
    exact quantitative test, so the VNA was *not* fully calibrated. SOLT
    calibration was performed, but the Open, Short, Load, and Thru standards
    were all assumed ideal, which introduces errors at high frequencies,
-   and may affect frequency response flatness across the spectrum as well.
+   and may affect the flatness of frequency response across the spectrum.
    But the *trend* remains largely unaffected.
 
 Results
 """""""
 
 A Qucs-S simulation is used to visualize the S-parameters from both
-simulation and experiment. This is done by setting a simulation with
+the simulation and experiment for comparison. This is done by setting
+a simulation with
 two S-parameter-defined components, one from the simulation, and another
 from measurement. The obtained result is the following.
 
@@ -3103,14 +3152,14 @@ As we can see, both the :math:`S_{11}` and :math:`S_{21}` magnitudes
 from the simulation and measurement are correlated, including the
 resonance at 500 MHz, the resonance at 1.5 GHz, and the 20 dB loss
 around 2 GHz. On the Smith chart, the :math:`S_{11}` phases also
-shows good correlations between from 100 MHz to 1.3 GHz.
+show good correlations between from 100 MHz to 1.3 GHz.
 
-Using ``scikit-rf`` to compute the equivalent step-input TDR curves
-of the simulation and experiment, we create the following plot for
-comparison. Both curves show a high-impedance discontinuity at the
-first port, and another high-impedance discontinuity at the second
+We also use ``scikit-rf`` to compute the equivalent step-input TDR
+curves of the simulation and experiment. The resulting plot is shown
+below for comparison. Both curves show a high-impedance discontinuity at the
+first port, and another high-impedance reflection at the second
 port (with a weaker reflection). The peak impedance magnitudes are
-quantitative different in the simulation and experiment, 100 Ω and
+quantitatively different in the simulation and experiment, 100 Ω and
 140 Ω respectively. The exact number is sensitive to the port/connector
 transition and geometry, and we didn't model the SMA RF connectors.
 But both results are qualitatively similar.
@@ -3118,9 +3167,9 @@ But both results are qualitatively similar.
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/experiment-tdr.svg
    :width: 49%
 
-Therefore, the observed high-frequency loss is a real effect of the
-parallel-plate waveguide. What is its origin? We can make several educated
-guesses:
+Therefore, the observed high-frequency loss is a measurable effect of a
+real parallel-plate waveguide. What is its origin? We can make several
+educated guesses:
 
 1. **Non-TEM modes.** Ordinary two-conductor transmission lines and
    circuits operate in TEM (Transverse Electro-Magnetic) mode, in
@@ -3171,8 +3220,7 @@ guesses:
 Impedance Transformation
 """""""""""""""""""""""""
 
-Another notable effect worth paying attention to is the resonance at 500
-MHz and 1.5 GHz.
+Another notable effect is the resonance at 500 MHz and 1.5 GHz.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_db_sim_skrf.svg
    :width: 49%
@@ -3184,23 +3232,23 @@ Curiously, even the microstrip transmission line simulation in
    :width: 60%
 
 Is it an intrinsic resonance caused by the waveguide or transmission line
-itself, or an artifact from the non-ideal ports?
+itself, or an artifact from the mismatched ports?
 
-This can be revealed by a simple calculation. In vacuum or air, the
-wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
+This can be revealed by a simple wavelength calculation. In vacuum or air,
+the wavelength of an electromagnetic signal at 500 MHz is approximately 600 mm.
 At 1.5 GHz, the wavelength is approximately 200 mm. Both are integer
-multiples of the length of our 100 mm parallel-plate waveguide,
-suggesting it's related to the quarter-wave impedance transformer effect.
+multiples of the 100 mm length of our parallel-plate waveguide,
+suggesting it's a quarter-wave impedance transformer effect.
 
 In transmission line theory, a remarkable observation is the following:
 if the length of a lossless transmission line is a multiple of
-:math:`\lambda / 2`, its input impedance is *exactly* equal to the load
-impedance, regardless of its characteristic impedance!
+:math:`\lambda / 2`, its input impedance will be *exactly* equal to the
+load impedance, regardless of its characteristic impedance!
 
 The implication is that when a mismatched line with a length of
-:math:`\lambda / 2` is used to connect a transmitter and a receiver, if
+:math:`\lambda / 2` connects a transmitter and a receiver, and if
 both ports have real and identical impedances (i.e. they're
-mismatched the same way), *any* transmission line can be used
+mismatched in the same way), *any* transmission line can be used
 regardless of its characteristic impedance.
 We can show this from a simple argument. Consider a 50 Ω transmission
 line, connected to a 600 Ω receiver. If we measure its impedance using a
@@ -3223,7 +3271,7 @@ the line.
 But when the line is :math:`\lambda / 2`, the phase
 shift is zero, since the signal has shifted 180 degrees going forward,
 and 180 degrees going back. As a result, the measured reflection
-coefficient has a zero phase angle. Thus, the input impedance looking
+coefficient has a phase angle of 0 degrees. Thus, the input impedance looking
 into the beginning of the transmission line is exactly 600 Ω, without
 an imaginary part.
 
@@ -3262,19 +3310,18 @@ exactly equal to the 50 Ω load again.
          is 0.0∠0.0°, its input impedance is 600.0∠0.0° Ω.
 
 Therefore, we can conclude the 500 MHz and 1500 MHz resonances are
-effects of the mismatched ports resonating with the transmission line
-due to its length, not the intrinsic characteristics of the parallel-plate
-waveguide.
+effects of the mismatched ports resonating with the transmission line's
+length, not the intrinsic characteristics of the parallel-plate waveguide.
 
 .. note::
    **Quarter-Wave Impedance Transformer** - This half-wave
-   transmission line is a special case of the powerful
-   quarter-wave impendance transformer. Learn more about
-   it at [8]_.
+   transmission line phenomenon is a special case of the more
+   powerful quarter-wave impendance transformer. Learn more
+   about it at [8]_.
 
    **Port Discontinuities** - This shows why an optimized
-   port transition, or the use of de-embedding or calibration
-   is crucial in both simulations and measurements. Otherwise
+   port transition, as well as the use of de-embedding or calibration,
+   are crucial in both simulations and measurements. Otherwise
    port mismatches can easily generate misleading results.
 
 Troubleshoot
