@@ -87,7 +87,7 @@ parallel-plate waveguide shown below. It's formed by two metal
 sheets each measuring 100 mm x 100 mm, assumed perfect without
 resistance or thickness, separated by 16 mm of vacuum.
 
-The 2D cross-section of the 3D waveguide is as follows::
+The 2D cross-section of the 3D waveguide is as follows:
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/capacitor1.py.svg
 
