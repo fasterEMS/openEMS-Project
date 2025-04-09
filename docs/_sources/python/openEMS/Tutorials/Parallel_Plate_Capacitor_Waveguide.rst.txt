@@ -253,10 +253,12 @@ The speed of light in a medium is given by:
 in which :math:`c_0` is the speed of light in vacuum, :math:`\epsilon_r`
 is the relative permittivity of the medium (in engineering, it's sometimes
 also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
-In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly. The
-:math:`\mu_r` term is usually omitted in engineering since most insulators
-(like plastics or fiberglass) are non-magnetic, unless one is dealing with
-inductors or circulators.
+The :math:`\mu_r` term is the medium's relative permeability, which is
+usually omitted in engineering for the purpose of signal transmission.
+Most dielectrics (like plastics or fiberglass) in cables are non-magnetic -
+unless one is dealing with inductors or circulators.
+
+In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
 """"""""""""""""""""""""""""""""""""""""
