@@ -86,7 +86,11 @@
 <li class="toctree-l5"><a class="reference internal" href="#code-refactoring">Code Refactoring</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="#run-simulation">Run Simulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#run-simulation">Run Simulation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#expected-simulator-output">Expected Simulator Output</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#convergence-and-divergence-blow-up">Convergence and Divergence (Blow-up)</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="#built-in-post-processing">Built-In Post-Processing</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#port-attribute-references">Port Attribute References</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#introduction-to-s-parameters">Introduction to S-parameters</a></li>
@@ -174,15 +178,17 @@
 <li><p>Create conductors in the simulation box.</p></li>
 <li><p>Create a Cartesian mesh (Yee cells) and correctly apply the 1/3-2/3 rule to
 ensure accuracy.</p></li>
-<li><p>Add an excitation port with signal.</p></li>
 <li><p>Inspect the finished 3D model with AppCSXCAD.</p></li>
 </ul>
 </div></blockquote>
 </li>
 <li><p><strong>Boundary Conditions</strong>: Understand the available boundary conditions in openEMS and
 their physical interpretation.</p></li>
+<li><p><strong>Ports and Excitations.</strong> Add an excitation port with signal. Understand the purpose
+of ports and the existence of different port types. Recognize a Gaussian pulse’s
+waveform, frequency spectrum, and its advantages in FDTD simulations.</p></li>
 <li><p><strong>Simulate</strong>: Run simulation to obtain the S-parameters (frequency response) of
-the waveguide.</p></li>
+the waveguide. Understand the meanings of convergence, divergence, and “blow-ups”.</p></li>
 <li><p><strong>Built-in Post-Processing</strong>: Calculate the final frequency response (S-parameters)
 and time-domain signal waveforms.</p>
 <blockquote>
@@ -220,7 +226,7 @@ parameters in the future.</p></li>
 physics classes, but the physics involved is far more complex than
 an ideal capacitor in introductory textbooks. In the RF/microwave
 regime, the signal’s wavelength becomes comparable to or even
-smaller that the physical size of the capacitor. The plates
+smaller than the physical size of the capacitor. The plates
 form a two-conductor transmission line, known as a <em>parallel-plate
 waveguide</em>.</p>
 <p>However, the ideal parallel-plate waveguide is just a simplified model,
@@ -235,17 +241,21 @@ enter the structure.</p>
 <p>Multimoding is another challenge - in addition to the familiar signal
 mode that travels along two-conductor cables (TEM wave), the non-uniform
 electric field across the plate may allow TE/TM-mode waves to propagate,
-typically found in enclosed, single-conductor waveguides.</p>
+which are more commonly associated with enclosed, single-conductor
+waveguides.</p>
 <p>Given these complexities, a 3D full-wave field solver like openEMS
-is the most practical way to predict the behavior of a real,
+is the most practical way to simulate the behavior of a real,
 non-ideal parallel-plate waveguide. It does so by numerically
 solving Maxwell’s equations, the first principles of electromagnetism.</p>
 <p>Our task is to find the frequency response of the rectangular
 parallel-plate waveguide shown below. It’s formed by two metal
-sheets each measuring 100 mm x 100 mm, with negligible resistance
-and thickness, separated by 16 mm of vacuum.</p>
-<p>The 2D cross-section of the 3D waveguide is the following:</p>
-<img alt="../../../_images/capacitor1.py.svg" src="../../../_images/capacitor1.py.svg" /></section>
+sheets each measuring 100 mm x 100 mm, assumed perfect without
+resistance or thickness, separated by 16 mm of vacuum.</p>
+<p>The 2D cross-section of the 3D waveguide is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="n">images</span><span class="o">/</span><span class="n">Parallel_Plate_Capacitor_Waveguide</span><span class="o">/</span><span class="n">capacitor1</span><span class="o">.</span><span class="n">py</span><span class="o">.</span><span class="n">svg</span>
+</pre></div>
+</div>
+</section>
 <section id="create-conductors">
 <h2>Create Conductors<a class="headerlink" href="#create-conductors" title="Permalink to this headline"></a></h2>
 <p>An openEMS simulation always starts by creating a 3D model of the Device-Under-Test
@@ -256,8 +266,9 @@ structure called <code class="docutils literal notranslate"><span class="pre">cs
 <span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The next step is to create an instance of a material to build an object. Since we’re
-modeling metal plates with negligible resistance, we use the CSXCAD function
+<p>The next step is to define a material type by creating an material instance,
+which can then be used to build an object. Since we’re modeling metal plates
+with no resistance, we use the CSXCAD function
 <a class="reference internal" href="../../CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddMetal" title="CSXCAD.ContinuousStructure.AddMetal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddMetal()</span></code></a> to obtain an instance of a Perfect
 Electric Conductor (PEC):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create an instance of material named &quot;plate&quot;.</span>
@@ -268,7 +279,7 @@ Electric Conductor (PEC):</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Internally, PEC is implemented by forcing the tangential electric field in this
-region be zero, which is characteristic of an ideal conductor that can’t be penetrated
+region to be zero, which is characteristic of an ideal conductor that can’t be penetrated
 by electric field lines. If resistive losses are unimportant, one can use PEC
 rather than a realistic material model for simplicity and efficiency.</p>
 <p>To add a general material (defined by a permittivity, permeability, electric
@@ -286,7 +297,7 @@ physics.</p>
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">AddBox()</span></code> function. It accepts two 3D
 coordinates to specify the region occupied by the box.</p>
 <p>Our waveguide plates are 100 mm x 100 mm rectangular metal sheets, separated by a
-16 mm vacuum (i.e. empty space). Following the convention of CAD, we center
+16 mm vacuum (i.e. empty space). Following the common CAD conventions, we center
 the plates around the origin. Thus, for the upper plate, both its X and Y
 coordinates are (-50, 50). Their Z coordinates are -8 and 8 respectively, which
 means these metal plates have no thickness:</p>
@@ -349,7 +360,7 @@ algorithm).</p>
 <h3>General Requirements<a class="headerlink" href="#general-requirements" title="Permalink to this headline"></a></h3>
 <p>In general, the mesh must satisfy four requirements:</p>
 <ol class="arabic simple">
-<li><p><strong>Temporal Resolution</strong>. Its interval must be small enough to resolve the
+<li><p><strong>Frequency Resolution</strong>. Its interval must be small enough to resolve the
 shortest wavelength (highest
 frequency component) of the signal, so that electromagnetic field details are
 not missed. Thus, we need several cells per wavelength.</p></li>
@@ -358,7 +369,7 @@ shapes of the simulated
 structure, so that small details of the structure are not missed. Thus, we
 need at least a few cells around the important shapes (such as the waveguide
 plates) of the structure. openEMS uses a rectilinear mesh with variable
-spacing. To save time, only use a fine mesh interval around details within
+spacing. To save time, only use a fine mesh interval around details on
 a structure; use a coarse mesh for the rest.</p></li>
 <li><p><strong>Smoothness</strong>. Its interval should change smoothly, not by a sudden jump.
 It’s recommended that the mesh spacing vary by no more than a factor of
@@ -386,7 +397,7 @@ and <span class="math notranslate nohighlight">\(f_\mathrm{max}\)</span> is the 
 used in simulation.</p>
 <p>The speed of light in a medium is given by:</p>
 <div class="math notranslate nohighlight">
-\[v \approx \frac{c_0}{\sqrt{\epsilon_r\mu_r}}\]</div>
+\[v = \frac{c_0}{\sqrt{\epsilon_r\mu_r}}\]</div>
 <p>in which <span class="math notranslate nohighlight">\(c_0\)</span> is the speed of light in vacuum, <span class="math notranslate nohighlight">\(\epsilon_r\)</span>
 is the relative permittivity of the medium (in engineering, it’s sometimes
 also denoted as a material’s dielectric constant <span class="math notranslate nohighlight">\(D_k = \epsilon_r\)</span>).
@@ -408,29 +419,28 @@ larger than:</p>
 <p>where <span class="math notranslate nohighlight">\(v\)</span> is the wave speed, <span class="math notranslate nohighlight">\(\Delta x\)</span>,
 <span class="math notranslate nohighlight">\(\Delta y\)</span>, <span class="math notranslate nohighlight">\(\Delta z\)</span> are the distances between mesh
 lines.</p>
-<p>This creates a peculiar limitation: the simulation timestep must
-both be small enough to resolve the shortest wavelength, and resolve
-the smallest mesh cell.</p>
+<p>This creates a peculiar limitation: to resolve the smallest mesh
+cell, one must use a small timestep regardless of frequency.</p>
 <p>Even for simulations at low frequencies, as long as the simulated
 structure has small features (i.e. mesh distance is short), we
 must use very small timesteps, advancing the simulation only a few
 nanoseconds per iteration. Under 100 MHz, at the bottom of the VHF
-band or below the shortwave band, the required number of iterations
-becomes impractically large. This means openEMS (and other textbook
-FDTD solvers) is unsuitable if there’s a large mismatch between the
-signal wavelength and the physical size of the structure, such as a
-10 cm circuit board operating at 1 MHz, where the wavelength is
-300 m in vacuum.</p>
+band or in the HF band, the required number of iterations becomes
+impractically large. This means openEMS (and other textbook
+FDTD solvers with explicit timestepping) is unsuitable if there’s a
+large mismatch between the signal wavelength and the physical size
+of the structure, such as a 10 cm circuit board operating at 1
+MHz, where the wavelength is 300 m in vacuum.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In openEMS, just ensure the mesh itself is correct. There’s
-no need to calculate the required timestep size, as it
-automatically calculates simulation timesteps
-using a modified criterion named <em>Rennings2</em>, not CFL
-(derived
-in the unpublished paper <a class="footnote-reference brackets" href="#id24" id="id1">11</a>, see
-<a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetTimeStepMethod" title="openEMS.openEMS.SetTimeStepMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetTimeStepMethod()</span></code></a>).
-But the general limitation still applies.</p>
+<p>In openEMS, you only need to define an appropriate mesh.
+There’s no need to calculate the required timestep size,
+By default, openEMS uses a modified timestep criterion
+named <em>Rennings2</em> is used, not CFL. This improves timestep
+selection in non-uniform meshes. But the general limitation
+still applies.</p>
+<p><cite>Rennings2</cite> is derived in the unpublished paper <a class="footnote-reference brackets" href="#id25" id="id1">11</a>,
+see <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetTimeStepMethod" title="openEMS.openEMS.SetTimeStepMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetTimeStepMethod()</span></code></a> for details.</p>
 <p>If you really need small cells
 (e.g. to resolve some important feature of your structure) you
 will have to live with long execution times, or perhaps FDTD is
@@ -447,8 +457,8 @@ simulator.</p>
 <section id="obtain-the-mesh-object">
 <h3>Obtain the Mesh Object<a class="headerlink" href="#obtain-the-mesh-object" title="Permalink to this headline"></a></h3>
 <p>We obtain the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> object by calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">GetGrid()</span></code>
-to manipulate it further, and set its unit of measurements to 1 mm (<code class="docutils literal notranslate"><span class="pre">1e-3</span></code>
-meters):</p>
+to manipulate it further, and set its unit of measurement to 1 mm (<code class="docutils literal notranslate"><span class="pre">1e-3</span></code> meters).
+This will be used as the base unit of all coordinates:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
@@ -464,7 +474,7 @@ mesh resolution via the following code:</p>
 <span class="kn">from</span> <span class="nn">openEMS.physical_constants</span> <span class="kn">import</span> <span class="n">C0</span>
 
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
-<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
@@ -475,18 +485,19 @@ mesh resolution via the following code:</p>
 <section id="a-simple-but-flawed-mesh">
 <h3>A Simple But Flawed Mesh<a class="headerlink" href="#a-simple-but-flawed-mesh" title="Permalink to this headline"></a></h3>
 <p>Now, the most straightforward way of meshing the model is to draw some lines
-between [-50, 50] on the X and Y axes, and some lines between [-8, 8] on the Z axis.
-This is best done by drawing two lines at the beginning and end of each axis,
-using the <code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLine()</span></code> method:</p>
+in the [-50, 50] range on the X and Y axes, and some lines in the [-8, 8] range
+on the Z axis.  This is best done by drawing two lines at the beginning and
+end of each axis, using the <code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLine()</span></code> method:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>  <span class="c1"># two lines at -50, 50</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>  <span class="c1"># two lines at -50, 50</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>    <span class="c1"># two lines at -8, 8</span>
 </pre></div>
 </div>
-<p>Once we have two lines per axis, one can ask CSXCAD to automatically smooth
-the mesh based on all existing lines via
+<p>Once we have two lines per axis, one can ask CSXCAD to automatically insert
+additional lines by interpolating between existing lines, smoothing the final
+mesh. This feature provided by the function
 <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a>. Its second argument
-is the minimum spacing between the lines, here we set it be <code class="docutils literal notranslate"><span class="pre">res</span></code>. This is the
+is the minimum spacing between the lines, here we set it to <code class="docutils literal notranslate"><span class="pre">res</span></code>. This is the
 desired mesh resolution we’ve just calculated:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
@@ -499,10 +510,11 @@ desired mesh resolution we’ve just calculated:</p>
 <p>You may be unable to see the mesh lines in AppCSXCAD, as they may be blocked by the
 object due to their overlaps. If it happens, it’s necessary to view the model from
 an angle or a different direction (e.g. if there are no mesh lines when viewed from
-the top, try dragging the model to view it with a slight angle). It’s also useful
+the top, try dragging the model to view it from an oblique angle). It’s also useful
 to change the “Grid opacity” slider to the maximum (but it still requires viewing from
-an angle). AppCSXCAD only renders 2D and 3D cells, if only one axis has mesh lines,
-no lines will be displayed.</p>
+an angle).</p>
+<p>AppCSXCAD only renders 2D and 3D cells, if only one axis has mesh lines, no lines
+will be displayed.</p>
 <img alt="../../../_images/appcsxcad-opacity-slider.png" src="../../../_images/appcsxcad-opacity-slider.png" />
 </div>
 <p>Our 3D model’s XY and YZ cross-sections are:</p>
@@ -511,22 +523,24 @@ no lines will be displayed.</p>
 </section>
 <section id="a-practical-mesh">
 <h3>A Practical Mesh<a class="headerlink" href="#a-practical-mesh" title="Permalink to this headline"></a></h3>
-<p>Unfortunately, using the mesh as shown in a simulation will produce
-incorrect results due to several problems.</p>
+<p>Unfortunately, using the mesh as previously defined in a simulation will
+produce incorrect results due to several problems.</p>
 <section id="simulation-box-size">
 <h4>Simulation Box Size<a class="headerlink" href="#simulation-box-size" title="Permalink to this headline"></a></h4>
-<p>Our simulation box is as large as the waveguide; there’s no empty
+<p>Our simulation box exactly fits the waveguide; there’s no empty
 space around the waveguide in the simulation box, so the electric
-field around the waveguide is not modeled correctly. To be fair,
+field around the waveguide is truncated in the model. To be fair,
 there are legitimate use cases if the surrounding field is irrelevant,
 such as when modeling an infinite-length waveguide, or a capacitor
 stuck in a metal box. But here, we are modeling a finite waveguide
 with realistic behaviors, including fringe fields and radiation.</p>
 <p>As a quick fix to the problem, one can make the simulation box several
 times as big in volume in comparison to the waveguide, giving plenty of
-room for the simulation to breathe. We delete the original three
+room for the simulation to breathe. This allows fringe fields to
+naturally decay.</p>
+<p>We delete the original three
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLine()</span></code> calls and replace them with
-the following:</p>
+the following code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># delete these lines</span>
 <span class="c1"># mesh.AddLine(&#39;x&#39;, [-50, 50])  # two lines at -50, 50</span>
 <span class="c1"># mesh.AddLine(&#39;y&#39;, [-50, 50])  # two lines at -50, 50</span>
@@ -544,27 +558,29 @@ the following:</p>
 <p class="admonition-title">Important</p>
 <p>If it’s necessary to capture fringe fields, increase the
 size of the simulation box beyond the object. The first
-and line mesh lines on each axis defines the simulation
+and line mesh lines on each axis define the simulation
 box’s boundary.</p>
 </div>
 </section>
 <section id="zero-thickness-metal-alignment">
 <h4>Zero-Thickness Metal Alignment<a class="headerlink" href="#zero-thickness-metal-alignment" title="Permalink to this headline"></a></h4>
 <p>The Z mesh lines are now going from -50 to 50, and we’re going to
-rely on automation (by <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a>)
+rely on automatic interpolation
+(by <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a>)
 to fill the gaps with additional lines.
 The lack of guaranteed mesh line alignment becomes a problem.
 Zero-thickness objects like the metal plates must align to an exact mesh
-line, otherwise these objects can’t be simulated. Thus, we create two
-mesh lines on the Z axis at the exact level of the plates:</p>
+line, otherwise these objects can’t be simulated and will be ignored
+by the simulator. Thus, we create two mesh lines on the Z axis at the
+exact level of the plates:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># zero-thickness metal plates need mesh lines at their exact levels</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Zero-thickness metal plates (and other objects) need mesh lines at
-their exact levels.</p>
+<p>Zero-thickness metal plates (and other planar objects) need mesh
+lines at their exact levels.</p>
 </div>
 </section>
 <section id="rule">
@@ -581,8 +597,8 @@ mesh resolution is inefficient and ineffective. It’s wasteful and
 only has a marginal effect.</p>
 <p>To mitigate this technical limitation, the mesh should be intentionally
 misaligned with metal edges. For the best results, we introduce additional
-cells with different sizes around the edge, creating an non-uniform
-rectilinear with variable mesh spacing. Around the metal edge, the metal
+cells with different sizes around the edge, creating a non-uniform
+rectilinear mesh with variable spacing. Around the metal edge, the metal
 occupies 1/3 of a cell, while the vacuum or insulator occupies 2/3 of a
 cell. This is known as the <strong>1/3-2/3 rule</strong>.</p>
 <p>Let’s apply the rule to the X and Y axis:</p>
@@ -605,12 +621,12 @@ cell. This is known as the <strong>1/3-2/3 rule</strong>.</p>
 </pre></div>
 </div>
 <p>The interval between the 1/3 and 2/3 mesh lines (i.e. the length of the
-cell) is <code class="docutils literal notranslate"><span class="pre">highres</span></code>, it’s smaller than the base interval <code class="docutils literal notranslate"><span class="pre">res</span></code> by a
-factor of <cite>1.5</cite>. This is a workaround: If the same mesh resolution is
+cell) is <code class="docutils literal notranslate"><span class="pre">highres</span></code>, which is smaller than the base interval <code class="docutils literal notranslate"><span class="pre">res</span></code> by a
+factor of 1.5. This is a workaround: If the same mesh resolution is
 used for all cells, when we later smooth the mesh,
 <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a> may add additional mesh
 lines within our handcrafted cells, effectively undoing the 1/3-2/3 rule.
-Using an interval <cite>highres</cite> works around the problem, since
+Using the <cite>highres</cite> interval works around the problem, since
 <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a> is not allowed to
 subdivide an interval smaller than <code class="docutils literal notranslate"><span class="pre">res</span></code>. A factor of 1.5 is recommended to
 preserve mesh smoothness.</p>
@@ -620,29 +636,31 @@ preserve mesh smoothness.</p>
 <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s inspect the model again, it’s now much better.</p>
+<p>Now let’s inspect the model again; it’s now much better.</p>
 <a class="reference internal image-reference" href="../../../_images/capacitor_xy_bettermesh.png"><img alt="../../../_images/capacitor_xy_bettermesh.png" src="../../../_images/capacitor_xy_bettermesh.png" style="width: 49%;" /></a>
 <a class="reference internal image-reference" href="../../../_images/capacitor_yz_bettermesh.png"><img alt="../../../_images/capacitor_yz_bettermesh.png" src="../../../_images/capacitor_yz_bettermesh.png" style="width: 49%;" /></a>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p><strong>Perspective.</strong> The mesh line alignment may look misleading in AppCSXCAD
-due to different camera angle and perspective when looking at the 3D scene.
-Click the <span class="guilabel">2D</span> button for a planar view.</p>
+due to an oblique camera angle in the 3D scene. Click the
+<span class="guilabel">2D</span> button for a planar view.</p>
 <img alt="../../../_images/appcsxcad-2d-button.png" src="../../../_images/appcsxcad-2d-button.png" />
 <img alt="../../../_images/appcsxcad-opacity-slider.png" src="../../../_images/appcsxcad-opacity-slider.png" />
 <p>When in doubt, use <span class="guilabel">Rectilinear Grid</span> panel’s <span class="guilabel">Edit</span> button
 (or call <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.GetLines" title="CSXCAD.CSRectGrid.CSRectGrid.GetLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GetLines()</span></code></a>) to check mesh
 coordinates manually.</p>
 <p><strong>Mesh interval.</strong> Use a smaller mesh interval <code class="docutils literal notranslate"><span class="pre">highres</span> <span class="pre">=</span> <span class="pre">res</span> <span class="pre">/</span> <span class="pre">1.5</span></code>
-for cells with
-1/3-2/3 rules to prevent <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a>
-from undoing it. Alternatively, one may avoid calling this function by
-adding mesh lines one by one manually, or by extracting all generated
-lines and removing unwanted ones, or by moving the whole simulated
-structure by an offset. For our purpose, the <code class="docutils literal notranslate"><span class="pre">highres</span></code> workaround
-is the most convenient solution.</p>
+for cells where 1/3-2/3 rules is applied
+to prevent <a class="reference internal" href="../../CSXCAD/CSRectGrid.html#CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines" title="CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SmoothMeshLines()</span></code></a>
+from undoing it. Alternatively, one may avoid calling this function by:</p>
+<ul class="simple">
+<li><p>Adding mesh lines one by one manually.</p></li>
+<li><p>Extracting all generated lines and removing unwanted ones.</p></li>
+<li><p>Moving the whole simulated structure by an offset.</p></li>
+</ul>
+<p>For our purpose, the <code class="docutils literal notranslate"><span class="pre">highres</span></code> workaround is the most convenient solution.</p>
 <p><strong>Imperfect rule is still better than no rule.</strong> If the
-simulated structure is complicated, making it difficult to enforce the
+simulated structure is complicated, making it difficult to apply the
 1/3-2/3 rule, at least try avoiding an exact alignment between metal
 edge and the mesh. This won’t be as accurate as the 1/3-2/3 rule, but
 still gives a small accuracy boost at no cost.</p>
@@ -653,24 +671,24 @@ still gives a small accuracy boost at no cost.</p>
 <section id="optional-create-a-field-dump-box">
 <span id="fielddump"></span><h2>Optional: Create A Field Dump Box<a class="headerlink" href="#optional-create-a-field-dump-box" title="Permalink to this headline"></a></h2>
 <p>Some applications make use of the raw electromagnetic fields, not just the
-input and output signals. We can do this by creating a dump box to save raw
-field samples to disk. For troubleshooting malfunctioning setups, this
-is quite helpful as one can identify the problematic region through direct
-visualization.</p>
+input and output signals. We can do this by creating a “dump box” (a region
+in space where field values are recorded) to save field samples to disk.
+For troubleshooting malfunctioning setups, this is especially helpful as one can
+identify the problematic region through direct visualization.</p>
 <p>Several kinds of dump boxes exist.</p>
 <ol class="arabic simple">
 <li><p>Time-domain dumps of electric field <span class="math notranslate nohighlight">\(\mathbf{E}\)</span>, auxiliary magnetic
 field <span class="math notranslate nohighlight">\(\mathbf{H}\)</span>, electric conduction current <span class="math notranslate nohighlight">\(\mathbf{J}\)</span>,
 total current density <span class="math notranslate nohighlight">\(\mathrm{\nabla} \times \mathbf{H}\)</span>, electric
 displacement field <span class="math notranslate nohighlight">\(\mathbf{D}\)</span>, and magnetic field (flux density)
-<span class="math notranslate nohighlight">\(\mathbf{B}\)</span>, numbered from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<span class="math notranslate nohighlight">\(\mathbf{B}\)</span>, with their <code class="docutils literal notranslate"><span class="pre">dump_type</span></code> numbered from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
 <li><p>Frequency-domain dumps of electric field, auxiliary magnetic field,
 electric conduction current, total current density, electric displacement
 field, and magnetic field (flux density), numbered from <code class="docutils literal notranslate"><span class="pre">10</span></code> to <code class="docutils literal notranslate"><span class="pre">15</span></code>.</p></li>
-<li><p>Specific Absorption Rate (SAR) for E&amp;M radiation exposure analysis.</p></li>
+<li><p>Specific Absorption Rate (SAR) for biological E&amp;M radiation exposure analysis.</p></li>
 <li><p>Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
-(special, requires <a class="reference internal" href="../openEMS.html#openEMS.openEMS.CreateNF2FFBox" title="openEMS.openEMS.CreateNF2FFBox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS.openEMS.CreateNF2FFBox()</span></code></a> and a separate
-post-processing tool).</p></li>
+(special setup required, via <a class="reference internal" href="../openEMS.html#openEMS.openEMS.CreateNF2FFBox" title="openEMS.openEMS.CreateNF2FFBox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS.openEMS.CreateNF2FFBox()</span></code></a> and a
+separate post-processing tool).</p></li>
 </ol>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -684,14 +702,15 @@ on the upper waveguide plate as a 2D surface, using the
 <span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>We do something slightly unusual here: The XY plane of the entire
+<p>We do something slightly unusual here: The XY slice of the entire
 simulation box is dumped at Z = 8, not just the waveguide plate.
 This way, we can visualize the current both on the waveguide plates
-and in vacuum, allowing us to see radiation into free space.</p>
+and in vacuum, allowing us to see radiated field in the surrounding
+free space.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>openEMS obtains the total current density by calculating
-<span class="math notranslate nohighlight">\(\mathrm{\nabla} \times \mathbf{H}\)</span>, which is
+<p>openEMS calculates the total current density via Ampere-Maxwell’s
+law <span class="math notranslate nohighlight">\(\mathrm{\nabla} \times \mathbf{H}\)</span>, which is
 <span class="math notranslate nohighlight">\(\mathbf{J} + \frac{\partial \mathbf{D}}{\partial t}\)</span>
 (i.e. the sum of conduction current and displacement current).</p>
 </div>
@@ -705,9 +724,10 @@ on RF/microwave components, such as the standard 50 Ω input or output ports
 on circuit boards, signal generators, oscilloscopes, and especially Vector
 Network Analyzers (VNA). A port is treated as a lumped circuit, located
 at a defined position. It acts as a voltage source or load with a
-resistive impedance. It can inject a signal at the Device-Under-Test (DUT)
-or measure a response, either from its own signal or from another port.</p>
-<figure class="align-default" id="id27">
+resistive impedance. It can inject a signal to the Device-Under-Test (DUT)
+or measure the DUT’s response, either from its own signal or from another
+port.</p>
+<figure class="align-default" id="id29">
 <a class="with-border reference internal image-reference" href="../../../_images/vna_ports.svg"><img alt="../../../_images/vna_ports.svg" class="with-border" src="../../../_images/vna_ports.svg" width="49%" /></a>
 <figcaption>
 <p><span class="caption-text">The “port” in openEMS serves a purpose similar to the physical
@@ -719,7 +739,7 @@ its input-output relationships without an internal structure.
 Note that port implementations are fundamentally different in
 physical instruments (via circuits) and in openEMS simulations
 (by loading numerical values into Yee cells). Image by Julien Hillairet,
-from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed under BSD-3, modified for clarity.</span><a class="headerlink" href="#id27" title="Permalink to this image"></a></p>
+from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed under BSD-3, modified for clarity.</span><a class="headerlink" href="#id29" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Internally, a port is implemented by locating the Yee cells occupied
@@ -734,8 +754,10 @@ at this region.</p>
 <section id="select-the-right-port-type">
 <h3>Select the Right Port Type<a class="headerlink" href="#select-the-right-port-type" title="Permalink to this headline"></a></h3>
 <p>In openEMS, ports are ideal sources of E&amp;M fields, but they are not ideal
-<em>launchers</em> of E&amp;M waves into structures. If port placement is not optimized,
-it creates a region of discontinuity, which may introduce artifacts such
+<em>launchers</em> of E&amp;M waves into structures due to a discontinuity at the
+boundary between the port and the structure.
+If port placement is not optimized,
+this region of discontinuity may introduce artifacts such
 as reflections or excitation of spurious modes. Optimizing the placement
 and implementation of a port reduces these artifacts. This can be done
 by using smooth transitions or by shaping the electric fields initially
@@ -743,10 +765,10 @@ injected by the port.</p>
 <p>In openEMS, the standard port is the lumped port
 (<a class="reference internal" href="../openEMS.html#openEMS.openEMS.AddLumpedPort" title="openEMS.openEMS.AddLumpedPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedPort()</span></code></a>) that works with most structures.
 If an optimal transition is needed, openEMS also provides optimized implementations
-of curved ports (<code class="docutils literal notranslate"><span class="pre">AddCurvePort.m</span></code>), microstrip (<a class="reference internal" href="../ports.html#openEMS.ports.MSLPort" title="openEMS.ports.MSLPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MSLPort()</span></code></a>),
+of curved (<code class="docutils literal notranslate"><span class="pre">AddCurvePort.m</span></code>), microstrip (<a class="reference internal" href="../ports.html#openEMS.ports.MSLPort" title="openEMS.ports.MSLPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MSLPort()</span></code></a>),
 stripline (<code class="docutils literal notranslate"><span class="pre">AddStripLinePort.m</span></code>), coplanar waveguide (<code class="docutils literal notranslate"><span class="pre">AddCPWPort.m</span></code>),
-and coax cables (<code class="docutils literal notranslate"><span class="pre">AddCoaxialPort.m</span></code>). For now, the lumped ports suffice
-for our purpose.</p>
+and coax cable (<code class="docutils literal notranslate"><span class="pre">AddCoaxialPort.m</span></code>) ports. For now, the lumped ports
+suffice for our purpose.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Some port types are not <em>ported</em> (no pun intended) to Python yet.</p>
@@ -758,7 +780,7 @@ there is only one conductor. An ordinary port can’t excite it correctly,
 as the waveguide is essentially a DC short circuit (unlike our parallel-plate
 waveguide, which has two conductors). Enclosed waveguides require
 special waveguide ports to excite the unique TE-mode waves. This is why
-openEMS provides generic waveguides (<a class="reference internal" href="../ports.html#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">WaveguidePort()</span></code></a>),
+openEMS provides general waveguides (<a class="reference internal" href="../ports.html#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">WaveguidePort()</span></code></a>),
 rectangular waveguides (<a class="reference internal" href="../ports.html#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">RectWGPort()</span></code></a>), and circular
 waveguides (<code class="docutils literal notranslate"><span class="pre">AddCircWaveGuidePort.m</span></code>) ports.</p>
 <div class="admonition note">
@@ -771,7 +793,7 @@ Optimizing the placement and implementation of a port reduces artifacts.
 Alternatively, these artifacts
 can be removed through calibration or de-embedding algorithms, an
 advanced topic beyond the scope of this tutorial.</p>
-<figure class="align-default" id="id28">
+<figure class="align-default" id="id30">
 <a class="with-border reference internal image-reference" href="../../../_images/error-box.svg"><img alt="../../../_images/error-box.svg" class="with-border" src="../../../_images/error-box.svg" width="60%" /></a>
 <figcaption>
 <p><span class="caption-text">The artifacts introduced by a two-port measurement can be viewed
@@ -781,36 +803,35 @@ called their S-parameters. Measurement error can be reduced by making
 error boxes nearly transparent using optimized port transitions.
 Alternatively, by mathematically removing the port’s contributions from
 the measured response using linear algebra, a process known as
-calibration or de-embedding (image by Ziad Hatab, Michael Ernst Gadringer,
-and Wolfgang Bösch, from <em>Indirect Measurement of Switch
-Terms of a Vector Network Analyzer with Reciprocal Devices</em>, licensed
-under CC BY-SA 4.0).</span><a class="headerlink" href="#id28" title="Permalink to this image"></a></p>
+calibration or de-embedding (image by Ziad Hatab et, al., licensed
+under CC BY-SA 4.0 <a class="footnote-reference brackets" href="#id28" id="id2">14</a>)</span><a class="headerlink" href="#id30" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="test-fixture-as-1-port-or-2-port-network">
 <h3>Test Fixture as 1-Port or 2-Port Network<a class="headerlink" href="#test-fixture-as-1-port-or-2-port-network" title="Permalink to this headline"></a></h3>
-<p>To analyze the frequency response of the DUT, both 1-port and 2-port
-measurements can be made. In a 1-port measurement (<em>shunt</em> method),
-a signal is injected into the DUT using a 50 Ω port, and the reflected
-signal at the same port is measured. In a 2-port measurement, the DUT is
-connected either in series (<em>series</em> method) or parallel (<em>shunt-through</em>
-method) between the transmitter and receiver.
+<p>To analyze the frequency response of the DUT, both 1-port, 2-port, and
+multi-port measurements are available. In a 1-port measurement (<em>shunt</em>
+method), a signal is injected into the DUT using a 50 Ω port, and the
+reflected signal at the same port is measured. In a 2-port measurement,
+the DUT is connected either in series (<em>series</em> method) or parallel
+(<em>shunt-through</em> method) between the transmitter and receiver.
 A signal is injected into the DUT using a 50 Ω transmitter port, and the
 received signal is measured by the 50 Ω receiver port at the other side.
 The 2-port techniques are shown in the following circuit diagram (the
 impedance <code class="docutils literal notranslate"><span class="pre">Z</span></code> is a function of frequency).</p>
-<figure class="align-default" id="id29">
+<figure class="align-default" id="id31">
 <img alt="../../../_images/vna-shunt-thru-series.svg" class="with-border" src="../../../_images/vna-shunt-thru-series.svg" /><figcaption>
 <p><span class="caption-text">2-port shunt-through measurement (DUT in parallel), and 2-port series
-(DUT in series) measurement.</span><a class="headerlink" href="#id29" title="Permalink to this image"></a></p>
+(DUT in series) measurement.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>In the real world, the 1-port measurement method is only accurate when
-the DUT’s impedance is close to the system impedance. If the impedance
+the DUT’s impedance is close to the port impedance. If the impedance
 of the DUT is too high or too low, almost all energy is reflected back.
-Small differences between strong reflections are hard to distinguish.
+overwhelming the receiver with strong reflections, making them are hard to
+distinguish.
 For low-impedance DUTs, results are also sensitive to the port’s contact
 resistance. Both result in significant measurement errors.</p>
 <p>Instead, two-port measurements detect the weak signal transmitted across
@@ -823,9 +844,10 @@ in microwave measurements, we follow the 2-port method here.</p>
 </section>
 <section id="create-ports">
 <h2>Create Ports<a class="headerlink" href="#create-ports" title="Permalink to this headline"></a></h2>
-<p>Ports and excitations are related to the FDTD simulation, not just the
-3D structure, so they must be added only after associating our CSXCAD
-structure with the FDTD simulation:</p>
+<p>Ports and excitations are associated with the FDTD simulation object
+<a class="reference internal" href="../openEMS.html#openEMS.openEMS" title="openEMS.openEMS"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS()</span></code></a>. We need to create an instance of the
+simulation, and link the CSXCAD 3D structure <code class="docutils literal notranslate"><span class="pre">csx</span></code> with the
+simulator:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openEMS</span>
 <span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">()</span>
 <span class="n">fdtd</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">csx</span><span class="p">)</span>
@@ -841,12 +863,12 @@ coordinates span from [-8, 8]. This matches the intuition of a
 circuit diagram, in which a lumped port is vertically connected
 across the horizontal transmission line. The port’s internal voltage
 source acts as both a wire and a source of electric field.</p>
-<figure class="align-default" id="id30">
+<figure class="align-default" id="id32">
 <img alt="../../../_images/lumped-port.svg" class="with-border" src="../../../_images/lumped-port.svg" /><figcaption>
 <p><span class="caption-text">An ideal lumped port is connected vertically across a horizontal
 circuit. Its internal voltage source acting as both a wire and a
 source of electric field. A lumped excitation port in openEMS
-works similarly here.</span><a class="headerlink" href="#id30" title="Permalink to this image"></a></p>
+works similarly here.</span><a class="headerlink" href="#id32" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>To complicate the issue further, a port must cross at least a mesh line, since
@@ -861,17 +883,18 @@ issues are negligible for this demo.</p>
 <p>A port must cross or align exactly with at least one mesh line, otherwise
 it can’t be simulated.</p>
 </div>
-<p>Another question is whether the port should have a length and width. For
-transmission line simulations, the answer is often yes - the port should
-have a width as wide as the
-transmission line to minimize discontinuity. On the other hand, one can usually
-keep the length 0. Here to make the problem more interesting, we simulate a
+<p>Another consideration is whether the port should have a length and width. For
+transmission line simulations, the port should have a width as wide as the
+line to minimize discontinuity. On the other hand, one can usually
+keep the length 0, it represents a measurement plane which doesn’t extend
+into the line. Here to make the problem more interesting, we simulate a
 port much smaller than the width of the plates to study the consequences
 of impedance mismatch. We choose to create a port with a 5 mm width.</p>
-<p>Both ports have an input (or output) impedance of 50 Ω, but only the first
-port is used for excitation (input), so we set Port 1’s <code class="docutils literal notranslate"><span class="pre">excite</span></code> attribute
-to <code class="docutils literal notranslate"><span class="pre">1</span></code>, and Port 2’s <code class="docutils literal notranslate"><span class="pre">excite</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">0</span></code>. The parameter <code class="docutils literal notranslate"><span class="pre">z</span></code> is
-the direction of the field, pointing from one plate to another on the Z axis.</p>
+<p>Both ports have an internal impedance of 50 Ω, but only the first port
+is used for excitation, so we set Port 1’s <code class="docutils literal notranslate"><span class="pre">excite</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">1</span></code> (input),
+and Port 2’s <code class="docutils literal notranslate"><span class="pre">excite</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">0</span></code> (load and output). The parameter <code class="docutils literal notranslate"><span class="pre">z</span></code>
+is the direction of the field, pointing from one plate to another on the Z
+axis.</p>
 <p>Both ports are also added to a Python list to keep track of them for
 future processing:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">z0</span> <span class="o">=</span> <span class="mi">50</span>
@@ -891,7 +914,7 @@ future processing:</p>
 wideband and smooth signal without discontinuous jumps. In openEMS,
 the Gaussian pulse is implemented as a sinusoidal carrier at the center
 frequency, with its amplitude modulated by a Gaussian function. This signal
-produces an well-distributed spectrum with a wide range of frequencies in both
+produces a well-distributed spectrum with a wide range of frequencies in both
 sidebands around the carrier. This relatively clean spectrum enables
 openEMS to accurately extract the DUT’s frequency response in the
 frequency domain.</p>
@@ -910,7 +933,7 @@ cause numerical problems like dispersion and unrealistic excitation
 of high-order modes. As a workaround, users can provide custom
 bandwidth-limited expressions to openEMS (no built-in implementations
 exist currently) via <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetCustomExcite" title="openEMS.openEMS.SetCustomExcite"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetCustomExcite()</span></code></a>. For an
-example, see <a class="footnote-reference brackets" href="#id20" id="id2">7</a>.  However, these pulses also suffer from rapid energy
+example, see <a class="footnote-reference brackets" href="#id21" id="id3">7</a>.  However, these pulses also suffer from rapid energy
 roll-off at high frequencies. The Gaussian pulse, by comparison,
 retains significant energy in both sidebands around the center carrier
 frequency.</p>
@@ -935,7 +958,7 @@ These are known as the <em>boundary conditions</em> of Partial Differential
 Equations (PDEs). To create an effective simulation, we must select the
 appropriate boundary conditions. There are six in total, located at
 the six faces of the box: <code class="docutils literal notranslate"><span class="pre">x_min</span></code>, <code class="docutils literal notranslate"><span class="pre">x_max</span></code>, <code class="docutils literal notranslate"><span class="pre">y_min</span></code>, <code class="docutils literal notranslate"><span class="pre">y_max</span></code>,
-<code class="docutils literal notranslate"><span class="pre">z_min</span></code>, <code class="docutils literal notranslate"><span class="pre">z_max</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">z_min</span></code>, <code class="docutils literal notranslate"><span class="pre">z_max</span></code>. Each is independently adjustable.</p>
 <section id="reflecting-dirichlet-boundary-conditions">
 <h3>Reflecting (Dirichlet) Boundary Conditions<a class="headerlink" href="#reflecting-dirichlet-boundary-conditions" title="Permalink to this headline"></a></h3>
 <p>If the finite nature of the simulation box and the reflection of E&amp;M waves at
@@ -944,7 +967,7 @@ zero-overhead solution. They efficiently model structures inside metal
 enclosures, above a ground plane, or with an electric or magnetic field
 symmetry across a plane. No explicit modeling is necessary; the boundary
 conditions implicitly enforce these behaviors.</p>
-<figure class="align-default" id="id31">
+<figure class="align-default" id="id33">
 <a class="with-border reference internal image-reference" href="../../../_images/reverberation_chamber.jpg"><img alt="../../../_images/reverberation_chamber.jpg" class="with-border" src="../../../_images/reverberation_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure.
@@ -953,7 +976,7 @@ chambers. Taking advantage of the standing waves due to reflections,
 one can create strong electric fields at localized regions to generate
 electromagnetic interference for testing.
 Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
-licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
+licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id33" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Perfect Electric Conductor (PEC)</strong>: The simplest treatment sets
@@ -970,8 +993,9 @@ Magnetic Conductor (PMC) with infinite permeability, also known as the
 Magnetic Wall. All incoming waves are fully reflected back as well,
 but with a phase opposite to that of the PEC, analogous to a 1D
 transmission line terminated by an open circuit. It’s used mainly as
-a mathematical tool for structures with field symmetry across a plane,
-as no natural material in the real world behaves like a PMC.</p>
+a mathematical tool to enforce field symmetry when simulating a
+half-structure, as no natural material in the real world behaves like
+a PMC.</p>
 <p>Mathematically, both PEC and PMC are Dirichlet boundary conditions
 that enforce fixed field values (e.g. zero).</p>
 <div class="admonition note">
@@ -979,7 +1003,7 @@ that enforce fixed field values (e.g. zero).</p>
 <p>For our simulation, instead of explicitly modeling metal
 plates, we can model a vacuum with nothing inside, taking advantage
 of the PEC boundary conditions at <code class="docutils literal notranslate"><span class="pre">z_min</span></code> and <code class="docutils literal notranslate"><span class="pre">z_max</span></code> for
-fast computation. However, this is out of the scope of this tutorial,
+fast computation. However, this is out of this tutorial’s scope,
 and it won’t capture the fringe fields above and below. We won’t use
 PEC or PMC in this example.</p>
 </div>
@@ -992,12 +1016,12 @@ box larger than the device, allowing some fringe fields. Then, at the
 boundaries, the electromagnetic waves are absorbed and dissipated without
 reflecting back into the box, creating the illusion of an infinitely large
 free space.</p>
-<figure class="align-default" id="id32">
+<figure class="align-default" id="id34">
 <a class="with-border reference internal image-reference" href="../../../_images/anechoic_chamber.jpg"><img alt="../../../_images/anechoic_chamber.jpg" class="with-border" src="../../../_images/anechoic_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PML at all boundaries acts like an anechoic chamber
 in an EMC test lab, mimicking an infinitely large free space. Image by
-Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id32" title="Permalink to this image"></a></p>
+Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id34" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Two kinds of Absorbing Boundary Conditions are implemented in openEMS.</p>
@@ -1006,9 +1030,10 @@ Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="
 first-generation boundary condition purely defined by differential
 equations, originally invented by Gerrit Mur in the 1980s. It has
 a moderate computational overhead, but it works only if the E&amp;M wave
-is orthogonal to the boundary and has a well-defined phase velocity
-(e.g. the speed of light). Thus, reflections may cause errors if
-strong radiation exists due to imperfect absorption.</p></li>
+is traveling at a direction orthogonal to the boundary, with a
+well-defined phase velocity (e.g. the speed of light). Thus,
+reflections may cause errors if strong radiation exists due to
+imperfect absorption.</p></li>
 <li><p><strong>Perfectly Matched Layer (PML)</strong>. This is the
 second-generation boundary condition proposed in the 1990s, modeling
 the behavior of a hypothetical E&amp;M wave-absorbing material. Unlike
@@ -1021,8 +1046,8 @@ highest computational overhead (especially in openEMS, due to suboptimal
 implementation). Avoid it if efficiency is critical (e.g. only use
 PML at the simulation box’s face directly hit by radiation, and use
 MUR for other boundaries). Intrusion of fringe fields and evanescent
-waves into the PML can destabilize it. Radiating structures must be kept
-at a distance of <span class="math notranslate nohighlight">\(\lambda / 4\)</span>.</p>
+waves into the PML can destabilize it, causing the simulation to “blow-up”.
+Radiating structures must be kept at a distance of <span class="math notranslate nohighlight">\(\lambda / 4\)</span>.</p>
 </li>
 </ol>
 <div class="admonition important">
@@ -1073,11 +1098,11 @@ discouraged due to poor readability, but one may encounter them in older example
 <td><p><code class="docutils literal notranslate"><span class="pre">MUR</span></code></p></td>
 <td><p>2</p></td>
 <td><p>Absorbing. Slow.</p>
-<p>Only absorbs waves normal to the boundary.</p>
+<p>Only absorbs waves orthogonal to the boundary.</p>
 <p>Named after Gerrit Mur.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><p>Perfectly Matched Laye</p></td>
+<tr class="row-odd"><td><p>Perfectly Matched Layer</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">PML_8</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">PML_x</span></code></p>
 </td>
@@ -1124,7 +1149,7 @@ last:</p>
 <span class="c1"># calculate mesh resolution according to simulation frequency</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
-<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
@@ -1232,7 +1257,7 @@ build upon further:</p>
 <span class="c1"># calculate mesh resolution according to simulation frequency</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
-<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
@@ -1380,17 +1405,17 @@ build upon further:</p>
 and <code class="docutils literal notranslate"><span class="pre">postproc</span></code>. This allows incremental development.</p>
 <p>One can immediately inspect the model in AppCSXCAD without starting
 the simulation via:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">generate</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">Parallel_Plate_Capacitor_Waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">generate</span>
 </pre></div>
 </div>
 <p>Once checked, one can manually start the simulation via:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">simulate</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">Parallel_Plate_Capacitor_Waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">simulate</span>
 </pre></div>
 </div>
 <p>Likewise, one can experiment with different post-processing
 routines based on existing data without wasting time on
 re-running the simulation via:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">postproc</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">Parallel_Plate_Capacitor_Waveguide</span><span class="o">.</span><span class="n">py</span> <span class="n">postproc</span>
 </pre></div>
 </div>
 <p>In the future, it’s also easy to modify the program to add
@@ -1400,8 +1425,10 @@ and other features.</p>
 </section>
 <section id="run-simulation">
 <h2>Run Simulation<a class="headerlink" href="#run-simulation" title="Permalink to this headline"></a></h2>
-<p>If everything works as expected, the following screen appears. This
-simulation should finish within a few minutes:</p>
+<section id="expected-simulator-output">
+<h3>Expected Simulator Output<a class="headerlink" href="#expected-simulator-output" title="Permalink to this headline"></a></h3>
+<p>If everything works as expected, the following screen appears.
+For this small simulation, it should finish within a few minutes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 Parallel_Plate_Capacitor_Waveguide.py
  ----------------------------------------------------------------------
  | openEMS 64bit -- version v0.0.36-16-g7d7688a
@@ -1418,7 +1445,6 @@ simulation should finish within a few minutes:</p>
                    compiled against: 9.1.0
 
 Create FDTD operator (compressed SSE + multi-threading)
-CalcNyquistNum(4756540486875873280,4438156221306557130)
 FDTD simulation size: 70x70x37 --&gt; 181300 FDTD cells
 FDTD timestep is: 5.3429e-12 s; Nyquist rate: 9 timesteps @1.0398e+10 Hz
 Excitation signal length is: 108 timesteps (5.77033e-10s)
@@ -1444,6 +1470,36 @@ respective solution.</p>
 <li><p><a class="reference internal" href="#unused-excite"><span class="std std-ref">Warning: Unused primitive (type: Box) detected in property: port_excite_1!</span></a></p></li>
 <li><p><a class="reference internal" href="#voltage-integral-error"><span class="std std-ref">CalcVoltageIntegral: Error, only a 1D/line integration is allowed</span></a></p></li>
 </ul>
+</section>
+<section id="convergence-and-divergence-blow-up">
+<h3>Convergence and Divergence (Blow-up)<a class="headerlink" href="#convergence-and-divergence-blow-up" title="Permalink to this headline"></a></h3>
+<p>The simulation runs until the total energy in the simulation box
+decays to nearly zero, 60 dB below the injected initial energy
+by the excitation port. When this occurs, the simulation achieves
+<em>convergence</em> and terminates. Conservely, incorrect or unphysical
+modeling or meshing may destabilize the simulation, causing
+<em>blow-ups</em>. The simulation box’s field strength diverges over time
+due to the accumulation of small errors. The total energy may
+gradually increase towards infinity. If the energy shows signs
+of rapid increases, the simulation should be stopped early via
+<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Control</kbd>-<kbd class="kbd docutils literal notranslate">C</kbd></kbd> to avoid wasting time.</p>
+<p>Note that the displayed energy is only a rough estimate. For
+resonating structures (such as cavity resonators and antennas),
+the energy may go up and down multiple times due to the oscillating
+field strengths. The convergence time required for low-pass (high Q)
+resonators is notoriously long in FDTD simulations due to the lack
+of termination resistances or Absorbing Boundary Conditions to
+dissipate the injected energy.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The termination threshold is adjustable via
+<a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetEndCriteria" title="openEMS.openEMS.SetEndCriteria"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS.openEMS.SetEndCriteria()</span></code></a>, but 60 dB is a
+good default. For advanced usage, <code class="xref py py-meth docutils literal notranslate"><span class="pre">SetNumberOfTimeSteps()</span></code>
+and <code class="xref py py-meth docutils literal notranslate"><span class="pre">SetMaxTime()</span></code> can limit the total number of timesteps
+(in iterations) or virtual time (in seconds) to truncate
+the simulation earlier before convergence.</p>
+</div>
+</section>
 </section>
 <section id="built-in-post-processing">
 <h2>Built-In Post-Processing<a class="headerlink" href="#built-in-post-processing" title="Permalink to this headline"></a></h2>
@@ -1617,9 +1673,9 @@ wave, all S-parameters are complex numbers.</p>
 <section id="calculate-s-parameters">
 <h3>Calculate S-parameters<a class="headerlink" href="#calculate-s-parameters" title="Permalink to this headline"></a></h3>
 <p>In openEMS, after calling <code class="docutils literal notranslate"><span class="pre">CalcPort()</span></code> on a port object, its incident and reflected
-voltages can be accessed via its <cite>uf_inc</cite> and <cite>uf_ref</cite> attributes, which are a <cite>numpy</cite>
-lists with the same number of elements as <code class="docutils literal notranslate"><span class="pre">freq_list</span></code> (which we previously passed to
-<code class="docutils literal notranslate"><span class="pre">CalcPort()</span></code>).</p>
+voltages can be accessed via its <code class="docutils literal notranslate"><span class="pre">uf_inc</span></code> and <code class="docutils literal notranslate"><span class="pre">uf_ref</span></code> attributes, which are
+<code class="docutils literal notranslate"><span class="pre">numpy`</span></code> lists with the same number of elements as <code class="docutils literal notranslate"><span class="pre">freq_list</span></code> (which we previously
+passed to <code class="docutils literal notranslate"><span class="pre">CalcPort()</span></code>).</p>
 <p>Thus, by definition, one can calculate <span class="math notranslate nohighlight">\(S_{11}\)</span> and <span class="math notranslate nohighlight">\(S_{21}\)</span> as the
 following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s11_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
@@ -1629,10 +1685,17 @@ following:</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>We utilize <cite>numpy</cite>’s broadcasting feature here. The quantities <code class="docutils literal notranslate"><span class="pre">uf_ref</span></code> and
-<code class="docutils literal notranslate"><span class="pre">uf_inc</span></code> are all frequency-dependent, thus they’re arrays, not scalars. But
-instead of looping over each frequency explicitly and adding them to an array,
-here, element-wise division is done automatically between every element within
-the two <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays. We will use this feature extensively throughout the
+<code class="docutils literal notranslate"><span class="pre">uf_inc</span></code> are arrays, not scalars. Every element represents a single value at
+the a frequency point. But instead of looping over each element explicitly,
+we can work on all elements simultaneously:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>  <span class="c1"># [5, 7, 9]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">c</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># [10, 14, 18]</span>
+</pre></div>
+</div>
+<p>This way, we can do element-wise arithmetic automatically on the whole
+<code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays. We will use this feature extensively throughout the
 rest of this tutorial.</p>
 </div>
 <p>Two S-parameters <span class="math notranslate nohighlight">\(S_{12}\)</span> and <span class="math notranslate nohighlight">\(S_{22}\)</span> are still missing here. The
@@ -1765,14 +1828,14 @@ to satisfy the potential nitpickers while following the tradition, here we use
 a compromise. Plots are labeled as “Return loss” and use the positive sign
 convention, but also with the Y axis inverted, so that resonances appear
 as familiar valleys.</p>
-<p>For more information, see <a class="footnote-reference brackets" href="#id14" id="id3">1</a> <a class="footnote-reference brackets" href="#id15" id="id4">2</a>.</p>
+<p>For more information, see <a class="footnote-reference brackets" href="#id15" id="id4">1</a> <a class="footnote-reference brackets" href="#id16" id="id5">2</a>.</p>
 </div>
 </section>
 <section id="plot-z-parameters-impedances-via-matplotlib">
 <h3>Plot Z-parameters (Impedances) via matplotlib<a class="headerlink" href="#plot-z-parameters-impedances-via-matplotlib" title="Permalink to this headline"></a></h3>
 <p>It’s straightforward to transform S-parameters to Z-parameters (impedances) using
 well-known formulas, so saving a redundant set of Z-parameters is unnecessary.
-If <span class="math notranslate nohighlight">\(Z0\)</span> is the port impedance, <span class="math notranslate nohighlight">\(S_{11}\)</span> (also known as the
+If <span class="math notranslate nohighlight">\(Z_0\)</span> is the port impedance, <span class="math notranslate nohighlight">\(S_{11}\)</span> (also known as the
 reflection coefficient <span class="math notranslate nohighlight">\(\Gamma\)</span>) is related to the load impedance
 seen at the port via:</p>
 <div class="math notranslate nohighlight">
@@ -2003,7 +2066,7 @@ writes a new line with parameter order of <code class="docutils literal notransl
 </pre></div>
 </div>
 <p>Finally, beware that for 3-port, 4-port, or more ports, the parameters order is
-different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id16" id="id5">3</a></p>
+different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id17" id="id6">3</a></p>
 </section>
 </section>
 <section id="code-checkpoint-3">
@@ -2024,7 +2087,7 @@ obtains if the previous instructions are followed:</p>
 <span class="c1"># calculate mesh resolution according to simulation frequency</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
-<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
@@ -2382,7 +2445,7 @@ accurately model real-world effects.</p>
 <p class="admonition-title">See also</p>
 <p>The features introduced in this manual is only the tip of the
 iceberg, it’s possible to cover all of its aspects here. See
-the full manual <a class="footnote-reference brackets" href="#id25" id="id6">12</a> for usage.</p>
+the full manual <a class="footnote-reference brackets" href="#id26" id="id7">12</a> for usage.</p>
 </div>
 </section>
 <section id="transient-analysis-via-signalintegrity">
@@ -2394,11 +2457,11 @@ input signals, so there’s no loss of generality. In fact, performing
 a time-domain transient simulation using frequency-domain S-parameters
 is a common feature in many proprietary commercial circuit simulators,
 such as <strong class="program">HyperLynx</strong>, <strong class="program">ADS</strong>, or <strong class="program">AWR</strong>. A
-third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id17" id="id7">4</a></p>
+third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id18" id="id8">4</a></p>
 <p>However, in the free and open source world, few (if any) free and
 open source circuit simulators have this capability. For example,
 Ngspice supports S-parameter calculation but not transient
-simulation. <a class="footnote-reference brackets" href="#id18" id="id8">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
+simulation. <a class="footnote-reference brackets" href="#id19" id="id9">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
 simulation with S-parameters, although it’s possible to define
 devices using them.</p>
 <p>The Python package <strong class="program">SignalIntegrity</strong>, designed for signal
@@ -2408,7 +2471,7 @@ integrity expert at LeCroy.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>The software’s internal theory of operation is also published almost
-in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id19" id="id9">6</a>. Each
+in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id20" id="id10">6</a>. Each
 concept is accomplished by both formulas and executable code, making
 it an invaluable reference in this field. The author of this tutorial
 recommends everyone who simulates or measures RF/microwave devices to
@@ -2435,11 +2498,11 @@ local path). You should be able to start it via:</p>
 </div>
 <p>If not, you may need to add this local <code class="file docutils literal notranslate"><span class="pre">bin</span></code> directory into
 your shell’s search path.</p>
-<figure class="align-default" id="id33">
+<figure class="align-default" id="id35">
 <a class="with-border reference internal image-reference" href="../../../_images/si1.png"><img alt="../../../_images/si1.png" class="with-border" src="../../../_images/si1.png" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">The classic 1990s Tcl/Tk (Tkinter) GUI may look old-fashioned,
-but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id33" title="Permalink to this image"></a></p>
+but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id35" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>For the first example, let’s examine the circuit’s time-domain
@@ -2827,7 +2890,7 @@ Computing (HPC) and scientific computing world. One can install it using
 the operating system’s package manager.</p>
 <p>In openEMS, we rely on ParaView to visualize raw electromagnetic fields
 created during the simulation. For troubleshooting malfunctioning simulations
-or understanding the physical behavior of a structure, this is quite helpful
+or understanding the physical behavior of a structure, this is especially helpful
 as one can identify the problematic region directly by visualization.</p>
 <p>We continue our total current density visualization example, introduced
 as an optional step in <a class="reference internal" href="#fielddump"><span class="std std-ref">Optional: Create A Field Dump Box</span></a>. If the simulation finishes with
@@ -2906,7 +2969,7 @@ the scope of this tutorial.</p>
 <p class="admonition-title">See also</p>
 <p>ParaView is a large program used in many scientific applications,
 it’s impossible to cover all of its aspects here. See the full
-manual <a class="footnote-reference brackets" href="#id26" id="id10">13</a> for usage.</p>
+manual <a class="footnote-reference brackets" href="#id27" id="id11">13</a> for usage.</p>
 </div>
 </section>
 </section>
@@ -2916,7 +2979,7 @@ manual <a class="footnote-reference brackets" href="#id26" id="id10">13</a> for 
 <h3>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline"></a></h3>
 <p>As shown in earlier sections using different methods, the presented
 frequency response of this parallel-plate waveguide has anomalous
-losses at high frequencies, around 20 dB at 8 GHz. This behavior
+losses at high frequencies, around 20 dB at 2 GHz. This behavior
 runs against our expectation for lumped capacitors and transmission
 lines, both are essentially lossless.</p>
 <a class="reference internal image-reference" href="../../../_images/s21_db_sim_skrf.svg"><img alt="../../../_images/s21_db_sim_skrf.svg" src="../../../_images/s21_db_sim_skrf.svg" width="49%" /></a>
@@ -3002,7 +3065,7 @@ waveguide is given by <span class="math notranslate nohighlight">\(\lambda = 2d 
 v / \lambda\)</span>, in which <span class="math notranslate nohighlight">\(d\)</span> is the separation between the
 plates, <span class="math notranslate nohighlight">\(m = 1, 2, 3...\)</span> is the waveguide mode index,
 <span class="math notranslate nohighlight">\(v\)</span> is the speed of light in the medium, <span class="math notranslate nohighlight">\(\lambda\)</span> is
-the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id22" id="id11">9</a>
+the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id23" id="id12">9</a>
 Using this calculation, we find that multimoding appears at 9.3 GHz
 and above, so it indeed plays a small role.</p>
 </li>
@@ -3027,7 +3090,7 @@ ports in many cases, not just those found in analytic solutions.</p></li>
 <p class="admonition-title">Important</p>
 <p>Nearly everything can be an RF waveguide or resonator
 when the excitation frequency is high enough. For example,
-the book <a class="footnote-reference brackets" href="#id23" id="id12">10</a> lists four possible high-order microstrip modes.
+the book <a class="footnote-reference brackets" href="#id24" id="id13">10</a> lists four possible high-order microstrip modes.
 In fact, unrealistic excitation of high-order modes is fairly common
 in E&amp;M field solvers as unphysical excitation signals or
 port placements are easily created. Be sure to watch for it,
@@ -3091,7 +3154,7 @@ length, not the intrinsic characteristics of the parallel-plate waveguide.</p>
 <p><strong>Quarter-Wave Impedance Transformer</strong> - This half-wave
 transmission line phenomenon is a special case of the more
 powerful quarter-wave impendance transformer. Learn more
-about it at <a class="footnote-reference brackets" href="#id21" id="id13">8</a>.</p>
+about it at <a class="footnote-reference brackets" href="#id22" id="id14">8</a>.</p>
 <p><strong>Port Discontinuities</strong> - This shows why an optimized
 port transition, as well as the use of de-embedding or calibration,
 are crucial in both simulations and measurements. Otherwise
@@ -3294,52 +3357,57 @@ to <span class="guilabel">Qucsator</span> by clicking it.</p>
 <section id="bibliography">
 <h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline"></a></h2>
 <dl class="footnote brackets">
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id4">1</a></span></dt>
 <dd><p>T. S. Bird, <a class="reference external" href="https://ieeexplore.ieee.org/document/5162049">“Definition and Misuse of Return Loss [Report of the
 Transactions Editor-in-Chief],”</a>
 in IEEE Antennas and Propagation Magazine, vol. 51, no. 2, pp. 166-167,
 April 2009, doi: 10.1109/MAP.2009.5162049.</p>
 </dd>
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/loss-or-gain">Microwaves101: Loss or Gain?</a></p>
 </dd>
-<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/snp-format">Microwaves101: SNP Format</a></p>
 </dd>
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id7">4</a></span></dt>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id8">4</a></span></dt>
 <dd><p>Russell Carroll, <a class="reference external" href="https://emisleuth.com/Articles/How_to_Use_S-parameter_Models_in_PSpice_5-28-2024.pdf">How to Use S-parameter Models in PSpice</a></p>
 </dd>
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id8">5</a></span></dt>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id9">5</a></span></dt>
 <dd><p>Giles Atkinson, <a class="reference external" href="https://sourceforge.net/p/ngspice/discussion/120973/thread/3bce0daf1c/#fffd">Reply to “How to perform transient simulation with S parameter file”</a></p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id9">6</a></span></dt>
+<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id10">6</a></span></dt>
 <dd><p>Peter J. Pupalaikis, <a class="reference external" href="https://www.cambridge.org/core/books/sparameters-for-signal-integrity/2FD44B994CD054E4B844B358E8903A09">S-parameters for Signal Integrity.</a>
 Cambridge University Press, 2020.</p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id2">7</a></span></dt>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id3">7</a></span></dt>
 <dd><p>Ted Yapo, <a class="reference external" href="https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf">A Note on Gaussian Steps in openEMS.</a></p>
 </dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id13">8</a></span></dt>
+<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id14">8</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/quarter-wave-tricks">Quarter-wave Tricks</a></p>
 </dd>
-<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id11">9</a></span></dt>
+<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id12">9</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/06%3A_Waveguides/6.03%3A_Parallel-Plate_Waveguide">Microwave and RF Design II - Transmission Lines,
 6.3: Parallel-Plate Waveguide</a></p>
 </dd>
-<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id12">10</a></span></dt>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id13">10</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/04%3A_Extraordinary_Transmission_Line_Effects/4.06%3A_Microstrip_Operating_Frequency_Limitations">Microwave and RF Design II - Transmission Lines,
 4.6: Microstrip Operating Frequency Limitations</a></p>
 </dd>
-<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
+<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
 <dd><p>Andreas Rennings, Elektromagnetische Zeitbereichssimulationen innovativer
 Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
 2008, pp. 76, eq. 4.77</p>
 </dd>
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id6">12</a></span></dt>
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id7">12</a></span></dt>
 <dd><p><a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/">scikit-rf Manual</a>.</p>
 </dd>
-<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id10">13</a></span></dt>
+<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id11">13</a></span></dt>
 <dd><p><a class="reference external" href="https://docs.paraview.org/">ParaView Manual</a>.</p>
+</dd>
+<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id2">14</a></span></dt>
+<dd><p>Hatab, Ziad, Michael Ernst Gadringer, and Wolfgang Bosch.
+<a class="reference external" href="https://arxiv.org/abs/2306.07066">Indirect Measurement of Switch Terms of a Vector Network Analyzer with
+Reciprocal Devices.</a></p>
 </dd>
 </dl>
 </section>
