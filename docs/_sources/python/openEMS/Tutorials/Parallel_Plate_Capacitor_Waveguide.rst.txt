@@ -1387,11 +1387,14 @@ dissipate the injected energy.
 .. note::
 
    The termination threshold is adjustable via
-   :meth:`openEMS.openEMS.SetEndCriteria`, but 60 dB is a
-   good default. For advanced usage, :meth:`SetNumberOfTimeSteps`
-   and :meth:`SetMaxTime` can limit the total number of timesteps
-   (in iterations) or virtual time (in seconds) to truncate
-   the simulation earlier before convergence.
+   :meth:`~openEMS.openEMS.SetEndCriteria`, but 60 dB is a
+   good default. For advanced usage,
+   :meth:`~openEMS.openEMS.SetNumberOfTimeSteps`
+   and
+   :meth:`~openEMS.openEMS.SetMaxTime` can limit the total
+   number of timesteps (in iterations) or virtual time (in
+   seconds) to truncate the simulation earlier before
+   convergence.
 
 Built-In Post-Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^
