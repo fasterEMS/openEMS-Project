@@ -2403,9 +2403,9 @@ accurately model real-world effects.
 
    **Time-gating.** An alternative possibility is working in the time
    domain using the equivalent TDR responses. If we transform the
-   measured S-parameters into a TDR plot, a time window can be applied
+   measured S-parameters into a TDR plot, a *time gate* can be applied
    that focuses on the response of only the DUT without the early and
-   late reflections by the ports. This window can then be transformed
+   late reflections by the ports. This gated waveform can then be transformed
    back to the frequency domain to "clean" our S-parameters. This is
    not a rigorous solution in comparison to applying proper calibration
    algorithms, but is a quick-and-dirty solution. See [17]_.
