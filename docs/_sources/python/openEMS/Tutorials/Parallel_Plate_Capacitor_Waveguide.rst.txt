@@ -20,10 +20,10 @@ This tutorial covers
 
 * **Simulate**: Run simulation to obtain the S-parameters (frequency response) of
   the waveguide. Understand the meanings of convergence, divergence, and "blow-ups".
- 
+
 * **Built-in Post-Processing**: Calculate the final frequency response (S-parameters)
   and time-domain signal waveforms.
-  
+
      * Plot S-parameters, Z-parameters, time-domain waveforms via matplotlib.
 
      * Save the raw electromagnetic field dump.
@@ -113,7 +113,7 @@ Electric Conductor (PEC)::
     metal = csx.AddMetal('plate')
 
 .. note::
-   Internally, PEC is implemented by forcing the tangential electric field in this 
+   Internally, PEC is implemented by forcing the tangential electric field in this
    region to be zero, which is characteristic of an ideal conductor that can't be penetrated
    by electric field lines. If resistive losses are unimportant, one can use PEC
    rather than a realistic material model for simplicity and efficiency.
@@ -205,10 +205,10 @@ In general, the mesh must satisfy four requirements:
    frequency component) of the signal, so that electromagnetic field details are
    not missed. Thus, we need several cells per wavelength.
 
-#. **Spatial Resolution**. Its interval must be small enough to resolve the 
+#. **Spatial Resolution**. Its interval must be small enough to resolve the
    shapes of the simulated
    structure, so that small details of the structure are not missed. Thus, we
-   need at least a few cells around the important shapes (such as the waveguide 
+   need at least a few cells around the important shapes (such as the waveguide
    plates) of the structure. openEMS uses a rectilinear mesh with variable
    spacing. To save time, only use a fine mesh interval around details on
    a structure; use a coarse mesh for the rest.
@@ -299,7 +299,7 @@ MHz, where the wavelength is 300 m in vacuum.
 
    `Rennings2` is derived in the unpublished paper [11]_,
    see :meth:`~openEMS.openEMS.SetTimeStepMethod` for details.
-   
+
    If you really need small cells
    (e.g. to resolve some important feature of your structure) you
    will have to live with long execution times, or perhaps FDTD is
@@ -338,7 +338,7 @@ mesh resolution via the following code::
     epsilon_r = 1
     v = C0 * math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
-    res = wavelength / 10 
+    res = wavelength / 10
 
 A Simple But Flawed Mesh
 """"""""""""""""""""""""""
@@ -372,10 +372,10 @@ Now is a good time to rerun the script and inspect the 3D model again in AppCSXC
    the top, try dragging the model to view it from an oblique angle). It's also useful
    to change the "Grid opacity" slider to the maximum (but it still requires viewing from
    an angle).
-   
+
    AppCSXCAD only renders 2D and 3D cells, if only one axis has mesh lines, no lines
    will be displayed.
-   
+
    .. image:: images/Parallel_Plate_Capacitor_Waveguide/appcsxcad-opacity-slider.png
 
 Our 3D model's XY and YZ cross-sections are:
@@ -534,7 +534,7 @@ Now let's inspect the model again; it's now much better.
    * Adding mesh lines one by one manually.
    * Extracting all generated lines and removing unwanted ones.
    * Moving the whole simulated structure by an offset.
-   
+
    For our purpose, the ``highres`` workaround is the most convenient solution.
 
    **Imperfect rule is still better than no rule.** If the
@@ -683,7 +683,7 @@ waveguides (``AddCircWaveGuidePort.m``) ports.
    .. figure:: images/Parallel_Plate_Capacitor_Waveguide/error-box.svg
       :class: with-border
       :width: 60%
-   
+
       The artifacts introduced by a two-port measurement can be viewed
       as two linear circuits (left error box, right error box) cascaded in
       series with the DUT. All three circuits are represented as three matrices,
@@ -730,6 +730,10 @@ us to determine the DUT's impedance.
 To illustrate the general principle of two-port networks and S-parameters
 in microwave measurements, we follow the 2-port method here.
 
+.. seealso::
+   See [21]_ [22]_ on impedance determination using the 2-port methods
+   with VNAs.
+
 Create Ports
 ^^^^^^^^^^^^^
 
@@ -743,7 +747,7 @@ simulator::
     fdtd.SetCSX(csx)
 
 To use a lumped port, call the ``openEMS`` object's
-:meth:`~openEMS.openEMS.AddLumpedPort` method. 
+:meth:`~openEMS.openEMS.AddLumpedPort` method.
 
 Let's create two ports at the leftmost and rightmost sides of the
 waveguide. Port 1 should be centered at x = -50, y = 0, and Port 2
@@ -768,7 +772,7 @@ Yee cells. Since we have enforced the 1/3-2/3 rule, if the port is placed
 exactly at the edge of the plate, no mesh lines pass through the port. Thus,
 as a compromise, we shift the port's location to the nearest mesh lines instead.
 This may introduce a small error due to a measurement plane. But these
-issues are negligible for this demo. 
+issues are negligible for this demo.
 
 .. important::
    A port must cross or align exactly with at least one mesh line, otherwise
@@ -1030,11 +1034,11 @@ last::
     import sys
     import math
     import pathlib
-    
+
     import CSXCAD
     import openEMS
     from openEMS.physical_constants import C0
-    
+
     # calculate mesh resolution according to simulation frequency
     unit = 1e-3
     f_min = 100e6  # post-processing only, not used in simulation
@@ -1045,10 +1049,10 @@ last::
     res = wavelength / 10
     # use a smaller cell size around metal edge, not just the base mesh size
     highres = res / 1.5
-    
+
     # port impedance
     z0 = 50
-    
+
     # determine the simulation output path
 
     # find the directory of the script itself
@@ -1060,7 +1064,7 @@ last::
     xmlname = filepath.with_suffix(".xml").name
     # concat two paths
     xmlpath = simdir / xmlname
-    
+
     csx = CSXCAD.ContinuousStructure()
     fdtd = openEMS.openEMS()
 
@@ -1070,24 +1074,24 @@ last::
     # set unit of measurement in the CSXCAD drawing
     mesh = csx.GetGrid()
     mesh.SetDeltaUnit(unit)
-    
+
     # Create an instance of material named "plate".
     # AddMetal() creates a Perfect Electric Conductor.
     metal = csx.AddMetal('plate')
-    
+
     # Build two 3D shapes from -50 to 50 on the X/Y axes, located at Z = -8
     # and Z = 8 respectively. Note that the starting and stopping Z coordinates
     # of each plate are the same, so these metal plates have zero thickness.
     metal.AddBox(start=[-50, -50, -8], stop=[50, 50, -8])  # lower plate
     metal.AddBox(start=[-50, -50,  8], stop=[50, 50,  8])  # upper plate
-    
+
     mesh.AddLine('x', [-100, 100])  # two lines at -100, 100
     mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
     mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
 
     # zero-thickness metal plates need mesh lines at their exact levels
     mesh.AddLine('z', [-8, 8])    # two lines at -8, 8
-    
+
     # strategically draw lines misaligned with the waveguide's left and right edges,
     # so that the edge occupies 33% space within a cell.
     mesh.AddLine('x', [
@@ -1112,10 +1116,10 @@ last::
     port = [None, None]
     port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
     port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
-    
+
     # save structure to file for inspection
     csx.Write2XML(str(xmlpath))
-    
+
     # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
     # Lower sideband covers 0 - 5 GHz, upper sideband cover 5 - 10 GHz.
     fdtd.SetGaussExcite(f_max / 2, f_max / 2)
@@ -1126,7 +1130,7 @@ Code Refactoring
 """""""""""""""""
 
 The program above is not entirely satisfactory. If we want make some
-small adjustment to the model, it forces us to run the simulation. For
+small adjustments to the model, it forces us to run the simulation. For
 improved modularity, the 3D modeling, ports creation, simulation, and
 post-processing should each be written in separated functions, so each
 part can be ran and reran separately. This is important for repeated
@@ -1139,11 +1143,11 @@ build upon further::
     import sys
     import math
     import pathlib
-    
+
     import CSXCAD
     import openEMS
     from openEMS.physical_constants import C0
-    
+
     # calculate mesh resolution according to simulation frequency
     unit = 1e-3
     f_min = 100e6  # post-processing only, not used in simulation
@@ -1154,54 +1158,54 @@ build upon further::
     res = wavelength / 10
     # use a smaller cell size around metal edge, not just the base mesh size
     highres = res / 1.5
-    
+
     # port impedance
     z0 = 50
-    
+
     # determine the simulation output path
-    
+
     # find the directory of the script itself
     filepath = pathlib.Path(__file__)
-    
+
     # use a directory named after the script, but without ".py"
     simdir = filepath.with_suffix("")
     simdir.mkdir(parents=True, exist_ok=True)
-    
+
     # find the filename of the script itself, and replace ".py" with ".xml"
     xmlname = filepath.with_suffix(".xml").name
-    
+
     # concat two paths
     xmlpath = simdir / xmlname
-    
-    
+
+
     def generate_structure(csx):
         """
         Generate and return the 3D structure used for simulation.
-    
+
         This function should return a CSXCAD instance, but without changing any
         simulation parameters.
         """
         # set unit of measurement in the CSXCAD drawing
         mesh = csx.GetGrid()
         mesh.SetDeltaUnit(unit)
-    
+
         # Create an instance of material named "plate".
         # AddMetal() creates a Perfect Electric Conductor.
         metal = csx.AddMetal('plate')
-    
+
         # Build two 3D shapes from -50 to 50 on the X/Y axes, located at Z = -8
         # and Z = 8 respectively. Note that the starting and stopping Z coordinates
         # of each plate are the same, so these metal plates have zero thickness.
         metal.AddBox(start=[-50, -50, -8], stop=[50, 50, -8])  # lower plate
         metal.AddBox(start=[-50, -50,  8], stop=[50, 50,  8])  # upper plate
-    
+
         mesh.AddLine('x', [-100, 100])  # two lines at -100, 100
         mesh.AddLine('y', [-100, 100])  # two lines at -100, 100
         mesh.AddLine('z', [-50,   50])  # two lines at -50, 50
-    
+
         # zero-thickness metal plates need mesh lines at their exact levels
         mesh.AddLine('z', [-8, 8])    # two lines at -8, 8
-        
+
         # strategically draw lines misaligned with the waveguide's left and right edges,
         # so that the edge occupies 33% space within a cell.
         mesh.AddLine('x', [
@@ -1215,22 +1219,22 @@ build upon further::
             -50 + highres * 1/3, -50 - highres * 2/3,  # lower edge
              50 - highres * 1/3,  50 + highres * 2/3   # upper edge
         ])
-    
+
         mesh.SmoothMeshLines('x', res)
         mesh.SmoothMeshLines('y', res)
         mesh.SmoothMeshLines('z', res)
 
         dump = csx.AddDump("curl_H_upper", dump_type=3)
         dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
-    
+
         return csx
-    
-    
+
+
     def setup_ports(fdtd, csx):
         """
         Create and return ports to inject and measure signals at a particular mesh
         location.
-    
+
         This function should only create ports, but without changing the structure
         or simulation parameters.
         """
@@ -1238,13 +1242,13 @@ build upon further::
         port[0] = fdtd.AddLumpedPort(1, z0, [-50 + 1/3 * highres, -2.5, -8], [-50 + 1/3 * highres, 2.5, 8], 'z', excite=1)
         port[1] = fdtd.AddLumpedPort(2, z0, [ 50 - 1/3 * highres, -2.5, -8], [ 50 - 1/3 * highres, 2.5, 8], 'z', excite=0)
         return port
-    
-    
+
+
     def simulate(fdtd, csx):
         """
         Setup boundary conditions, excitation signals, and finally run the
         simulator.
-    
+
         This function should run the simulator from the given "fdtd" and "csx"
         instance, without changing them.
         """
@@ -1253,8 +1257,8 @@ build upon further::
         fdtd.SetGaussExcite(f_max / 2, f_max / 2)
         fdtd.SetBoundaryCond(["PML_8", "PML_8", "PML_8", "PML_8", "PML_8", "PML_8"])
         fdtd.Run(simdir)
-    
-    
+
+
     def postproc(port):
         """
         Process the data generated by a complete simulation. Only knowledge of ports
@@ -1262,15 +1266,15 @@ build upon further::
         parameters.
         """
         pass
-    
-    
+
+
     if __name__ == "__main__":
         csx = CSXCAD.ContinuousStructure()
         fdtd = openEMS.openEMS()
-    
+
         # associate CSXCAD structure with an openEMS simulation
         fdtd.SetCSX(csx)
-    
+
         if len(sys.argv) <= 1:
             print('No command given, expect "generate", "simulate", "postproc"')
         elif sys.argv[1] in ["generate", "simulate"]:
@@ -1278,7 +1282,7 @@ build upon further::
             generate_structure(csx)
             setup_ports(fdtd, csx)
             csx.Write2XML(str(xmlpath))
-    
+
             if sys.argv[1] == "simulate":
                 # run simulator
                 simulate(fdtd, csx)
@@ -1754,8 +1758,13 @@ are indistinguishable.
    imperfections, which can lead to frequency-dependent artifacts. The DUT impedance
    can't be read from :math:`Z_{11}` without removing measurement artifacts. This
    can be achieved by eliminating port discontinuities or separating the contributions
-   from both parts via de-embedding, calibration, or time gating. These are
+   from the ports via de-embedding, calibration, or time gating. These are
    advanced topics not discussed here.
+
+   Futhermore, even after de-embedding, it's not meaningful to associate this DUT's
+   impedance with a pure capacitance, since this DUT is not a lumped capacitor but
+   a parallel-plate waveguide. Only the RLCG transmission line is be the correct
+   model here.
 
 Code Checkpoint 2: Eliminate Repetitions in ``matplotlib`` Code
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -2277,7 +2286,7 @@ abrupt transition from the port to the waveguide.
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/s11_smith_sim.svg
 
-An alternative way to plot :math:`S_{11}` is to create a 1-port network 
+An alternative way to plot :math:`S_{11}` is to create a 1-port network
 by extracting it from a multi-port network, using the ``s11`` attribute
 (or ``s21``, ``s22``, etc). But note that doing this would create a new 1-port
 network, so all charts will be labeled ``S11`` regardless of the parameter
@@ -2370,19 +2379,47 @@ included here for completeness).
 
 This clearly indicates both ports exhibit discontinuities due to
 impedance and geometry mismatches, as the lumped port impedance
-differs from waveguide's characteristic impedance.
+differs from the waveguide's characteristic impedance.
 
 In transmission line characterization, one should address such
 mismatches by improving the simulation setup via better port
-transitions, or through post-processing techniques like de-embedding
-or time-gating. However, in this simulation, the mismatches are
+transitions. However, in this simulation, the mismatches are
 intentionally introduced to demonstrate openEMS's ability to
 accurately model real-world effects.
 
 .. seealso::
-   The features introduced in this manual is only the tip of the
-   iceberg, it's possible to cover all of its aspects here. See
-   the full manual [12]_ for usage.
+   The features introduced in this manual are only the tip of the
+   iceberg, it's not possible to cover all of its aspects here. See
+   the full manual [12]_ for usage. Here we mention three important
+   use cases.
+
+   **Calibration and de-embedding.** If a port mismatch is unavoidable,
+   post-processing techniques commonly used in Vector Network Analyzers
+   can be applied to openEMS simulations as well, such as the SOLT
+   calibration algorithm, or the newer IEEE P370 de-embedding algorithm.
+   This involves making additional measurements (simulations) with known
+   loads or structures at the port, so that the port or the test fixture's
+   influence can be solved and removed. See [15]_ [16]_.
+
+   **Time-gating.** An alternative possibility is working in the time
+   domain using the equivalent TDR responses. If we transform the
+   measured S-parameters into a TDR plot, a time window can be applied
+   that focuses on the response of only the DUT without the early and
+   late reflections by the ports. This window can then be transformed
+   back to the frequency domain to "clean" our S-parameters. This is
+   not a rigorous solution in comparison to applying proper calibration
+   algorithms, but is a quick-and-dirty solution. See [17]_.
+
+   **Passivity and causality.** For time-domain simulations using
+   S-parameters, the measured data must satisfy two criteria. The
+   DUT itself must not amplify the input signal, violating energy
+   conservation (passivity). The DUT must also not generate an output
+   signal before an input signal arrives, violating the arrow of time
+   (causality). Unfortunately, apparent perpetual motion machines and
+   time machines are often created when S-parameters from measurements
+   or simulations contain artifacts and noise, resulting in unphysical
+   time-domain responses. This necessitates data quality checks and
+   post-processing if violations are found. See [18]_ [19]_ [20]_.
 
 Transient Analysis via ``SignalIntegrity``
 """"""""""""""""""""""""""""""""""""""""""""
@@ -3634,10 +3671,10 @@ to :guilabel:`Qucsator` by clicking it.
 Bibliography
 ^^^^^^^^^^^^^
 
-.. [1] T. S. Bird, `"Definition and Misuse of Return Loss [Report of the
-  Transactions Editor-in-Chief]," <https://ieeexplore.ieee.org/document/5162049>`_
+.. [1] T. S. Bird, `Definition and Misuse of Return Loss [Report of the
+  Transactions Editor-in-Chief], <https://ieeexplore.ieee.org/document/5162049>`_
   in IEEE Antennas and Propagation Magazine, vol. 51, no. 2, pp. 166-167,
-  April 2009, doi: 10.1109/MAP.2009.5162049. 
+  April 2009, doi: 10.1109/MAP.2009.5162049.
 
 .. [2] The Unknown Editor, `Microwaves101: Loss or Gain?
   <https://www.microwaves101.com/encyclopedias/loss-or-gain>`_
@@ -3673,10 +3710,35 @@ Bibliography
    Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
    2008, pp. 76, eq. 4.77
 
-.. [12] `scikit-rf Manual <https://scikit-rf.readthedocs.io/en/latest/>`_.
+.. [12] scikit-rf. `scikit-rf Manual <https://scikit-rf.readthedocs.io/en/latest/>`_.
 
-.. [13] `ParaView Manual <https://docs.paraview.org/>`_.
+.. [13] scikit-rf. `ParaView Manual <https://docs.paraview.org/>`_.
 
 .. [14] Hatab, Ziad, Michael Ernst Gadringer, and Wolfgang Bosch.
    `Indirect Measurement of Switch Terms of a Vector Network Analyzer with
    Reciprocal Devices. <https://arxiv.org/abs/2306.07066>`_
+
+.. [15] scikit-rf. `IEEEP370 Deembedding
+   <https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/IEEEP370%20Deembedding.html>`_
+
+.. [16] scikit-rf. `API / calibration (skrf.calibration.calibration)
+   <https://scikit-rf.readthedocs.io/en/latest/api/calibration/index.html>`_
+
+.. [17] scikit-rf. `Time Domain and Gating
+   <https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/Time%20Domain.html>`_
+
+.. [18] Anritsu. Simberian.
+   `S-parameter Quality Metrics and Analysis to Measurement Correlation
+   <https://www.simberian.com/Presentations/VS43_S-Parameter_Quality_Metrics_And_Analysis_To_Measurement16x9.pdf>`_. DesignCon 2015.
+
+.. [19] scikit-rf. `Single-Ended S-parameters quality checking
+   <https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/IEEEP370%20Deembedding.html#Single-Ended-S-parameters-quality-checking>`_
+
+.. [20] SignalIntegrity project. `Enforce Both Passivity and Reciprocity
+   <https://nubis-communications.github.io/SignalIntegrity/SignalIntegrity/App/Help/Help.html.LyXconv/Help-Subsubsection-6.html#Control-Help:Enforce-Both-Passivity-and-Reciprocity>`_
+
+.. [21] Anto Davis and Steve Sandler. `The 2-Port Shunt-Thru Measurement and the Inherent Ground Loop
+   <https://www.signalintegrityjournal.com/articles/1202-the-2-port-shunt-thru-measurement-and-the-inherent-ground-loop>`_, in Signal Integrity Journal.
+
+.. [22] Brian Walker. `Make Accurate Impedance Measurements Using a VNA
+   <https://www.mwrf.com/technologies/test-measurement/article/21849791/copper-mountain-technologies-make-accurate-impedance-measurements-using-a-vna>`_, in Microwave & RF website.

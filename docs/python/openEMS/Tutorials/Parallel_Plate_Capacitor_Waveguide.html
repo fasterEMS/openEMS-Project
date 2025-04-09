@@ -437,7 +437,7 @@ By default, openEMS uses a modified timestep criterion
 named <em>Rennings2</em> is used, not CFL. This improves timestep
 selection in non-uniform meshes. But the general limitation
 still applies.</p>
-<p><cite>Rennings2</cite> is derived in the unpublished paper <a class="footnote-reference brackets" href="#id25" id="id1">11</a>,
+<p><cite>Rennings2</cite> is derived in the unpublished paper <a class="footnote-reference brackets" href="#id33" id="id1">11</a>,
 see <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetTimeStepMethod" title="openEMS.openEMS.SetTimeStepMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetTimeStepMethod()</span></code></a> for details.</p>
 <p>If you really need small cells
 (e.g. to resolve some important feature of your structure) you
@@ -725,7 +725,7 @@ at a defined position. It acts as a voltage source or load with a
 resistive impedance. It can inject a signal to the Device-Under-Test (DUT)
 or measure the DUT’s response, either from its own signal or from another
 port.</p>
-<figure class="align-default" id="id29">
+<figure class="align-default" id="id45">
 <a class="with-border reference internal image-reference" href="../../../_images/vna_ports.svg"><img alt="../../../_images/vna_ports.svg" class="with-border" src="../../../_images/vna_ports.svg" width="49%" /></a>
 <figcaption>
 <p><span class="caption-text">The “port” in openEMS serves a purpose similar to the physical
@@ -737,7 +737,7 @@ its input-output relationships without an internal structure.
 Note that port implementations are fundamentally different in
 physical instruments (via circuits) and in openEMS simulations
 (by loading numerical values into Yee cells). Image by Julien Hillairet,
-from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed under BSD-3, modified for clarity.</span><a class="headerlink" href="#id29" title="Permalink to this image"></a></p>
+from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed under BSD-3, modified for clarity.</span><a class="headerlink" href="#id45" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Internally, a port is implemented by locating the Yee cells occupied
@@ -791,7 +791,7 @@ Optimizing the placement and implementation of a port reduces artifacts.
 Alternatively, these artifacts
 can be removed through calibration or de-embedding algorithms, an
 advanced topic beyond the scope of this tutorial.</p>
-<figure class="align-default" id="id30">
+<figure class="align-default" id="id46">
 <a class="with-border reference internal image-reference" href="../../../_images/error-box.svg"><img alt="../../../_images/error-box.svg" class="with-border" src="../../../_images/error-box.svg" width="60%" /></a>
 <figcaption>
 <p><span class="caption-text">The artifacts introduced by a two-port measurement can be viewed
@@ -802,7 +802,7 @@ error boxes nearly transparent using optimized port transitions.
 Alternatively, by mathematically removing the port’s contributions from
 the measured response using linear algebra, a process known as
 calibration or de-embedding (image by Ziad Hatab et, al., licensed
-under CC BY-SA 4.0 <a class="footnote-reference brackets" href="#id28" id="id2">14</a>)</span><a class="headerlink" href="#id30" title="Permalink to this image"></a></p>
+under CC BY-SA 4.0 <a class="footnote-reference brackets" href="#id36" id="id2">14</a>)</span><a class="headerlink" href="#id46" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </div>
@@ -819,10 +819,10 @@ A signal is injected into the DUT using a 50 Ω transmitter port, and the
 received signal is measured by the 50 Ω receiver port at the other side.
 The 2-port techniques are shown in the following circuit diagram (the
 impedance <code class="docutils literal notranslate"><span class="pre">Z</span></code> is a function of frequency).</p>
-<figure class="align-default" id="id31">
+<figure class="align-default" id="id47">
 <img alt="../../../_images/vna-shunt-thru-series.svg" class="with-border" src="../../../_images/vna-shunt-thru-series.svg" /><figcaption>
 <p><span class="caption-text">2-port shunt-through measurement (DUT in parallel), and 2-port series
-(DUT in series) measurement.</span><a class="headerlink" href="#id31" title="Permalink to this image"></a></p>
+(DUT in series) measurement.</span><a class="headerlink" href="#id47" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>In the real world, the 1-port measurement method is only accurate when
@@ -838,6 +838,11 @@ taking advantage of the sensitive radio receiver in the VNA. This allows
 us to determine the DUT’s impedance.</p>
 <p>To illustrate the general principle of two-port networks and S-parameters
 in microwave measurements, we follow the 2-port method here.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>See <a class="footnote-reference brackets" href="#id43" id="id3">21</a> <a class="footnote-reference brackets" href="#id44" id="id4">22</a> on impedance determination using the 2-port methods
+with VNAs.</p>
+</div>
 </section>
 </section>
 <section id="create-ports">
@@ -861,12 +866,12 @@ coordinates span from [-8, 8]. This matches the intuition of a
 circuit diagram, in which a lumped port is vertically connected
 across the horizontal transmission line. The port’s internal voltage
 source acts as both a wire and a source of electric field.</p>
-<figure class="align-default" id="id32">
+<figure class="align-default" id="id48">
 <img alt="../../../_images/lumped-port.svg" class="with-border" src="../../../_images/lumped-port.svg" /><figcaption>
 <p><span class="caption-text">An ideal lumped port is connected vertically across a horizontal
 circuit. Its internal voltage source acting as both a wire and a
 source of electric field. A lumped excitation port in openEMS
-works similarly here.</span><a class="headerlink" href="#id32" title="Permalink to this image"></a></p>
+works similarly here.</span><a class="headerlink" href="#id48" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>To complicate the issue further, a port must cross at least a mesh line, since
@@ -931,7 +936,7 @@ cause numerical problems like dispersion and unrealistic excitation
 of high-order modes. As a workaround, users can provide custom
 bandwidth-limited expressions to openEMS (no built-in implementations
 exist currently) via <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetCustomExcite" title="openEMS.openEMS.SetCustomExcite"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetCustomExcite()</span></code></a>. For an
-example, see <a class="footnote-reference brackets" href="#id21" id="id3">7</a>.  However, these pulses also suffer from rapid energy
+example, see <a class="footnote-reference brackets" href="#id29" id="id5">7</a>.  However, these pulses also suffer from rapid energy
 roll-off at high frequencies. The Gaussian pulse, by comparison,
 retains significant energy in both sidebands around the center carrier
 frequency.</p>
@@ -965,7 +970,7 @@ zero-overhead solution. They efficiently model structures inside metal
 enclosures, above a ground plane, or with an electric or magnetic field
 symmetry across a plane. No explicit modeling is necessary; the boundary
 conditions implicitly enforce these behaviors.</p>
-<figure class="align-default" id="id33">
+<figure class="align-default" id="id49">
 <a class="with-border reference internal image-reference" href="../../../_images/reverberation_chamber.jpg"><img alt="../../../_images/reverberation_chamber.jpg" class="with-border" src="../../../_images/reverberation_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure.
@@ -974,7 +979,7 @@ chambers. Taking advantage of the standing waves due to reflections,
 one can create strong electric fields at localized regions to generate
 electromagnetic interference for testing.
 Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
-licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id33" title="Permalink to this image"></a></p>
+licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id49" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Perfect Electric Conductor (PEC)</strong>: The simplest treatment sets
@@ -1014,12 +1019,12 @@ box larger than the device, allowing some fringe fields. Then, at the
 boundaries, the electromagnetic waves are absorbed and dissipated without
 reflecting back into the box, creating the illusion of an infinitely large
 free space.</p>
-<figure class="align-default" id="id34">
+<figure class="align-default" id="id50">
 <a class="with-border reference internal image-reference" href="../../../_images/anechoic_chamber.jpg"><img alt="../../../_images/anechoic_chamber.jpg" class="with-border" src="../../../_images/anechoic_chamber.jpg" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">A simulation box with PML at all boundaries acts like an anechoic chamber
 in an EMC test lab, mimicking an infinitely large free space. Image by
-Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id34" title="Permalink to this image"></a></p>
+Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id50" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Two kinds of Absorbing Boundary Conditions are implemented in openEMS.</p>
@@ -1236,7 +1241,7 @@ last:</p>
 <section id="code-refactoring">
 <h3>Code Refactoring<a class="headerlink" href="#code-refactoring" title="Permalink to this headline"></a></h3>
 <p>The program above is not entirely satisfactory. If we want make some
-small adjustment to the model, it forces us to run the simulation. For
+small adjustments to the model, it forces us to run the simulation. For
 improved modularity, the 3D modeling, ports creation, simulation, and
 post-processing should each be written in separated functions, so each
 part can be ran and reran separately. This is important for repeated
@@ -1835,7 +1840,7 @@ to satisfy the potential nitpickers while following the tradition, here we use
 a compromise. Plots are labeled as “Return loss” and use the positive sign
 convention, but also with the Y axis inverted, so that resonances appear
 as familiar valleys.</p>
-<p>For more information, see <a class="footnote-reference brackets" href="#id15" id="id4">1</a> <a class="footnote-reference brackets" href="#id16" id="id5">2</a>.</p>
+<p>For more information, see <a class="footnote-reference brackets" href="#id23" id="id6">1</a> <a class="footnote-reference brackets" href="#id24" id="id7">2</a>.</p>
 </div>
 </section>
 <section id="plot-z-parameters-impedances-via-matplotlib">
@@ -1882,8 +1887,12 @@ seen by the port, including the contribution of both the DUT and port
 imperfections, which can lead to frequency-dependent artifacts. The DUT impedance
 can’t be read from <span class="math notranslate nohighlight">\(Z_{11}\)</span> without removing measurement artifacts. This
 can be achieved by eliminating port discontinuities or separating the contributions
-from both parts via de-embedding, calibration, or time gating. These are
+from the ports via de-embedding, calibration, or time gating. These are
 advanced topics not discussed here.</p>
+<p>Futhermore, even after de-embedding, it’s not meaningful to associate this DUT’s
+impedance with a pure capacitance, since this DUT is not a lumped capacitor but
+a parallel-plate waveguide. Only the RLCG transmission line is be the correct
+model here.</p>
 </div>
 </section>
 <section id="code-checkpoint-2-eliminate-repetitions-in-matplotlib-code">
@@ -2073,7 +2082,7 @@ writes a new line with parameter order of <code class="docutils literal notransl
 </pre></div>
 </div>
 <p>Finally, beware that for 3-port, 4-port, or more ports, the parameters order is
-different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id17" id="id6">3</a></p>
+different. The website Microwaves101 contains useful information here. <a class="footnote-reference brackets" href="#id25" id="id8">3</a></p>
 </section>
 </section>
 <section id="code-checkpoint-3">
@@ -2441,18 +2450,43 @@ included here for completeness).</p>
 <a class="reference internal image-reference" href="../../../_images/tdr_impulse_sim.svg"><img alt="../../../_images/tdr_impulse_sim.svg" src="../../../_images/tdr_impulse_sim.svg" width="49%" /></a>
 <p>This clearly indicates both ports exhibit discontinuities due to
 impedance and geometry mismatches, as the lumped port impedance
-differs from waveguide’s characteristic impedance.</p>
+differs from the waveguide’s characteristic impedance.</p>
 <p>In transmission line characterization, one should address such
 mismatches by improving the simulation setup via better port
-transitions, or through post-processing techniques like de-embedding
-or time-gating. However, in this simulation, the mismatches are
+transitions. However, in this simulation, the mismatches are
 intentionally introduced to demonstrate openEMS’s ability to
 accurately model real-world effects.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p>The features introduced in this manual is only the tip of the
-iceberg, it’s possible to cover all of its aspects here. See
-the full manual <a class="footnote-reference brackets" href="#id26" id="id7">12</a> for usage.</p>
+<p>The features introduced in this manual are only the tip of the
+iceberg, it’s not possible to cover all of its aspects here. See
+the full manual <a class="footnote-reference brackets" href="#id34" id="id9">12</a> for usage. Here we mention three important
+use cases.</p>
+<p><strong>Calibration and de-embedding.</strong> If a port mismatch is unavoidable,
+post-processing techniques commonly used in Vector Network Analyzers
+can be applied to openEMS simulations as well, such as the SOLT
+calibration algorithm, or the newer IEEE P370 de-embedding algorithm.
+This involves making additional measurements (simulations) with known
+loads or structures at the port, so that the port or the test fixture’s
+influence can be solved and removed. See <a class="footnote-reference brackets" href="#id37" id="id10">15</a> <a class="footnote-reference brackets" href="#id38" id="id11">16</a>.</p>
+<p><strong>Time-gating.</strong> An alternative possibility is working in the time
+domain using the equivalent TDR responses. If we transform the
+measured S-parameters into a TDR plot, a time window can be applied
+that focuses on the response of only the DUT without the early and
+late reflections by the ports. This window can then be transformed
+back to the frequency domain to “clean” our S-parameters. This is
+not a rigorous solution in comparison to applying proper calibration
+algorithms, but is a quick-and-dirty solution. See <a class="footnote-reference brackets" href="#id39" id="id12">17</a>.</p>
+<p><strong>Passivity and causality.</strong> For time-domain simulations using
+S-parameters, the measured data must satisfy two criteria. The
+DUT itself must not amplify the input signal, violating energy
+conservation (passivity). The DUT must also not generate an output
+signal before an input signal arrives, violating the arrow of time
+(causality). Unfortunately, apparent perpetual motion machines and
+time machines are often created when S-parameters from measurements
+or simulations contain artifacts and noise, resulting in unphysical
+time-domain responses. This necessitates data quality checks and
+post-processing if violations are found. See <a class="footnote-reference brackets" href="#id40" id="id13">18</a> <a class="footnote-reference brackets" href="#id41" id="id14">19</a> <a class="footnote-reference brackets" href="#id42" id="id15">20</a>.</p>
 </div>
 </section>
 <section id="transient-analysis-via-signalintegrity">
@@ -2464,11 +2498,11 @@ input signals, so there’s no loss of generality. In fact, performing
 a time-domain transient simulation using frequency-domain S-parameters
 is a common feature in many proprietary commercial circuit simulators,
 such as <strong class="program">HyperLynx</strong>, <strong class="program">ADS</strong>, or <strong class="program">AWR</strong>. A
-third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id18" id="id8">4</a></p>
+third-party tool also exists for PSpice. <a class="footnote-reference brackets" href="#id26" id="id16">4</a></p>
 <p>However, in the free and open source world, few (if any) free and
 open source circuit simulators have this capability. For example,
 Ngspice supports S-parameter calculation but not transient
-simulation. <a class="footnote-reference brackets" href="#id19" id="id9">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
+simulation. <a class="footnote-reference brackets" href="#id27" id="id17">5</a> <strong class="program">Qucs</strong>, too, doesn’t support transient
 simulation with S-parameters, although it’s possible to define
 devices using them.</p>
 <p>The Python package <strong class="program">SignalIntegrity</strong>, designed for signal
@@ -2478,7 +2512,7 @@ integrity expert at LeCroy.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>The software’s internal theory of operation is also published almost
-in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id20" id="id10">6</a>. Each
+in full in the textbook <em>S-Parameters for Signal Integrity</em> <a class="footnote-reference brackets" href="#id28" id="id18">6</a>. Each
 concept is accomplished by both formulas and executable code, making
 it an invaluable reference in this field. The author of this tutorial
 recommends everyone who simulates or measures RF/microwave devices to
@@ -2505,11 +2539,11 @@ local path). You should be able to start it via:</p>
 </div>
 <p>If not, you may need to add this local <code class="file docutils literal notranslate"><span class="pre">bin</span></code> directory into
 your shell’s search path.</p>
-<figure class="align-default" id="id35">
+<figure class="align-default" id="id51">
 <a class="with-border reference internal image-reference" href="../../../_images/si1.png"><img alt="../../../_images/si1.png" class="with-border" src="../../../_images/si1.png" style="width: 60%;" /></a>
 <figcaption>
 <p><span class="caption-text">The classic 1990s Tcl/Tk (Tkinter) GUI may look old-fashioned,
-but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id35" title="Permalink to this image"></a></p>
+but it works, and will keep working until the end of time.</span><a class="headerlink" href="#id51" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>For the first example, let’s examine the circuit’s time-domain
@@ -2976,7 +3010,7 @@ the scope of this tutorial.</p>
 <p class="admonition-title">See also</p>
 <p>ParaView is a large program used in many scientific applications,
 it’s impossible to cover all of its aspects here. See the full
-manual <a class="footnote-reference brackets" href="#id27" id="id11">13</a> for usage.</p>
+manual <a class="footnote-reference brackets" href="#id35" id="id19">13</a> for usage.</p>
 </div>
 </section>
 </section>
@@ -3072,7 +3106,7 @@ waveguide is given by <span class="math notranslate nohighlight">\(\lambda = 2d 
 v / \lambda\)</span>, in which <span class="math notranslate nohighlight">\(d\)</span> is the separation between the
 plates, <span class="math notranslate nohighlight">\(m = 1, 2, 3...\)</span> is the waveguide mode index,
 <span class="math notranslate nohighlight">\(v\)</span> is the speed of light in the medium, <span class="math notranslate nohighlight">\(\lambda\)</span> is
-the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id23" id="id12">9</a>
+the cutoff wavelength, and <span class="math notranslate nohighlight">\(f_c\)</span> is the cutoff frequency. <a class="footnote-reference brackets" href="#id31" id="id20">9</a>
 Using this calculation, we find that multimoding appears at 9.3 GHz
 and above, so it indeed plays a small role.</p>
 </li>
@@ -3097,7 +3131,7 @@ ports in many cases, not just those found in analytic solutions.</p></li>
 <p class="admonition-title">Important</p>
 <p>Nearly everything can be an RF waveguide or resonator
 when the excitation frequency is high enough. For example,
-the book <a class="footnote-reference brackets" href="#id24" id="id13">10</a> lists four possible high-order microstrip modes.
+the book <a class="footnote-reference brackets" href="#id32" id="id21">10</a> lists four possible high-order microstrip modes.
 In fact, unrealistic excitation of high-order modes is fairly common
 in E&amp;M field solvers as unphysical excitation signals or
 port placements are easily created. Be sure to watch for it,
@@ -3161,7 +3195,7 @@ length, not the intrinsic characteristics of the parallel-plate waveguide.</p>
 <p><strong>Quarter-Wave Impedance Transformer</strong> - This half-wave
 transmission line phenomenon is a special case of the more
 powerful quarter-wave impendance transformer. Learn more
-about it at <a class="footnote-reference brackets" href="#id22" id="id14">8</a>.</p>
+about it at <a class="footnote-reference brackets" href="#id30" id="id22">8</a>.</p>
 <p><strong>Port Discontinuities</strong> - This shows why an optimized
 port transition, as well as the use of de-embedding or calibration,
 are crucial in both simulations and measurements. Otherwise
@@ -3364,57 +3398,82 @@ to <span class="guilabel">Qucsator</span> by clicking it.</p>
 <section id="bibliography">
 <h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline"></a></h2>
 <dl class="footnote brackets">
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id4">1</a></span></dt>
-<dd><p>T. S. Bird, <a class="reference external" href="https://ieeexplore.ieee.org/document/5162049">“Definition and Misuse of Return Loss [Report of the
-Transactions Editor-in-Chief],”</a>
+<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dd><p>T. S. Bird, <a class="reference external" href="https://ieeexplore.ieee.org/document/5162049">Definition and Misuse of Return Loss [Report of the
+Transactions Editor-in-Chief],</a>
 in IEEE Antennas and Propagation Magazine, vol. 51, no. 2, pp. 166-167,
 April 2009, doi: 10.1109/MAP.2009.5162049.</p>
 </dd>
-<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id7">2</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/loss-or-gain">Microwaves101: Loss or Gain?</a></p>
 </dd>
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
+<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/snp-format">Microwaves101: SNP Format</a></p>
 </dd>
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id8">4</a></span></dt>
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id16">4</a></span></dt>
 <dd><p>Russell Carroll, <a class="reference external" href="https://emisleuth.com/Articles/How_to_Use_S-parameter_Models_in_PSpice_5-28-2024.pdf">How to Use S-parameter Models in PSpice</a></p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id9">5</a></span></dt>
+<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id17">5</a></span></dt>
 <dd><p>Giles Atkinson, <a class="reference external" href="https://sourceforge.net/p/ngspice/discussion/120973/thread/3bce0daf1c/#fffd">Reply to “How to perform transient simulation with S parameter file”</a></p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id10">6</a></span></dt>
+<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id18">6</a></span></dt>
 <dd><p>Peter J. Pupalaikis, <a class="reference external" href="https://www.cambridge.org/core/books/sparameters-for-signal-integrity/2FD44B994CD054E4B844B358E8903A09">S-parameters for Signal Integrity.</a>
 Cambridge University Press, 2020.</p>
 </dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id3">7</a></span></dt>
+<dt class="label" id="id29"><span class="brackets"><a class="fn-backref" href="#id5">7</a></span></dt>
 <dd><p>Ted Yapo, <a class="reference external" href="https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf">A Note on Gaussian Steps in openEMS.</a></p>
 </dd>
-<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id14">8</a></span></dt>
+<dt class="label" id="id30"><span class="brackets"><a class="fn-backref" href="#id22">8</a></span></dt>
 <dd><p>The Unknown Editor, <a class="reference external" href="https://www.microwaves101.com/encyclopedias/quarter-wave-tricks">Quarter-wave Tricks</a></p>
 </dd>
-<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id12">9</a></span></dt>
+<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id20">9</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/06%3A_Waveguides/6.03%3A_Parallel-Plate_Waveguide">Microwave and RF Design II - Transmission Lines,
 6.3: Parallel-Plate Waveguide</a></p>
 </dd>
-<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id13">10</a></span></dt>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id21">10</a></span></dt>
 <dd><p>Michael Steer. <a class="reference external" href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/04%3A_Extraordinary_Transmission_Line_Effects/4.06%3A_Microstrip_Operating_Frequency_Limitations">Microwave and RF Design II - Transmission Lines,
 4.6: Microstrip Operating Frequency Limitations</a></p>
 </dd>
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
+<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
 <dd><p>Andreas Rennings, Elektromagnetische Zeitbereichssimulationen innovativer
 Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
 2008, pp. 76, eq. 4.77</p>
 </dd>
-<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id7">12</a></span></dt>
-<dd><p><a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/">scikit-rf Manual</a>.</p>
+<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id9">12</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/">scikit-rf Manual</a>.</p>
 </dd>
-<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id11">13</a></span></dt>
-<dd><p><a class="reference external" href="https://docs.paraview.org/">ParaView Manual</a>.</p>
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id19">13</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://docs.paraview.org/">ParaView Manual</a>.</p>
 </dd>
-<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id2">14</a></span></dt>
+<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id2">14</a></span></dt>
 <dd><p>Hatab, Ziad, Michael Ernst Gadringer, and Wolfgang Bosch.
 <a class="reference external" href="https://arxiv.org/abs/2306.07066">Indirect Measurement of Switch Terms of a Vector Network Analyzer with
 Reciprocal Devices.</a></p>
+</dd>
+<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id10">15</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/IEEEP370%20Deembedding.html">IEEEP370 Deembedding</a></p>
+</dd>
+<dt class="label" id="id38"><span class="brackets"><a class="fn-backref" href="#id11">16</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/api/calibration/index.html">API / calibration (skrf.calibration.calibration)</a></p>
+</dd>
+<dt class="label" id="id39"><span class="brackets"><a class="fn-backref" href="#id12">17</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/Time%20Domain.html">Time Domain and Gating</a></p>
+</dd>
+<dt class="label" id="id40"><span class="brackets"><a class="fn-backref" href="#id13">18</a></span></dt>
+<dd><p>Anritsu. Simberian.
+<a class="reference external" href="https://www.simberian.com/Presentations/VS43_S-Parameter_Quality_Metrics_And_Analysis_To_Measurement16x9.pdf">S-parameter Quality Metrics and Analysis to Measurement Correlation</a>. DesignCon 2015.</p>
+</dd>
+<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id14">19</a></span></dt>
+<dd><p>scikit-rf. <a class="reference external" href="https://scikit-rf.readthedocs.io/en/latest/examples/networktheory/IEEEP370%20Deembedding.html#Single-Ended-S-parameters-quality-checking">Single-Ended S-parameters quality checking</a></p>
+</dd>
+<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id15">20</a></span></dt>
+<dd><p>SignalIntegrity project. <a class="reference external" href="https://nubis-communications.github.io/SignalIntegrity/SignalIntegrity/App/Help/Help.html.LyXconv/Help-Subsubsection-6.html#Control-Help:Enforce-Both-Passivity-and-Reciprocity">Enforce Both Passivity and Reciprocity</a></p>
+</dd>
+<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id3">21</a></span></dt>
+<dd><p>Anto Davis and Steve Sandler. <a class="reference external" href="https://www.signalintegrityjournal.com/articles/1202-the-2-port-shunt-thru-measurement-and-the-inherent-ground-loop">The 2-Port Shunt-Thru Measurement and the Inherent Ground Loop</a>, in Signal Integrity Journal.</p>
+</dd>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id4">22</a></span></dt>
+<dd><p>Brian Walker. <a class="reference external" href="https://www.mwrf.com/technologies/test-measurement/article/21849791/copper-mountain-technologies-make-accurate-impedance-measurements-using-a-vna">Make Accurate Impedance Measurements Using a VNA</a>, in Microwave &amp; RF website.</p>
 </dd>
 </dl>
 </section>
