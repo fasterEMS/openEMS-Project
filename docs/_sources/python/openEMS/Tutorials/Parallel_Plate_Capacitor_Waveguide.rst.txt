@@ -173,12 +173,11 @@ to visualize the model::
 
     $ AppCSXCAD Parallel_Plate_Capacitor_Waveguide.xml
 
-One can inspect the model by mouse drags, looking at it from different camera
-angles:
-
 .. important::
    If you're using Wayland, AppCSXCAD may not work correctly, see :ref:`wayland`.
 
+One can inspect the model by mouse drags, looking at it from different camera
+angles.
 Here's the XY and YZ cross-sections of the correct 3D model:
 
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/capacitor_xy_nomesh.png
