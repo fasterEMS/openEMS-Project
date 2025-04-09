@@ -1366,34 +1366,41 @@ Convergence and Divergence (Blow-up)
 """"""""""""""""""""""""""""""""""""""
 
 The simulation runs until the total energy in the simulation box
-decays to nearly zero, 60 dB below the injected initial energy
-by the excitation port. When this occurs, the simulation achieves
-*convergence* and terminates. Conservely, incorrect or unphysical
-modeling or meshing may destabilize the simulation, causing
-*blow-ups*. The simulation box's field strength diverges over time
-due to the accumulation of small errors. The total energy may
-gradually increase towards infinity. If the energy shows signs
-of rapid increases, the simulation should be stopped early via
-:kbd:`Control-C` to avoid wasting time.
+decays to nearly zero, reaching 60 dB below the initial energy
+injected by the excitation port. When this occurs, the simulation
+achieves convergence, meaning the transients in the system have
+dissipated, and the system has reached a steady-state. Thus, the
+simulation terminates.
 
-Note that the displayed energy is only a rough estimate. For
-resonating structures (such as cavity resonators and antennas),
-the energy may go up and down multiple times due to the oscillating
-field strengths. The convergence time required for low-pass (high Q)
-resonators is notoriously long in FDTD simulations due to the lack
-of termination resistances or Absorbing Boundary Conditions to
-dissipate the injected energy.
+Conversely, incorrect or unphysical
+modeling or meshing may destabilize the simulation, causing
+*blow-ups*. The simulation box's E&M field strength diverges over
+time due to the accumulation of small numerical errors. The
+total energy may gradually increase unbounded, eventually
+reaching the floating-point infinity.
+If the energy shows signs of rapid increases, the simulation
+should be stopped early via :kbd:`Control-C` to avoid wasting time.
+
+Note that the displayed energy value is only a rough, indicative estimate.
+Factors such as material properties are ignored for simulation speed.
+For resonating structures (such as cavity resonators and antennas),
+the energy indicator may fluctuate up and down repeatedly
+due to the oscillating E&M field strengths. The convergence time
+required for low-loss (high Q) resonators which have minimal energy
+dissipation, is notoriously long in FDTD simulations. The absence
+of termination resistances or Absorbing Boundary Conditions
+makes it difficult to dissipate the injected energy.
 
 .. note::
 
-   The termination threshold is adjustable via
-   :meth:`~openEMS.openEMS.SetEndCriteria`, but 60 dB is a
+   The energy decay threshold for termination is adjustable
+   via :meth:`~openEMS.openEMS.SetEndCriteria`, but 60 dB is a
    good default. For advanced usage,
    :meth:`~openEMS.openEMS.SetNumberOfTimeSteps`
    and
    :meth:`~openEMS.openEMS.SetMaxTime` can limit the total
-   number of timesteps (in iterations) or virtual time (in
-   seconds) to truncate the simulation earlier before
+   number of timesteps (in iterations) or wall-clock time
+   (in seconds) to truncate the simulation earlier before
    convergence.
 
 Built-In Post-Processing

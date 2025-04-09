@@ -1474,32 +1474,38 @@ respective solution.</p>
 <section id="convergence-and-divergence-blow-up">
 <h3>Convergence and Divergence (Blow-up)<a class="headerlink" href="#convergence-and-divergence-blow-up" title="Permalink to this headline"></a></h3>
 <p>The simulation runs until the total energy in the simulation box
-decays to nearly zero, 60 dB below the injected initial energy
-by the excitation port. When this occurs, the simulation achieves
-<em>convergence</em> and terminates. Conservely, incorrect or unphysical
+decays to nearly zero, reaching 60 dB below the initial energy
+injected by the excitation port. When this occurs, the simulation
+achieves convergence, meaning the transients in the system have
+dissipated, and the system has reached a steady-state. Thus, the
+simulation terminates.</p>
+<p>Conversely, incorrect or unphysical
 modeling or meshing may destabilize the simulation, causing
-<em>blow-ups</em>. The simulation box’s field strength diverges over time
-due to the accumulation of small errors. The total energy may
-gradually increase towards infinity. If the energy shows signs
-of rapid increases, the simulation should be stopped early via
-<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Control</kbd>-<kbd class="kbd docutils literal notranslate">C</kbd></kbd> to avoid wasting time.</p>
-<p>Note that the displayed energy is only a rough estimate. For
-resonating structures (such as cavity resonators and antennas),
-the energy may go up and down multiple times due to the oscillating
-field strengths. The convergence time required for low-pass (high Q)
-resonators is notoriously long in FDTD simulations due to the lack
-of termination resistances or Absorbing Boundary Conditions to
-dissipate the injected energy.</p>
+<em>blow-ups</em>. The simulation box’s E&amp;M field strength diverges over
+time due to the accumulation of small numerical errors. The
+total energy may gradually increase unbounded, eventually
+reaching the floating-point infinity.
+If the energy shows signs of rapid increases, the simulation
+should be stopped early via <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Control</kbd>-<kbd class="kbd docutils literal notranslate">C</kbd></kbd> to avoid wasting time.</p>
+<p>Note that the displayed energy value is only a rough, indicative estimate.
+Factors such as material properties are ignored for simulation speed.
+For resonating structures (such as cavity resonators and antennas),
+the energy indicator may fluctuate up and down repeatedly
+due to the oscillating E&amp;M field strengths. The convergence time
+required for low-loss (high Q) resonators which have minimal energy
+dissipation, is notoriously long in FDTD simulations. The absence
+of termination resistances or Absorbing Boundary Conditions
+makes it difficult to dissipate the injected energy.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The termination threshold is adjustable via
-<a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetEndCriteria" title="openEMS.openEMS.SetEndCriteria"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetEndCriteria()</span></code></a>, but 60 dB is a
+<p>The energy decay threshold for termination is adjustable
+via <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetEndCriteria" title="openEMS.openEMS.SetEndCriteria"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetEndCriteria()</span></code></a>, but 60 dB is a
 good default. For advanced usage,
 <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetNumberOfTimeSteps" title="openEMS.openEMS.SetNumberOfTimeSteps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetNumberOfTimeSteps()</span></code></a>
 and
 <a class="reference internal" href="../openEMS.html#openEMS.openEMS.SetMaxTime" title="openEMS.openEMS.SetMaxTime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetMaxTime()</span></code></a> can limit the total
-number of timesteps (in iterations) or virtual time (in
-seconds) to truncate the simulation earlier before
+number of timesteps (in iterations) or wall-clock time
+(in seconds) to truncate the simulation earlier before
 convergence.</p>
 </div>
 </section>
