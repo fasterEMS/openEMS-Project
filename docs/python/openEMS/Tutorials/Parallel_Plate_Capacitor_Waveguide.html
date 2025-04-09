@@ -1665,17 +1665,18 @@ S_{21} &amp; S_{22} \end{bmatrix}
 </tbody>
 </table>
 <p>At Port 1, its total voltage can be seen as a superposition of two parts:
-an incident voltage wave injected at port 1, and a reflected wave going back
-to port 1. Their ratio <span class="math notranslate nohighlight">\(V_\mathrm{ref} / V_\mathrm{inc}\)</span> is the parameter
+an incident voltage wave entering Port 1, and a reflected wave leaving from
+Port 1. Their ratio <span class="math notranslate nohighlight">\(V_\mathrm{ref} / V_\mathrm{inc}\)</span> is the parameter
 <span class="math notranslate nohighlight">\(S_{11}\)</span>. This parameter has several other names: the reflection
 coefficient <span class="math notranslate nohighlight">\(\Gamma = S_{11}\)</span>. When its magnitude is plotted on a log
 scale, it’s called the return loss <span class="math notranslate nohighlight">\(-10 \cdot \log_{10}(|S_{11}|^2)\)</span>.</p>
-<p>At Port 2, its voltage can also be seen as a ratio of two parts: Voltage
-wave transmitted from port 1 and going to port 2, called <span class="math notranslate nohighlight">\(S_{21}\)</span>.
-This parameter is also known as transmission coefficient. When its magnitude
-is plotted on the log scale, it’s called the insertion loss
-<span class="math notranslate nohighlight">\(-10 \cdot \log_{10}(|S_{21}|^2)\)</span>. This corresponds to the attenuation
-of a cable or a filter.</p>
+<p>At Port 2, the voltage or power it receives can also be calculated as a
+ratio of two quantities: an incident voltage wave entering Port 1, and a
+transmitted voltage wave leaving from Port 2, called <span class="math notranslate nohighlight">\(S_{21}\)</span>. This
+parameter is also known as transmission coefficient  When its magnitude is
+plotted on the log scale, it’s called the insertion loss
+<span class="math notranslate nohighlight">\(-10 \cdot \log_{10}(|S_{21}|^2)\)</span>. This corresponds to the
+attenuation of a cable or a filter.</p>
 <p>Since a circuit may modify both the amplitude and the phase of a voltage
 wave, all S-parameters are complex numbers.</p>
 </section>
@@ -1683,7 +1684,7 @@ wave, all S-parameters are complex numbers.</p>
 <h3>Calculate S-parameters<a class="headerlink" href="#calculate-s-parameters" title="Permalink to this headline"></a></h3>
 <p>In openEMS, after calling <code class="docutils literal notranslate"><span class="pre">CalcPort()</span></code> on a port object, its incident and reflected
 voltages can be accessed via its <code class="docutils literal notranslate"><span class="pre">uf_inc</span></code> and <code class="docutils literal notranslate"><span class="pre">uf_ref</span></code> attributes, which are
-<code class="docutils literal notranslate"><span class="pre">numpy`</span></code> lists with the same number of elements as <code class="docutils literal notranslate"><span class="pre">freq_list</span></code> (which we previously
+<code class="docutils literal notranslate"><span class="pre">numpy</span></code> lists with the same number of elements as <code class="docutils literal notranslate"><span class="pre">freq_list</span></code> (which we previously
 passed to <code class="docutils literal notranslate"><span class="pre">CalcPort()</span></code>).</p>
 <p>Thus, by definition, one can calculate <span class="math notranslate nohighlight">\(S_{11}\)</span> and <span class="math notranslate nohighlight">\(S_{21}\)</span> as the
 following:</p>

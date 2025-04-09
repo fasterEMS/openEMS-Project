@@ -1519,18 +1519,19 @@ as the transmission and reflection of voltage waves in a transmission line.
   +--------------------------------------------------------------------------------------------------------+
 
 At Port 1, its total voltage can be seen as a superposition of two parts:
-an incident voltage wave injected at port 1, and a reflected wave going back
-to port 1. Their ratio :math:`V_\mathrm{ref} / V_\mathrm{inc}` is the parameter
+an incident voltage wave entering Port 1, and a reflected wave leaving from
+Port 1. Their ratio :math:`V_\mathrm{ref} / V_\mathrm{inc}` is the parameter
 :math:`S_{11}`. This parameter has several other names: the reflection
 coefficient :math:`\Gamma = S_{11}`. When its magnitude is plotted on a log
 scale, it's called the return loss :math:`-10 \cdot \log_{10}(|S_{11}|^2)`.
 
-At Port 2, its voltage can also be seen as a ratio of two parts: Voltage
-wave transmitted from port 1 and going to port 2, called :math:`S_{21}`.
-This parameter is also known as transmission coefficient. When its magnitude
-is plotted on the log scale, it's called the insertion loss
-:math:`-10 \cdot \log_{10}(|S_{21}|^2)`. This corresponds to the attenuation
-of a cable or a filter.
+At Port 2, the voltage or power it receives can also be calculated as a
+ratio of two quantities: an incident voltage wave entering Port 1, and a
+transmitted voltage wave leaving from Port 2, called :math:`S_{21}`. This
+parameter is also known as transmission coefficient  When its magnitude is
+plotted on the log scale, it's called the insertion loss
+:math:`-10 \cdot \log_{10}(|S_{21}|^2)`. This corresponds to the
+attenuation of a cable or a filter.
 
 Since a circuit may modify both the amplitude and the phase of a voltage
 wave, all S-parameters are complex numbers.
@@ -1540,7 +1541,7 @@ Calculate S-parameters
 
 In openEMS, after calling ``CalcPort()`` on a port object, its incident and reflected
 voltages can be accessed via its ``uf_inc`` and ``uf_ref`` attributes, which are
-``numpy``` lists with the same number of elements as ``freq_list`` (which we previously
+``numpy`` lists with the same number of elements as ``freq_list`` (which we previously
 passed to ``CalcPort()``).
 
 Thus, by definition, one can calculate :math:`S_{11}` and :math:`S_{21}` as the
