@@ -174,7 +174,7 @@ to visualize the model::
     $ AppCSXCAD Parallel_Plate_Capacitor_Waveguide.xml
 
 One can inspect the model by mouse drags, looking at it from different camera
-angles::
+angles:
 
 .. important::
    If you're using Wayland, AppCSXCAD may not work correctly, see :ref:`wayland`.
@@ -1458,7 +1458,7 @@ for frequency response, impedance, and time-domain calculations.
 +-----------------------------+-----------------+--------------------------------------------------+
 |         ``ut_ref[n]``       | Time Sample     | Reflected Voltage                                |
 +-----------------------------+-----------------+--------------------------------------------------+
-|         ``it_tot[n]``       | Time Sample     | Total Voltage                                    |
+|         ``ut_tot[n]``       | Time Sample     | Total Voltage                                    |
 +-----------------------------+-----------------+--------------------------------------------------+
 |         ``it_inc[n]``       | Time Sample     | Incident Current                                 |
 +-----------------------------+-----------------+--------------------------------------------------+
