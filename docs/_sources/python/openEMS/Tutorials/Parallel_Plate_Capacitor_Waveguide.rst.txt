@@ -338,7 +338,7 @@ mesh resolution via the following code::
     f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9   # determines mesh size and excitation signal bandwidth
     epsilon_r = 1
-    v = C0 * math.sqrt(epsilon_r)
+    v = C0 / math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
 
@@ -1046,7 +1046,7 @@ last::
     f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9   # determines mesh size and excitation signal bandwidth
     epsilon_r = 1
-    v = C0 * math.sqrt(epsilon_r)
+    v = C0 / math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
     # use a smaller cell size around metal edge, not just the base mesh size
@@ -1155,7 +1155,7 @@ build upon further::
     f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9   # determines mesh size and excitation signal bandwidth
     epsilon_r = 1
-    v = C0 * math.sqrt(epsilon_r)
+    v = C0 / math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
     # use a smaller cell size around metal edge, not just the base mesh size
@@ -2001,7 +2001,7 @@ obtains if the previous instructions are followed::
     f_min = 100e6  # post-processing only, not used in simulation
     f_max = 10e9   # determines mesh size and excitation signal bandwidth
     epsilon_r = 1
-    v = C0 * math.sqrt(epsilon_r)
+    v = C0 / math.sqrt(epsilon_r)
     wavelength = v / f_max / unit  # convert to millimeters
     res = wavelength / 10
     # use a smaller cell size around metal edge, not just the base mesh size

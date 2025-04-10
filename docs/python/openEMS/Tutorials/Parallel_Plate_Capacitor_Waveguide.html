@@ -472,7 +472,7 @@ mesh resolution via the following code:</p>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
 <span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="mi">10</span>
 </pre></div>
@@ -1152,7 +1152,7 @@ last:</p>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
 <span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="mi">10</span>
 <span class="c1"># use a smaller cell size around metal edge, not just the base mesh size</span>
@@ -1260,7 +1260,7 @@ build upon further:</p>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
 <span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="mi">10</span>
 <span class="c1"># use a smaller cell size around metal edge, not just the base mesh size</span>
@@ -2104,7 +2104,7 @@ obtains if the previous instructions are followed:</p>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
 <span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
 <span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
 <span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="mi">10</span>
 <span class="c1"># use a smaller cell size around metal edge, not just the base mesh size</span>
