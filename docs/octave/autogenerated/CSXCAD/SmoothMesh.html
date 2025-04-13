@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmoothMesh &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SmoothMeshLines" href="SmoothMeshLines.html" />
+    <link rel="prev" title="RecursiveSmoothMesh" href="RecursiveSmoothMesh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/python.html">Python Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../octave.html">Octave/Matlab Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../CSXCAD/index.html">CSXCAD API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/geometry.html">Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/materials.html">Materials</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../CSXCAD/mesh.html">Mesh</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="AnalyseMesh.html">AnalyseMesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AutoSmoothMeshLines.html">AutoSmoothMeshLines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CheckMesh.html">CheckMesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DefineRectGrid.html">DefineRectGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DetectEdges.html">DetectEdges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RecursiveSmoothMesh.html">RecursiveSmoothMesh</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">SmoothMesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SmoothMeshLines.html">SmoothMeshLines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SmoothMeshLines2.html">SmoothMeshLines2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/excitations.html">Excitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/probes_dumps.html">Probes and Field Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/import_export.html">Import &amp; Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/index.html">openEMS API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../octave.html">Octave/Matlab Interface</a> &raquo;</li>
+          <li><a href="../../CSXCAD/index.html">CSXCAD API</a> &raquo;</li>
+          <li><a href="../../CSXCAD/mesh.html">Mesh</a> &raquo;</li>
+      <li>SmoothMesh</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/octave/autogenerated/CSXCAD/SmoothMesh.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="smoothmesh">
+<h1>SmoothMesh<a class="headerlink" href="#smoothmesh" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="SmoothMesh">
+<span class="sig-name descname"><span class="pre">SmoothMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varargin&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SmoothMesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Full definition:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[mesh]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">SmoothMesh</span><span class="p">(</span> mesh, max_res, &lt;ratio, varargin&gt;<span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Convienent function to create a smooth mesh in all directions.
+Generate smooth mesh by choosing an appropriate algorithm in each direction.</p>
+<p>Currently supported smoothing algorithm:
+SmoothMeshLines, SmoothMeshLines2 and RecursiveSmoothMesh</p>
+<p>arguments:</p>
+<ul class="simple">
+<li><p>lines:      given fixed lines to create a smooth mesh in between</p></li>
+<li><p>max_res:    scalar or vector of desired max. allowed resolution</p></li>
+<li><p>ratio:      grading ratio: scalar or vector of desired neighboring
+line-delta ratio (optional, default is 1.5)
+- see also ‘allowed_max_ratio’ argument</p></li>
+</ul>
+<p>variable arguments (‘keyword’,value):</p>
+<ul class="simple">
+<li><p>algorithm:          define subset of tried algorihm, e.g. [1 3]</p></li>
+<li><p>symmetric:          0/1 force symmetric mesh (default is input symmetry)</p></li>
+<li><p>homogeneous:        0/1 force homogeneous mesh</p></li>
+<li><p>allowed_min_res:    allow a given min resolution only</p></li>
+<li><p>allowed_max_ratio:  allow only a given max. grading ratio
+(default –&gt; ratio*1.25)</p></li>
+<li><p>debug:              0/1 off/on</p></li>
+</ul>
+<p>example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mesh.x = [-BoundBox 0 BoundBox];
+mesh.y = [-BoundBox 0 BoundBox];
+mesh.z = [0 BoundBox];
+mesh = SmoothMesh(mesh, lambda/20/unit);
+CSX = DefineRectGrid(CSX, unit, mesh);
+</pre></div>
+</div>
+<p>See also AutoSmoothMeshLines, InitCSX, DefineRectGrid, DetectEdges</p>
+<hr class="docutils" />
+<p>author: Thorsten Liebig (C) 2012</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="RecursiveSmoothMesh.html" class="btn btn-neutral float-left" title="RecursiveSmoothMesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SmoothMeshLines.html" class="btn btn-neutral float-right" title="SmoothMeshLines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

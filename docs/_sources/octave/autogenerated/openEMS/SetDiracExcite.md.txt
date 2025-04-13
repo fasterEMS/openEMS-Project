@@ -1,0 +1,8 @@
+SetDiracExcite
+==============
+```{function} 
+```
+Full definition:
+```{code-block} matlab
+
+```

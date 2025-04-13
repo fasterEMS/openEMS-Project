@@ -1,0 +1,29 @@
+export_excellon
+===============
+```{function} export_excellon( CSX, filename, options )
+```
+Full definition:
+```{code-block} matlab
+export_excellon( CSX, filename, options )
+```
+
+Exports the geometry defined in CSX to filename as an excellon drill file.
+Only cylinders will be considered for export.
+The xy-plane is exported.
+
+- CSX: CSX-object created by InitCSX()
+- filename: export filename (e.g. '/tmp/export.gbr')
+- options (optional): struct
+  - .header: (string) add this to the header of the file
+       comment line must have ';' as the very first character
+  - .exclude: (cell array) ignore these CSX-properties
+  - .include: (cell array) include only these CSX-properties
+       if neither .exclude or .include is specified, process all properties
+
+See also InitCSX 
+
+
+-----------------------
+author: Sebastian Held <sebastian.held@gmx.de>
+26. Aug 2010: initial version
+

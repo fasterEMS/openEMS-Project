@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boundary Conditions &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Boundary Conditions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/bc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="boundary-conditions">
+<h1>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Permalink to this headline"></a></h1>
+<p>In openEMS, all physical phenomena occur in a small simulation box, so
+we must decide what happens to the electromagnetic fields at its edges.
+These are known as the <em>boundary conditions</em> of Partial Differential
+Equations (PDEs). To create an effective simulation, we must select the
+appropriate boundary conditions. There are six in total, located at
+the six faces of the box: <code class="docutils literal notranslate"><span class="pre">x_min</span></code>, <code class="docutils literal notranslate"><span class="pre">x_max</span></code>, <code class="docutils literal notranslate"><span class="pre">y_min</span></code>, <code class="docutils literal notranslate"><span class="pre">y_max</span></code>,
+<code class="docutils literal notranslate"><span class="pre">z_min</span></code>, <code class="docutils literal notranslate"><span class="pre">z_max</span></code>. Each is independently adjustable.</p>
+<section id="set-boundary-conditions">
+<h2>Set Boundary Conditions<a class="headerlink" href="#set-boundary-conditions" title="Permalink to this headline"></a></h2>
+<p>To set the boundary conditions of the simulator, use
+<a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.SetBoundaryCond" title="openEMS.openEMS.SetBoundaryCond"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS.openEMS.SetBoundaryCond()</span></code></a> of the <code class="docutils literal notranslate"><span class="pre">openEMS</span></code> class. Its syntax is:
+<code class="docutils literal notranslate"><span class="pre">SetBoundaryCond(bc)</span></code> where <code class="docutils literal notranslate"><span class="pre">bc</span></code> is a list with 6 elements with the order
+of <code class="docutils literal notranslate"><span class="pre">[x_min,</span> <span class="pre">x_max,</span> <span class="pre">y_min,</span> <span class="pre">y_max,</span> <span class="pre">z_min,</span> <span class="pre">z_max]</span></code>. Each element is a string or
+integer according to the following table. Note that the use of integers is
+discouraged due to poor readability, but one may encounter them in older examples.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 12%" />
+<col style="width: 4%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Boundary Condition</p></th>
+<th class="head"><p>String</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Perfect Electric Conductor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PEC</span></code></p></td>
+<td><p>0</p></td>
+<td><p>Reflective. Fast.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Perfect Magnetic Conductor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PMC</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Reflective. Fast.</p></td>
+</tr>
+<tr class="row-even"><td><p>Mur’s Absorbing Boundary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MUR</span></code></p></td>
+<td><p>2</p></td>
+<td><p>Absorbing. Slow.</p>
+<p>Only absorbs waves orthogonal to the boundary.</p>
+<p>Named after Gerrit Mur.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Perfectly Matched Layer</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PML_8</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PML_x</span></code></p>
+</td>
+<td><p>3</p></td>
+<td><p>Absorbing. Slowest.</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span></code> has a range [6, 20], 8 by default.</p>
+<p>Occupies <code class="docutils literal notranslate"><span class="pre">x</span></code> mesh lines near the boundary.</p>
+<p>Keep structures <code class="docutils literal notranslate"><span class="pre">x</span></code> cells away from boundary.</p>
+<p>For radiating structures, λ / 4 away.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Matlab/Octave example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FDTD</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">();</span>
+<span class="n">BC</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">};</span>
+<span class="n">FDTD</span> <span class="o">=</span> <span class="n">SetBoundaryCond</span><span class="p">(</span><span class="n">FDTD</span><span class="p">,</span> <span class="n">BC</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">()</span>
+<span class="n">bc</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PML_8&quot;</span><span class="p">,</span> <span class="s2">&quot;PML_8&quot;</span><span class="p">,</span> <span class="s2">&quot;PML_8&quot;</span><span class="p">,</span> <span class="s2">&quot;PML_8&quot;</span><span class="p">,</span> <span class="s2">&quot;PML_8&quot;</span><span class="p">,</span> <span class="s2">&quot;PML_8&quot;</span><span class="p">]</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="reflecting-dirichlet-boundary-conditions">
+<h2>Reflecting (Dirichlet) Boundary Conditions<a class="headerlink" href="#reflecting-dirichlet-boundary-conditions" title="Permalink to this headline"></a></h2>
+<p>If the finite nature of the simulation box and the reflection of E&amp;M waves at
+the boundaries are acceptable, reflecting boundary conditions offer a simple
+zero-overhead solution. They efficiently model structures inside metal
+enclosures, above a ground plane, or with an electric or magnetic field
+symmetry across a plane. No explicit modeling is necessary; the boundary
+conditions implicitly enforce these behaviors.</p>
+<figure class="align-default" id="id1">
+<a class="with-border reference internal image-reference" href="../_images/reverberation_chamber.jpg"><img alt="../_images/reverberation_chamber.jpg" class="with-border" src="../_images/reverberation_chamber.jpg" style="width: 60%;" /></a>
+<figcaption>
+<p><span class="caption-text">A simulation box with PEC at all boundaries acts like a shielded enclosure.
+EMC test labs use room-sized metal enclosures to create reverberation
+chambers. Taking advantage of the standing waves due to reflections,
+one can create strong electric fields at localized regions to generate
+electromagnetic interference for testing.
+Image by Dr. Hans Georg Krauthäuser (Hgk at English Wikipedia),
+licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Perfect Electric Conductor (PEC)</strong>: The simplest treatment sets
+the (tangential) electric field at the boundary to 0.
+Since the electric field lines can’t penetrate this boundary, it’s
+equivalent to a Perfect Electric Conductor (PEC) with infinite
+conductivity, also known as an Electric Wall. All incoming waves are
+fully reflected back, analogous to a 1D transmission line terminated
+by a short circuit.</p>
+<p><strong>Perfect Magnetic Conductor (PMC)</strong>: By duality, it sets the magnetic
+field to 0 at the boundary. It acts as a boundary at which
+the magnetic field lines can’t penetrate. It’s equivalent to a Perfect
+Magnetic Conductor (PMC) with infinite permeability, also known as the
+Magnetic Wall. All incoming waves are fully reflected back as well,
+but with a phase opposite to that of the PEC, analogous to a 1D
+transmission line terminated by an open circuit. It’s used mainly as
+a mathematical tool to enforce field symmetry when simulating a
+half-structure, as no natural material in the real world behaves like
+a PMC.</p>
+<p>Mathematically, both PEC and PMC are Dirichlet boundary conditions
+that enforce fixed field values (e.g. zero).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For our simulation, instead of explicitly modeling metal
+plates, we can model a vacuum with nothing inside, taking advantage
+of the PEC boundary conditions at <code class="docutils literal notranslate"><span class="pre">z_min</span></code> and <code class="docutils literal notranslate"><span class="pre">z_max</span></code> for
+fast computation. However, this is out of this tutorial’s scope,
+and it won’t capture the fringe fields above and below. We won’t use
+PEC or PMC in this example.</p>
+</div>
+</section>
+<section id="absorbing-boundary-conditions-abc">
+<h2>Absorbing Boundary Conditions (ABC)<a class="headerlink" href="#absorbing-boundary-conditions-abc" title="Permalink to this headline"></a></h2>
+<p>In open-boundary problems, such as antennas or structures with radiation
+loss, <em>Absorbing Boundary Conditions (ABC)</em> must be used to suppress
+reflections to prevent spurious simulation results. At its boundaries, the
+electromagnetic waves are absorbed and dissipated without reflecting back,
+creating the illusion of an infinitely large free space.</p>
+<p>In general, these simulations should use a simulation box larger than the
+structure to avoid intrusion of strong fringe fields at the boundary.
+However, deliberately running a transmission line into the PML (defined
+below) can be used as a perfect termination resistor. This allows one
+to terminate a transmission line without knowing its characteristic
+impedance, enabling impedance measurement. In fact, openEMS’s microstrip
+ports doesn’t create a lumped termination resistor by default, expecting
+users to place them into the PML at boundaries.</p>
+<figure class="align-default" id="id2">
+<a class="with-border reference internal image-reference" href="../_images/anechoic_chamber.jpg"><img alt="../_images/anechoic_chamber.jpg" class="with-border" src="../_images/anechoic_chamber.jpg" style="width: 60%;" /></a>
+<figcaption>
+<p><span class="caption-text">A simulation box with PML at all boundaries acts like an anechoic chamber
+in an EMC test lab, mimicking an infinitely large free space. Image by
+Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Two kinds of Absorbing Boundary Conditions are implemented in openEMS.</p>
+<ol class="arabic">
+<li><p><strong>Mur’s Boundary Condition (MUR)</strong>. This is a
+first-generation boundary condition purely defined by differential
+equations, originally invented by Gerrit Mur in the 1980s. It has
+a moderate computational overhead, but it works only if the E&amp;M wave
+is traveling at a direction orthogonal to the boundary, with a
+well-defined phase velocity (e.g. the speed of light). Thus,
+reflections may cause errors if strong radiation exists due to
+imperfect absorption.</p></li>
+<li><p><strong>Perfectly Matched Layer (PML)</strong>. This is the
+second-generation boundary condition proposed in the 1990s, modeling
+the behavior of a hypothetical E&amp;M wave-absorbing material. Unlike
+Mur’s ABC, PML occupies some physical cells in the simulation box
+(the actual boundary at the true edge remains PEC).
+This mimics the wave-absorbing foam on the wall of an anechoic chamber
+in EMC test labs.</p>
+<p>PML is a more effective absorber and is easy to use, but it has the
+highest computational overhead (especially in openEMS, due to suboptimal
+implementation). Avoid it if efficiency is critical (e.g. only use
+PML at the simulation box’s face directly hit by radiation, and use
+MUR for other boundaries). Intrusion of fringe fields and evanescent
+waves into the PML can destabilize it, causing the simulation to “blow-up”.
+Radiating structures must be kept at a distance of <span class="math notranslate nohighlight">\(\lambda / 4\)</span>.</p>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In openEMS, <code class="docutils literal notranslate"><span class="pre">PML_8</span></code> is commonly used, meaning the nearest 8 mesh lines
+of the simulation box are dedicated to the PML. This is an assumption made
+by the simulator and not visible in AppCSXCAD. Ensure your structures do not
+overlap with edge cells (unless intentionally terminating a region with
+the PML). Radiating structures must be kept at a distance of <span class="math notranslate nohighlight">\(\lambda / 4\)</span>
+from PML as intrusion of evanescent waves (fringe fields) can create
+numerical instability.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

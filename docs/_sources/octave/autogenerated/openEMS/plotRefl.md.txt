@@ -1,0 +1,40 @@
+plotRefl
+========
+```{function}  plotRefl(port,varargin)
+```
+Full definition:
+```{code-block} matlab
+h = plotRefl(port,varargin)
+```
+
+ plot the reflection coefficient of a port into a Smith chart.
+ left and right facing triangles mark the lower and upper cutoff
+ frequency of the pass bands. An asterisk marks the frequnecy with 
+ the lowest reflection.
+
+input:
+-  port:      port data structure. Call calcPort with an appropriate 
+              frequency vector before calling this routine
+
+output:      graphics handle for further modification of the plot.
+
+variable input:
+- 'precision':     number of decimal places (floating point precision) 
+                    for the frequency (always in MHz), default is 0
+- 'threshold':     Threshold value (in dB) for the upper and lower
+                    cutoff frequency, default is -3
+- 'fmarkers':      set lower and upper frequency marker in Hz manually, 
+                   like so: [4e9, 6.5e9]
+
+example:
+
+    myport = calcPort(myport, Sim_Path, linspace(f_0-f_c, f_0+f_c, 200));
+    plotRefl(myport, 'fmarkers', [4e9, 6.5e9]);
+
+See also calcPort
+
+
+
+-----------------------
+author: Georg Michel
+

@@ -1,0 +1,12 @@
+queue_checkProcess
+==================
+```{function}  queue_checkProcess( pid )
+```
+Full definition:
+```{code-block} matlab
+[alive,stdout,stderr] = queue_checkProcess( pid )
+```
+
+Sebastian Held <sebastian.held@uni-due.de>
+12.5.2010
+

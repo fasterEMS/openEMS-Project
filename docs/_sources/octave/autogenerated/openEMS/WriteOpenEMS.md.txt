@@ -1,0 +1,24 @@
+WriteOpenEMS
+============
+```{function} function WriteOpenEMS(filename, FDTD, CSX)
+```
+Full definition:
+```{code-block} matlab
+function WriteOpenEMS(filename, FDTD, CSX)
+```
+
+Write the FDTD and CSX structures to a file.
+
+example:
+
+    CSX = InitCSX();
+    FDTD = InitFDTD();
+    WriteOpenEMS('test.xml',FDTD,CSX)
+
+See also InitFDTD InitCSX CSXGeomPlot
+
+
+
+-----------------------
+author: Thorsten Liebig
+

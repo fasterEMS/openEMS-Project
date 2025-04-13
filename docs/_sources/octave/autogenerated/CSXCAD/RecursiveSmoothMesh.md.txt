@@ -1,0 +1,51 @@
+RecursiveSmoothMesh
+===================
+```{function}  RecursiveSmoothMesh(fixedMeshPoints, max_res, ratio, varargin)
+```
+Full definition:
+```{code-block} matlab
+function resultMeshPoints = RecursiveSmoothMesh(fixedMeshPoints, max_res, ratio, varargin)
+```
+
+RecursiveSmoothMesh: This function tries to generate an optimal mesh
+ between the given fixedMeshPoints. The space between the fixed points is
+ filled with the largest possible mesh step size considdering mesh max
+ resolution and mesh increase/decrease ratio.
+
+Algorithm: Mesh creation is done via a simple try and error approach:
+ The next mesh point could be between lastDistance*ratio and
+ lastDistance/ratio away from the last mesh point. If a fixed mesh point
+ exist in this distance, this point is used. If there is a fixed mesh
+ point below this distance, the last (determined) mesh point is wrong, go
+ back and try with a mesh point a few mm below. (If that is not possible
+ because the distance to the mesh point behind the last point is to low,
+ also update this mesh point).
+ The algorithm seems to work very well, except if the ratio is to low.
+ At a value of 1.2, the calculation takes a very long time.
+
+
+Parameter:
+- fixedMeshPoints:    List containing points at which a mesh
+                      line should appear
+- max_res:            Maximum distance between two mesh lines
+- ratio:              Maximum grading ratio between two
+                      neighbour mesh lines
+
+optional variable arguments ('key', value):
+- CheckMesh:          Do a final mesh check (default is true)
+- allowed_max_ratio:  allow only a given max. grading ratio
+                      (default --> ratio*1.25)
+
+Returns:
+
+- resultMeshPoints:   List containing the positions of all
+                      mesh lines. If a empty list is
+                      returned, no resolution could be
+                      found.
+
+
+
+-----------------------
+Author: Florian Pfanner
+Date: 28.09.2012
+

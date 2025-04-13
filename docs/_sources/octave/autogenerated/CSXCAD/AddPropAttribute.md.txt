@@ -1,0 +1,16 @@
+AddPropAttribute
+================
+```{function}  AddPropAttribute(CSX, name, att_name, att_value)
+```
+Full definition:
+```{code-block} matlab
+CSX = AddPropAttribute(CSX, name, att_name, att_value)
+```
+
+Add a given attribute (name and value) to the given property
+
+
+
+-----------------------
+author: Thorsten Liebig (c) 2013
+

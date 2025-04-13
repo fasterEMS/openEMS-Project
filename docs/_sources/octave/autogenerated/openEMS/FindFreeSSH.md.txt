@@ -1,0 +1,28 @@
+FindFreeSSH
+===========
+```{function}  FindFreeSSH(host_list, Settings, wait_time, command)
+```
+Full definition:
+```{code-block} matlab
+function host = FindFreeSSH(host_list, Settings, wait_time, command)
+```
+
+Find a free ssh host not running openEMS
+
+internal function used by RunOpenEMS
+
+- host_list: give a list of possible host
+
+- wait_time: wait x seconds after not finding a free host and rechecking
+           default: 600 seconds
+
+- command: unix command to check for free host (empty result --> free)
+           default: 'ps -e | grep openEMS'
+
+See also RunOpenEMS
+
+
+
+-----------------------
+author: Thorsten Liebig
+

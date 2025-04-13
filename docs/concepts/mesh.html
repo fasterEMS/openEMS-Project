@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesh &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Mesh</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/mesh.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mesh">
+<h1>Mesh<a class="headerlink" href="#mesh" title="Permalink to this headline"></a></h1>
+<p>A mesh partitions the continuous 3D box into discrete rectangular cuboids.
+In the Finite-Difference Time-Domain (FDTD) algorithm, these cuboids
+discretize the 3D space and form the basic unit of electromagnetic
+calculations. These are known as Yee cells (named after Kane S. Yee’s 1966
+algorithm).</p>
+<p>openEMS supports the standard Cartesian mesh in conventional FDTD
+algorithm. A non-uniform mesh is supported as an improved to save
+computational resources, by allowing the use of fine mesh sizes only
+around small features in the structure.</p>
+<p>As an extension the FDTD algorithm, openEMS also supports meshing
+in Cylindrical coordinates. The is useful for simulating round
+structures without the “staircasing” error. The cylindrical mesh
+can be further “subgridded” into smaller cells, achieving resource-saving
+benefits similar to the non-uniform Cartesian mesh.
+As a showcase, an antenna for medical Magnetic Resonances Imaging (MRI)
+has been successfully simulated this way in a research project.</p>
+<section id="create-a-mesh">
+<h2>Create a Mesh<a class="headerlink" href="#create-a-mesh" title="Permalink to this headline"></a></h2>
+<section id="obtain-the-mesh-object">
+<h3>Obtain the Mesh Object<a class="headerlink" href="#obtain-the-mesh-object" title="Permalink to this headline"></a></h3>
+<p>We obtain the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> object by calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">GetGrid()</span></code>
+to manipulate it further, and set its unit of measurement to 1 mm (<code class="docutils literal notranslate"><span class="pre">1e-3</span></code> meters).
+This will be used as the base unit of all coordinates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decide-the-upper-frequency-and-mesh-resolution">
+<h3>Decide the Upper Frequency and Mesh Resolution<a class="headerlink" href="#decide-the-upper-frequency-and-mesh-resolution" title="Permalink to this headline"></a></h3>
+<p>Let’s pick an arbitrary lower frequency of 100 MHz and an upper frequency
+of 10 GHz. Based on the previous analysis, one can calculate the desired
+mesh resolution via the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">openEMS.physical_constants</span> <span class="kn">import</span> <span class="n">C0</span>
+
+<span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>  <span class="c1"># post-processing only, not used in simulation</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>   <span class="c1"># determines mesh size and excitation signal bandwidth</span>
+<span class="n">epsilon_r</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon_r</span><span class="p">)</span>
+<span class="n">wavelength</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">f_max</span> <span class="o">/</span> <span class="n">unit</span>  <span class="c1"># convert to millimeters</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="general-requirements">
+<h2>General Requirements<a class="headerlink" href="#general-requirements" title="Permalink to this headline"></a></h2>
+<p>In general, the mesh must satisfy four requirements:</p>
+<ol class="arabic simple">
+<li><p><strong>Frequency Resolution</strong>. Its interval must be small enough to resolve the
+shortest wavelength (highest
+frequency component) of the signal, so that electromagnetic field details are
+not missed. Thus, we need several cells per wavelength.</p></li>
+<li><p><strong>Spatial Resolution</strong>. Its interval must be small enough to resolve the
+shapes of the simulated
+structure, so that small details of the structure are not missed. Thus, we
+need at least a few cells around the important shapes (such as the waveguide
+plates) of the structure. openEMS uses a rectilinear mesh with variable
+spacing. To save time, only use a fine mesh interval around details on
+a structure; use a coarse mesh for the rest.</p></li>
+<li><p><strong>Smoothness</strong>. Its interval should change smoothly, not by a sudden jump.
+It’s recommended that the mesh spacing vary by no more than a factor of
+1.5 between adjacent lines.</p></li>
+<li><p><strong>1/3-2/3 Rule</strong>. The edges of a conductor have singularities with strong
+electric field. To improve FDTD accuracy, ideally, around the metal edge,
+the metal should occupy 1/3 of a cell, while the vacuum or insulator
+occupies 2/3 of a cell. More on that later.</p></li>
+</ol>
+<p>As a rule of thumb, we want a mesh resolution of at least:</p>
+<div class="math notranslate nohighlight">
+\[l_\mathrm{cell} \le \dfrac{1}{10} \lambda\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same “1/10 wavelength” rule of thumb used for
+determining whether transmission line effects are significant in a
+distributed circuit.</p>
+</div>
+<p>The relationship between wavelength and frequency is:</p>
+<div class="math notranslate nohighlight">
+\[\lambda = \frac{v}{f_\mathrm{max}}\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\lambda\)</span> is the wavelength of the electromagnetic wave
+in meters, <span class="math notranslate nohighlight">\(v\)</span> is the speed of light in a medium, in meters per second,
+and <span class="math notranslate nohighlight">\(f_\mathrm{max}\)</span> is the highest frequency component of the signals
+used in simulation.</p>
+<p>The speed of light in a medium is given by:</p>
+<div class="math notranslate nohighlight">
+\[v = \frac{c_0}{\sqrt{\epsilon_r\mu_r}}\]</div>
+<p>in which <span class="math notranslate nohighlight">\(c_0\)</span> is the speed of light in vacuum, <span class="math notranslate nohighlight">\(\epsilon_r\)</span>
+is the relative permittivity of the medium (in engineering, it’s sometimes
+also denoted as a material’s dielectric constant <span class="math notranslate nohighlight">\(D_k = \epsilon_r\)</span>).
+The <span class="math notranslate nohighlight">\(\mu_r\)</span> term is the medium’s relative permeability, which is
+usually omitted in engineering for the purpose of signal transmission.
+Most dielectrics (like plastics or fiberglass) in cables are non-magnetic -
+unless one is dealing with inductors or circulators.</p>
+<p>In vacuum, <span class="math notranslate nohighlight">\(\epsilon_r = 1\)</span> and <span class="math notranslate nohighlight">\(\mu_r = 1\)</span> exactly.</p>
+</section>
+<section id="courant-friedrichs-lewy-cfl-criterion">
+<h2>Courant-Friedrichs-Lewy (CFL) Criterion<a class="headerlink" href="#courant-friedrichs-lewy-cfl-criterion" title="Permalink to this headline"></a></h2>
+<p>In general, the CFL criterion governs the stability of FDTD
+calculations. It states that the simulation timestep can’t be
+larger than:</p>
+<div class="math notranslate nohighlight">
+\[\Delta t \le
+\frac{1}{v\sqrt{
+{1 \over {\Delta x^2}} + {1 \over {\Delta y^2}} + {1 \over {\Delta z^2}}
+}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(v\)</span> is the wave speed, <span class="math notranslate nohighlight">\(\Delta x\)</span>,
+<span class="math notranslate nohighlight">\(\Delta y\)</span>, <span class="math notranslate nohighlight">\(\Delta z\)</span> are the distances between mesh
+lines.</p>
+<p>This creates a peculiar limitation: to resolve the smallest mesh
+cell, one must use a small timestep regardless of frequency.</p>
+<p>Even for simulations at low frequencies, as long as the simulated
+structure has small features (i.e. mesh distance is short), we
+must use very small timesteps, advancing the simulation only a few
+nanoseconds per iteration. Under 100 MHz, at the bottom of the VHF
+band or in the HF band, the required number of iterations becomes
+impractically large. This means openEMS (and other textbook
+FDTD solvers with explicit timestepping) is unsuitable if there’s a
+large mismatch between the signal wavelength and the physical size
+of the structure, such as a 10 cm circuit board operating at 1
+MHz, where the wavelength is 300 m in vacuum.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In openEMS, you only need to define an appropriate mesh.
+There’s no need to calculate the required timestep size,
+By default, openEMS uses a modified timestep criterion
+named <em>Rennings2</em> is used, not CFL. This improves timestep
+selection in non-uniform meshes. But the general limitation
+still applies.</p>
+<p><cite>Rennings2</cite> is derived in the unpublished paper <a href="#id2"><span class="problematic" id="id1">[11]_</span></a>,
+see <a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.SetTimeStepMethod" title="openEMS.openEMS.SetTimeStepMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetTimeStepMethod()</span></code></a> for details.</p>
+<p>If you really need small cells
+(e.g. to resolve some important feature of your structure) you
+will have to live with long execution times, or perhaps FDTD is
+not the right method for your problem. As a workaround, one may
+also try extracting the circuit parameters using a higher signal
+frequency, then using those equivalent-circuit parameters in a
+low-frequency simulation with a general-purpose linear circuit
+simulator.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

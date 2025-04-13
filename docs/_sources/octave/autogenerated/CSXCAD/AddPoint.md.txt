@@ -1,0 +1,12 @@
+AddPoint
+========
+```{function}  AddPoint(CSX, propName, prio, pos, varargin)
+```
+Full definition:
+```{code-block} matlab
+CSX = AddPoint(CSX, propName, prio, pos, varargin)
+```
+
+
+
+

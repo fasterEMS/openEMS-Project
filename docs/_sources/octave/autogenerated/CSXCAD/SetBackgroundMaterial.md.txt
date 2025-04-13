@@ -1,0 +1,28 @@
+SetBackgroundMaterial
+=====================
+```{function}  SetBackgroundMaterial(CSX, varargin))
+```
+Full definition:
+```{code-block} matlab
+function CSX = SetBackgroundMaterial(CSX, varargin))
+```
+
+Set the background material properties
+
+variable arguments:
+- 'Epsilon'       : background rel. electric permittivity (default 1)
+- 'Kappa'         : background electric conductivity (default 0)
+- 'Mue'           : background rel. magnetic permeability (default 1) 
+
+example:
+
+    CSX = InitCSX();
+    CSX = SetBackgroundMaterial(CSX, 'Epsilon', 4)
+
+See also InitCSX
+
+
+
+-----------------------
+author: Thorsten Liebig (c) 2013
+

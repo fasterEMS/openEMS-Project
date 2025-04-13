@@ -1,0 +1,20 @@
+SetSinusExcite
+==============
+```{function}  SetSinusExcite(FDTD,f0)
+```
+Full definition:
+```{code-block} matlab
+function FDTD = SetSinusExcite(FDTD,f0)
+```
+
+see also SetGaussExcite SetCustomExcite
+
+e.g
+
+    FDTD = SetSinusExcite(FDTD,1e9);
+
+
+
+-----------------------
+author: Thorsten Liebig
+

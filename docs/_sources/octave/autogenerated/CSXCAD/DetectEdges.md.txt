@@ -1,0 +1,51 @@
+DetectEdges
+===========
+```{function}  DetectEdges(CSX <, mesh, varargin>)
+```
+Full definition:
+```{code-block} matlab
+mesh = DetectEdges(CSX <, mesh, varargin>)
+```
+
+Returns a mesh with the edges added of certain (see below) primitives
+found in the CSX structure.
+
+optional arguments:
+- mesh:       add edges to an existing (predefined) mesh
+
+optional: 'keyword', value
+- 'Debug'         enable debug mode (default is 1)
+- 'AddPropertyType'  add a list of additional property types to detect
+                  e.g. 'DumpBox' or {'DumpBox','ProbeBox'}
+- 'SetPropertyType'  set the list of property types to detect (override default)
+                  e.g. 'Metal' or {'Metal','ConductingSheet'}
+- 'ExcludeProperty'  give a list of property names to exclude from
+                     detection
+- 'SetProperty'  give a list of property names to handly exlusively for detection
+
+advanced options: 'keyword', value
+- '2D_Metal_Edge_Res' define a one-third/two-third metal edge resolution
+
+example:
+
+    CSX = InitCSX();
+    % define all properties and primitives to detect
+    % ...
+    % ...
+    mesh = DetectEdges(CSX);
+    mesh = SmoothMesh(mesh, lambda/20/unit);
+    CSX = DefineRectGrid(CSX, unit, mesh);
+
+Note:
+- Only primitives contained in Metal, Material, Excitation, LumpedElement
+  or ConductingSheet properties are processed
+- Currently this function handles only Box, Polygons, LinPoly and Cylinder.
+
+
+
+-----------------------
+author: Koen De Vleeschauwer (c) 2012
+modified by: Thorsten Liebig (c) 2012, 2013
+
+See also InitCSX, SmoothMesh, DefineRectGrid
+

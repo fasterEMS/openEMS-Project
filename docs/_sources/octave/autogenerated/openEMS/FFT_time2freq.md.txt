@@ -1,0 +1,13 @@
+FFT_time2freq
+=============
+```{function}  FFT_time2freq( t, val )
+```
+Full definition:
+```{code-block} matlab
+[f,val] = FFT_time2freq( t, val )
+```
+
+Note: This function can only be used for pulse signals
+
+See also DFT_time2freq
+

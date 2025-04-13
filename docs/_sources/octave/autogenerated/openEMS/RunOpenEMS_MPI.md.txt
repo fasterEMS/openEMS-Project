@@ -1,0 +1,27 @@
+RunOpenEMS_MPI
+==============
+```{function} function RunOpenEMS_MPI(Sim_Path, Sim_File, NrProc,  opts, Settings)
+```
+Full definition:
+```{code-block} matlab
+function RunOpenEMS_MPI(Sim_Path, Sim_File, NrProc,  opts, Settings)
+```
+
+Run an openEMS simulation with MPI support
+
+    % mpi binary path on all nodes needed
+    Settings.MPI.Binary = '/opt/openEMS/openEMS';
+    % number of processes to run
+    Settings.MPI.NrProc = 3;
+    % define the mpi hosts :
+    Settings.MPI.Hosts = {'host1','host2','host3'};
+
+    RunOpenEMS(Sim_Path, Sim_File, NrProc, opts, Settings)
+
+See also SetupMPI, WriteOpenEMS, RunOpenEMS
+
+
+
+-----------------------
+author: Thorsten Liebig
+

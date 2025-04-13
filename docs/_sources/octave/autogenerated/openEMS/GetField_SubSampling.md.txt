@@ -1,0 +1,20 @@
+GetField_SubSampling
+====================
+```{function}  GetField_SubSampling(field, mesh, subsampling, varargin)
+```
+Full definition:
+```{code-block} matlab
+[field_i mesh_i] = GetField_SubSampling(field, mesh, subsampling, varargin)
+```
+
+Get a sub-sampled field, e.g. read by ReadHDF5Dump
+
+sub-sampling e.g. skipping every second line in x/r direction: [2 1 1]
+
+
+
+-----------------------
+author: Thorsten Liebig
+
+See also ReadHDF5Dump ReadHDF5FieldData ReadHDF5Mesh
+

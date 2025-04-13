@@ -1,0 +1,19 @@
+DirChar2Int
+===========
+```{function}  DirChar2Int(dir_char)
+```
+Full definition:
+```{code-block} matlab
+function n = DirChar2Int(dir_char)
+```
+
+internal function to convert a character like 'x','y','z' into a numeric
+direction: 0..2!
+If input already is a numeric value from 0..2, it will just be copied!
+Everything else will raise an error!
+
+
+
+-----------------------
+author: Thorsten Liebig (c) 2013
+

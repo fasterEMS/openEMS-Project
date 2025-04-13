@@ -1,0 +1,26 @@
+Dump2VTK
+========
+```{function} Dump2VTK(filename, fields, mesh, fieldname, varargin)
+```
+Full definition:
+```{code-block} matlab
+Dump2VTK(filename, fields, mesh, fieldname, varargin)
+```
+
+  Dump fields extracted from an hdf5 file to a vtk file format
+
+  possible arguments:
+  -   'NativeDump': 0 (default) / 1, dump in native coordinate system
+  -   'CloseAlpha': 0 (default) / 1, repeat first/last line in
+                    alpha-direction for a full cylindrical mesh
+
+  example:
+
+
+
+
+-----------------------
+author: Thorsten Liebig
+
+See also ReadHDF5FieldData ReadHDF5Mesh GetField_TD2FD GetField_Interpolation
+

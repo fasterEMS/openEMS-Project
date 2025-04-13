@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcLorentzMaterial &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SetBackgroundMaterial" href="SetBackgroundMaterial.html" />
+    <link rel="prev" title="CalcDrudeMaterial" href="CalcDrudeMaterial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/python.html">Python Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../octave.html">Octave/Matlab Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../CSXCAD/index.html">CSXCAD API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/geometry.html">Geometry</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../CSXCAD/materials.html">Materials</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="AddConductingSheet.html">AddConductingSheet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddMetal.html">AddMetal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddMaterial.html">AddMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddLumpedElement.html">AddLumpedElement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddDebyeMaterial.html">AddDebyeMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddDiscMaterial.html">AddDiscMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddLorentzMaterial.html">AddLorentzMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CalcDebyeMaterial.html">CalcDebyeMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CalcDrudeMaterial.html">CalcDrudeMaterial</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CalcLorentzMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SetBackgroundMaterial.html">SetBackgroundMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SetMaterialProperty.html">SetMaterialProperty</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SetMaterialWeight.html">SetMaterialWeight</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Convert_VF_DiscMaterial.html">Convert_VF_DiscMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CreateDiscMaterial.html">CreateDiscMaterial</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/excitations.html">Excitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/probes_dumps.html">Probes and Field Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/import_export.html">Import &amp; Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/index.html">openEMS API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../octave.html">Octave/Matlab Interface</a> &raquo;</li>
+          <li><a href="../../CSXCAD/index.html">CSXCAD API</a> &raquo;</li>
+          <li><a href="../../CSXCAD/materials.html">Materials</a> &raquo;</li>
+      <li>CalcLorentzMaterial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/octave/autogenerated/CSXCAD/CalcLorentzMaterial.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calclorentzmaterial">
+<h1>CalcLorentzMaterial<a class="headerlink" href="#calclorentzmaterial" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="CalcLorentzMaterial">
+<span class="sig-name descname"><span class="pre">CalcLorentzMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmaFreq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LorPoleFreq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_relax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CalcLorentzMaterial" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Full definition:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">eps_lorentz</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">CalcLorentzMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">eps_r</span><span class="p">,</span><span class="w"> </span><span class="n">kappa</span><span class="p">,</span><span class="w"> </span><span class="n">plasmaFreq</span><span class="p">,</span><span class="w"> </span><span class="n">LorPoleFreq</span><span class="p">,</span><span class="w"> </span><span class="n">t_relax</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Calculate the Lorentz type dispersive material constant</p>
+<p>arguments:</p>
+<ul class="simple">
+<li><p>f:           frequeny range of interest</p></li>
+<li><p>eps_r:       eps_r infinity</p></li>
+<li><p>kappa:       conductivity (losses)</p></li>
+<li><p>plasmaFreq:  (vector) plasma frequencies (Drude model)</p></li>
+<li><p>LorPoleFreq: (vector) Lorentz pole frequencies (zero for pure Drude model)</p></li>
+<li><p>t_relax:     (vector) relaxation time (losses)</p></li>
+</ul>
+<p>return:</p>
+<ul class="simple">
+<li><p>eps_lorentz: the complex relative permitivity</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% silver (AG) at optical frequencies (Drude model) [1, p. 201]
+f = linspace(300e12, 1100e12, 201);
+eps_model = CalcLorentzMaterial(f, 3.942, 7.97e3, 7e15/2/pi, 0, 1/2.3e13);
+
+figure
+plot(f,real(eps_model))
+hold on;
+grid on;
+plot(f,imag(eps_model),&#39;r--&#39;)
+
+% silver (AG) at optical frequencies (Drude+Lorentz model) [1, p. 201]
+f = linspace(300e12, 1100e12, 201);
+eps_model = CalcLorentzMaterial(f, 1.138, 4.04e3, [13e15 9.61e15]/2/pi, [0 7.5e15]/2/pi,[1/2.59e13 1/3e14]);
+
+figure
+plot(f,real(eps_model))
+hold on;
+grid on;
+plot(f,imag(eps_model),&#39;r--&#39;)
+</pre></div>
+</div>
+<p>See also: CalcDebyeMaterial</p>
+<ul class="simple">
+<li><p>[1] Rennings, Andre: “Elektromagnetische Zeitbereichssimulationen
+innovativer Antennen auf Basis von Metamaterialien.”
+PhD Thesis, University of Duisburg-Essen, September 2008</p></li>
+</ul>
+<hr class="docutils" />
+<p>author: Thorsten Liebig (2013)</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CalcDrudeMaterial.html" class="btn btn-neutral float-left" title="CalcDrudeMaterial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SetBackgroundMaterial.html" class="btn btn-neutral float-right" title="SetBackgroundMaterial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

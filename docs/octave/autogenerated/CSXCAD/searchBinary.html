@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>searchBinary &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="struct_2_xml" href="struct_2_xml.html" />
+    <link rel="prev" title="isOctave" href="isOctave.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/python.html">Python Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../octave.html">Octave/Matlab Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../CSXCAD/index.html">CSXCAD API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/geometry.html">Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/materials.html">Materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/excitations.html">Excitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/probes_dumps.html">Probes and Field Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../CSXCAD/import_export.html">Import &amp; Export</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../CSXCAD/misc.html">Misc</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="InitCSX.html">InitCSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddPropAttribute.html">AddPropAttribute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSXGeomPlot.html">CSXGeomPlot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DirChar2Int.html">DirChar2Int</a></li>
+<li class="toctree-l4"><a class="reference internal" href="isOctave.html">isOctave</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">searchBinary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struct_2_xml.html">struct_2_xml</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/index.html">openEMS API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../octave.html">Octave/Matlab Interface</a> &raquo;</li>
+          <li><a href="../../CSXCAD/index.html">CSXCAD API</a> &raquo;</li>
+          <li><a href="../../CSXCAD/misc.html">Misc</a> &raquo;</li>
+      <li>searchBinary</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/octave/autogenerated/CSXCAD/searchBinary.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="searchbinary">
+<h1>searchBinary<a class="headerlink" href="#searchbinary" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="searchBinary">
+<span class="sig-name descname"><span class="pre">searchBinary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">searchpath&lt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_fail&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#searchBinary" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Full definition:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">binary_location</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">searchBinary</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">searchpath</span><span class="o">&lt;</span><span class="p">,</span><span class="w"> </span><span class="n">err_fail</span><span class="o">&gt;</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Function to search for executable. If the executable isn’t found
+in searchpath, look in environment search path.</p>
+<p>parameter:</p>
+<ul class="simple">
+<li><p>name:         name of the binary to search</p></li>
+<li><p>searchpath:   (list of) search paths</p></li>
+<li><p>err_fail:     0/1, throw an error if binary is not found (default is 1)</p></li>
+</ul>
+<p>Output:</p>
+<ul class="simple">
+<li><p>binary_location:</p>
+<ul>
+<li><p>if found in searchpath:                full path of binary</p></li>
+<li><p>if found in environment search path:   name of binary</p></li>
+<li><p>if not found:                          empty string</p></li>
+</ul>
+</li>
+</ul>
+<hr class="docutils" />
+<p>(C) 2013 Stefan Mahr <a class="reference external" href="mailto:dac922&#37;&#52;&#48;gmx&#46;de">dac922<span>&#64;</span>gmx<span>&#46;</span>de</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="isOctave.html" class="btn btn-neutral float-left" title="isOctave" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="struct_2_xml.html" class="btn btn-neutral float-right" title="struct_2_xml" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

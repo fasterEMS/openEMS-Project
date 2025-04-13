@@ -1,0 +1,168 @@
+Mesh
+====
+
+A mesh partitions the continuous 3D box into discrete rectangular cuboids.
+In the Finite-Difference Time-Domain (FDTD) algorithm, these cuboids
+discretize the 3D space and form the basic unit of electromagnetic
+calculations. These are known as Yee cells (named after Kane S. Yee's 1966
+algorithm).
+
+openEMS supports the standard Cartesian mesh in conventional FDTD
+algorithm. A non-uniform mesh is supported as an improved to save
+computational resources, by allowing the use of fine mesh sizes only
+around small features in the structure.
+
+As an extension the FDTD algorithm, openEMS also supports meshing
+in Cylindrical coordinates. The is useful for simulating round
+structures without the "staircasing" error. The cylindrical mesh
+can be further "subgridded" into smaller cells, achieving resource-saving
+benefits similar to the non-uniform Cartesian mesh.
+As a showcase, an antenna for medical Magnetic Resonances Imaging (MRI)
+has been successfully simulated this way in a research project.
+
+Create a Mesh
+---------------
+
+Obtain the Mesh Object
+"""""""""""""""""""""""""
+
+We obtain the ``mesh`` object by calling :meth:`~CSX.ContinuousStructure.GetGrid`
+to manipulate it further, and set its unit of measurement to 1 mm (``1e-3`` meters).
+This will be used as the base unit of all coordinates::
+
+    mesh = csx.GetGrid()
+    unit = 1e-3
+    mesh.SetDeltaUnit(unit)
+
+Decide the Upper Frequency and Mesh Resolution
+""""""""""""""""""""""""""""""""""""""""""""""
+
+Let's pick an arbitrary lower frequency of 100 MHz and an upper frequency
+of 10 GHz. Based on the previous analysis, one can calculate the desired
+mesh resolution via the following code::
+
+    import math
+    from openEMS.physical_constants import C0
+
+    f_min = 100e6  # post-processing only, not used in simulation
+    f_max = 10e9   # determines mesh size and excitation signal bandwidth
+    epsilon_r = 1
+    v = C0 / math.sqrt(epsilon_r)
+    wavelength = v / f_max / unit  # convert to millimeters
+    res = wavelength / 10
+
+General Requirements
+---------------------
+
+In general, the mesh must satisfy four requirements:
+
+#. **Frequency Resolution**. Its interval must be small enough to resolve the
+   shortest wavelength (highest
+   frequency component) of the signal, so that electromagnetic field details are
+   not missed. Thus, we need several cells per wavelength.
+
+#. **Spatial Resolution**. Its interval must be small enough to resolve the
+   shapes of the simulated
+   structure, so that small details of the structure are not missed. Thus, we
+   need at least a few cells around the important shapes (such as the waveguide
+   plates) of the structure. openEMS uses a rectilinear mesh with variable
+   spacing. To save time, only use a fine mesh interval around details on
+   a structure; use a coarse mesh for the rest.
+
+#. **Smoothness**. Its interval should change smoothly, not by a sudden jump.
+   It's recommended that the mesh spacing vary by no more than a factor of
+   1.5 between adjacent lines.
+
+#. **1/3-2/3 Rule**. The edges of a conductor have singularities with strong
+   electric field. To improve FDTD accuracy, ideally, around the metal edge,
+   the metal should occupy 1/3 of a cell, while the vacuum or insulator
+   occupies 2/3 of a cell. More on that later.
+
+As a rule of thumb, we want a mesh resolution of at least:
+
+.. math::
+
+   l_\mathrm{cell} \le \dfrac{1}{10} \lambda
+
+.. note::
+   This is the same "1/10 wavelength" rule of thumb used for
+   determining whether transmission line effects are significant in a
+   distributed circuit.
+
+The relationship between wavelength and frequency is:
+
+.. math::
+
+   \lambda = \frac{v}{f_\mathrm{max}}
+
+in which :math:`\lambda` is the wavelength of the electromagnetic wave
+in meters, :math:`v` is the speed of light in a medium, in meters per second,
+and :math:`f_\mathrm{max}` is the highest frequency component of the signals
+used in simulation.
+
+The speed of light in a medium is given by:
+
+.. math::
+
+   v = \frac{c_0}{\sqrt{\epsilon_r\mu_r}}
+
+in which :math:`c_0` is the speed of light in vacuum, :math:`\epsilon_r`
+is the relative permittivity of the medium (in engineering, it's sometimes
+also denoted as a material's dielectric constant :math:`D_k = \epsilon_r`).
+The :math:`\mu_r` term is the medium's relative permeability, which is
+usually omitted in engineering for the purpose of signal transmission.
+Most dielectrics (like plastics or fiberglass) in cables are non-magnetic -
+unless one is dealing with inductors or circulators.
+
+In vacuum, :math:`\epsilon_r = 1` and :math:`\mu_r = 1` exactly.
+
+Courant-Friedrichs-Lewy (CFL) Criterion
+----------------------------------------
+
+In general, the CFL criterion governs the stability of FDTD
+calculations. It states that the simulation timestep can't be
+larger than:
+
+.. math::
+  \Delta t \le
+  \frac{1}{v\sqrt{
+  {1 \over {\Delta x^2}} + {1 \over {\Delta y^2}} + {1 \over {\Delta z^2}}
+  }}
+
+where :math:`v` is the wave speed, :math:`\Delta x`,
+:math:`\Delta y`, :math:`\Delta z` are the distances between mesh
+lines.
+
+This creates a peculiar limitation: to resolve the smallest mesh
+cell, one must use a small timestep regardless of frequency.
+
+Even for simulations at low frequencies, as long as the simulated
+structure has small features (i.e. mesh distance is short), we
+must use very small timesteps, advancing the simulation only a few
+nanoseconds per iteration. Under 100 MHz, at the bottom of the VHF
+band or in the HF band, the required number of iterations becomes
+impractically large. This means openEMS (and other textbook
+FDTD solvers with explicit timestepping) is unsuitable if there's a
+large mismatch between the signal wavelength and the physical size
+of the structure, such as a 10 cm circuit board operating at 1
+MHz, where the wavelength is 300 m in vacuum.
+
+.. note::
+   In openEMS, you only need to define an appropriate mesh.
+   There's no need to calculate the required timestep size,
+   By default, openEMS uses a modified timestep criterion
+   named *Rennings2* is used, not CFL. This improves timestep
+   selection in non-uniform meshes. But the general limitation
+   still applies.
+
+   `Rennings2` is derived in the unpublished paper [11]_,
+   see :meth:`~openEMS.openEMS.SetTimeStepMethod` for details.
+
+   If you really need small cells
+   (e.g. to resolve some important feature of your structure) you
+   will have to live with long execution times, or perhaps FDTD is
+   not the right method for your problem. As a workaround, one may
+   also try extracting the circuit parameters using a higher signal
+   frequency, then using those equivalent-circuit parameters in a
+   low-frequency simulation with a general-purpose linear circuit
+   simulator.

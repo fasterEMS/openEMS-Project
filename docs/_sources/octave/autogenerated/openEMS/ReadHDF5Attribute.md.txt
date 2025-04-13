@@ -1,0 +1,18 @@
+ReadHDF5Attribute
+=================
+```{function}  ReadHDF5Attribute(file, groupname, attr_name)
+```
+Full definition:
+```{code-block} matlab
+attr = ReadHDF5Attribute(file, groupname, attr_name)
+```
+
+internal function for openEMS to read hdf5 attributes
+
+See also: ReadHDF5ComplexData
+
+
+
+-----------------------
+author: Thorsten Liebig, 2012
+

@@ -1,0 +1,39 @@
+SmoothMeshLines2
+================
+```{function}  SmoothMeshLines2( lines, max_res [, ratio, varargin] )
+```
+Full definition:
+```{code-block} matlab
+lines = SmoothMeshLines2( lines, max_res [, ratio, varargin] )
+```
+
+Create smooth mesh lines.
+
+input:
+- lines:   1xn vector of (fixed) mesh lines
+- max_res: maximum distance between any two lines (e.g. lambda/10)
+- ratio:   (optional) default: 1.3
+
+optional variable arguments ('key', value)
+- CheckMesh:          Do a final mesh check (default is true)
+- allowed_max_ratio:  allow only a given max. grading ratio
+                          (default --> ratio*1.25)
+output:
+- lines:   1xn vector of (smoothed) mesh lines
+
+example:
+- mesh.x = [0 100 2300 2400];
+- mesh.x = SmoothMeshLines2( mesh.x, 43 );
+
+todo:
+ - if gaps cannot be completely filled because of the ratio restriction,
+   the spacing is not optimal. SmoothRange() needs to be optimized.
+ - SmoothRange() has special handling if stop_taper is to long; can this
+   also happen for start_taper?
+
+
+
+-----------------------
+(C) 2010 Sebastian Held <sebastian.held@uni-due.de>
+See also SmoothMeshLines
+

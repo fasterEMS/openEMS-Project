@@ -1,0 +1,16 @@
+setup
+=====
+```{function} function setup()
+```
+Full definition:
+```{code-block} matlab
+function setup()
+```
+
+setup openEMS Matlab/octave interface
+
+
+
+-----------------------
+author: Thorsten Liebig (2011-2017)
+

@@ -1,0 +1,5 @@
+3D Modeling (CSXCAD)
+======================
+
+An openEMS simulation always starts by creating a 3D model of the Device-Under-Test
+(DUT) using the CSXCAD library.

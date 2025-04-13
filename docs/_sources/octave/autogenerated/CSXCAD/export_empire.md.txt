@@ -1,0 +1,25 @@
+export_empire
+=============
+```{function} export_empire( CSX, FDTD, filename, options )
+```
+Full definition:
+```{code-block} matlab
+export_empire( CSX, FDTD, filename, options )
+```
+
+Exports the geometry defined in CSX to filename as an Empire python file.
+
+- CSX: CSX-object created by InitCSX()
+- FDTD: FDTD-object created by InitFDTD()
+- filename: export filename (e.g. '/tmp/export.py')
+options (optional): struct
+-  options.ignore  : cell array with property names to ignore
+
+
+
+-----------------------
+author: Sebastian Held <sebastian.held@gmx.de>
+17. Jun 2010: initial version
+28. Sep 2010: rewritten using Empire python scripting
+See also InitCSX InitFDTD
+

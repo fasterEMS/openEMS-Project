@@ -295,11 +295,10 @@ MHz, where the wavelength is 300 m in vacuum.
    In openEMS, you only need to define an appropriate mesh.
    There's no need to calculate the required timestep size,
    By default, openEMS uses a modified timestep criterion
-   named *Rennings2* is used, not CFL. This improves timestep
-   selection in non-uniform meshes. But the general limitation
-   still applies.
-
-   `Rennings2` is derived in the unpublished paper [11]_,
+   named *Rennings2*, not CFL. *Rennings2* improves timestep
+   selection in non-uniform meshes, but the general limitation
+   (explained using CFL) still applies. `Rennings2` is derived
+   in an unpublished paper [11]_,
    see :meth:`~openEMS.openEMS.SetTimeStepMethod` for details.
 
    If you really need small cells
@@ -837,8 +836,10 @@ no loss of generality.
    (:meth:`~openEMS.openEMS.SetDiracExcite`) or the Heaviside step
    function (:meth:`~openEMS.openEMS.SetStepExcite`) have discontinuous
    jumps, reaching the full value in just a single timestep. This can
-   cause numerical problems like dispersion and unrealistic excitation
-   of high-order modes. As a workaround, users can provide custom
+   cause problems like the unrealistic excitation of rarely-seen high-order
+   modes in transmission lines, or the overshoot and ringing of its rising
+   edge due to numerical dispersion.
+   As a workaround, users can provide custom
    bandwidth-limited expressions to openEMS (no built-in implementations
    exist currently) via :meth:`~openEMS.openEMS.SetCustomExcite`. For an
    example, see [7]_.  However, these pulses also suffer from rapid energy
@@ -923,12 +924,20 @@ that enforce fixed field values (e.g. zero).
 Absorbing Boundary Conditions (ABC)
 """""""""""""""""""""""""""""""""""
 
-For this demo, the most intuitive type of boundary here is
-the *Absorbing Boundary Conditions (ABC)*. First, we create a simulation
-box larger than the device, allowing some fringe fields. Then, at the
-boundaries, the electromagnetic waves are absorbed and dissipated without
-reflecting back into the box, creating the illusion of an infinitely large
-free space.
+In open-boundary problems, such as antennas or structures with radiation
+loss, *Absorbing Boundary Conditions (ABC)* must be used to suppress
+reflections to prevent spurious simulation results. At its boundaries, the
+electromagnetic waves are absorbed and dissipated without reflecting back,
+creating the illusion of an infinitely large free space.
+
+In general, these simulations should use a simulation box larger than the
+structure to avoid intrusion of strong fringe fields at the boundary.
+However, deliberately running a transmission line into the PML (defined
+below) can be used as a perfect termination resistor. This allows one
+to terminate a transmission line without knowing its characteristic
+impedance, enabling impedance measurement. In fact, openEMS's microstrip
+ports doesn't create a lumped termination resistor by default, expecting
+users to place them into the PML at boundaries.
 
 .. figure:: images/Parallel_Plate_Capacitor_Waveguide/anechoic_chamber.jpg
    :class: with-border
@@ -1831,9 +1840,10 @@ Plot Time-Domain Waveforms via matplotlib
 FDTD is fundamentally a time-domain field solver. In some cases it's
 desirable to create custom excitations and observe transient responses
 directly. For example, it allows one to truncate a simulation early
-without waiting for convergence. It may help avoid violations of
-passivity and causality in S-parameters due to numerical artifacts,
-which is problematic in some transient simulations.
+without waiting for convergence. It may help improving data quality
+by preserving the DC term, or by avoiding violations of passivity and
+causality in S-parameters due to numerical artifacts. Both may be
+problematic if the frequency-domain data is used in transient simulations.
 
 To obtain the time-domain waveforms at a port, we can use these port
 attributes: ``u_data.ut_tot`` (total voltage), ``u_data.ui_time[0]`` (time
@@ -1920,7 +1930,7 @@ is 50 Ω::
     # Hz S RI R 50
 
 ``.s2p`` file
-.............
+''''''''''''''
 
 In an ``.s2p`` file, each additional line defines the S-parameters at a new frequency
 point, with the
@@ -1949,7 +1959,7 @@ code::
             touchstone.write("%f %f %f %f %f %f %f %f %f\n" % entry)
 
 ``.s1p`` file
-..............
+''''''''''''''
 The ``.s2p`` file already contains the S-parameter :math:`S_{11}`, so
 there's no need to create a separate 1-port Touchstone file. It's only
 used for 1-port measurement data. For completeness, the Touchstone file
@@ -1974,7 +1984,7 @@ writes a new line with parameter order of ``frequency``, ``s11_real``,
             touchstone.write("%f %f %f\n" % entry)
 
 ``.snp`` file
-..............
+''''''''''''''
 
 Finally, beware that for 3-port, 4-port, or more ports, the parameters order is
 different. The website Microwaves101 contains useful information here. [3]_
@@ -2236,7 +2246,7 @@ engineering, including a powerful set of features for plotting, circuit
 analysis, calibration, reading and writing data.
 
 Install and Import
-...................
+'''''''''''''''''''
 One can install it via ``pip3`` in your home directory (or another ``venv``
 environment you prefer)::
 
@@ -2254,7 +2264,7 @@ want to borrow it in other unrelated projects::
     skrf.stylely()
 
 Plot Smith Charts
-..................
+''''''''''''''''''
 
 The basic entity in ``scikit-rf`` is a ``skrf.Network``, representing an
 n-port network defined by an S-parameter. This object can be constructed
@@ -2299,7 +2309,7 @@ plotted. Hence plotting a sliced network is not recommended::
     plt.show()
 
 Plot Magnitude-Phase Charts
-................................
+''''''''''''''''''''''''''''''''
 
 We can also plot other familiar charts via ``scikit-rf`` automatically, such
 as the scalar :math:`S_{11}` plot in decibels and phase angles. This is
@@ -2333,7 +2343,7 @@ Likewise, to plot :math:`S_{21}` using the same method::
    :width: 49%
 
 Plot Impedance Chart
-.....................
+'''''''''''''''''''''
 
 `scikit-rf` also provides several routines to plot Z-parameters charts, such
 as the scalar impedance::
@@ -2344,8 +2354,10 @@ as the scalar impedance::
 .. image:: images/Parallel_Plate_Capacitor_Waveguide/z11_mag_sim_skrf.svg
    :width: 49%
 
+.. _skrf_tdr:
+
 Time Domain Reflectometry
-..........................
+''''''''''''''''''''''''''
 
 And now for something completely different: going from the frequency
 domain back to the time domain. By applying an inverse Fourier transform
@@ -2457,7 +2469,7 @@ integrity expert at LeCroy.
    get a copy.
 
 Install
-........
+''''''''
 
 To install ``SignalIntegrity``, download the latest ``.zip`` file
 at the project's release page using a Web browser::
@@ -2489,7 +2501,7 @@ your shell's search path.
    but it works, and will keep working until the end of time.
 
 Impulse Signal Analysis
-.........................
+'''''''''''''''''''''''''
 
 For the first example, let's examine the circuit's time-domain
 response to a short impulse.
@@ -2594,7 +2606,7 @@ time degradation due to high insertion loss above 2 GHz.
    :width: 60%
 
 Eye Diagram Analysis
-......................
+''''''''''''''''''''''
 
 For the next example, let's examine the circuit's time-domain signal
 integrity using a Pseudo-Random Bit Stream (PRBS) generator as the
@@ -2680,7 +2692,7 @@ engineering, it's capable of simulating circuits in both time and
 frequency domains.
 
 Install
-........
+''''''''
 
 Qucs has a somewhat confusing development history, three different
 spinoffs exist.
@@ -2728,8 +2740,10 @@ execution permission::
 
     chmod +x Qucs-S-25.1.0-linux-x86_64.AppImage
 
+.. _qucsator:
+
 Enable Qucsator
-...................
+'''''''''''''''''''
 
 As previously mentioned, Qucs-S uses Ngspice for simulation by default,
 but it lacks some features required for RF/microwave applications that
@@ -2750,7 +2764,7 @@ it and change it to `Qucsator`.
    Qucs-S. See :ref:`qucsator_bug` for the solution.
 
 S-Parameter Simulation Skeleton
-................................
+''''''''''''''''''''''''''''''''
 
 To perform frequency-domain analysis in Qucs (Qucs-S), we
 need to add several components in multiple steps: adding two
@@ -2762,7 +2776,7 @@ the DUT in the middle between the two ports.
 .. important::
 
    *Before* a filter is synthesized, Qucs-S must be switched to
-   use Qucsator as its engine as described in :ref:`Qucsator`.
+   use Qucsator as its engine as described in :ref:`qucsator`.
    Otherwise a broken schematic would be synthesized with non-functional
    equations - S-parameter simulations won't work correctly.
 
@@ -2895,7 +2909,7 @@ been deleted, the simulation skeleton is clean to use.
    :width: 30%
 
 Two-Port S-Parameter Analysis
-..............................
+''''''''''''''''''''''''''''''
 
 **Add an S-parameter-defined component.** On the left :guilabel:`Main Dock`,
 switch from :guilabel:`diagram` (or :guilabel:`lumped components`) to
@@ -2961,7 +2975,7 @@ the Smith and line charts.
    :width: 30%
 
 Comparison with Microstrip
-...........................
+'''''''''''''''''''''''''''
 
 In the analysis of RF/microwave devices, We often need to compare the
 behavior of different circuits. Using the microstrip as an example (as
@@ -3029,7 +3043,7 @@ Change its formulas to the following::
    Make sure ``S[3,3]`` and ``S[4,3]`` matches the actual port numbers
    on the schematics. If ports have been repeatedly deleted and inserted
    into the schematic, they could be renumbered. If so, change the
-   port numbers back to ``3`` and ``4``::
+   port numbers back to ``3`` and ``4``.
 
 **Run simulation.** Select :guilabel:`Simulation` and click :guilabel:`Simulate`.
 A dialog should pop up without warnings or errors.
@@ -3617,7 +3631,7 @@ manually each time.
 
 
 Programmatic Solution
-.......................
+'''''''''''''''''''''''
 
 We can solve this problem programmatically by clearing the `Qucsator`
 variable setting from the Qucs-S configuration
@@ -3629,7 +3643,7 @@ After quitting Qucs-S, running the command above, and restarting
 Qucs-S, the `Qucsator` option should return to the engine list.
 
 GUI Solution
-..............
+''''''''''''''
 
 For completeness, here's how to do reconfige the path to Qucsator
 manually. To do so, click :guilabel:`Simulation` and choose

@@ -1,0 +1,58 @@
+AddMSLPort
+==========
+```{function}  AddMSLPort( CSX, prio, portnr, materialname, start, stop, dir, evec, varargin )
+```
+Full definition:
+```{code-block} matlab
+[CSX,port] = AddMSLPort( CSX, prio, portnr, materialname, start, stop, dir, evec, varargin )
+```
+
+- CSX:          CSX-object created by InitCSX()
+- prio:         priority for excitation and probe boxes
+- portnr:       (integer) number of the port
+- materialname: property for the MSL (created by AddMetal())
+- start:        3D start rowvector for port definition
+- stop:         3D end rowvector for port definition
+- dir:          direction of wave propagation (choices: 0, 1, 2 or 'x','y','z')
+- evec:         excitation vector, which defines the direction of the e-field (must be the same as used in AddExcitation())
+
+variable input:
+- varargin:    optional additional excitations options, see also AddExcitation
+- 'ExcitePort'  true/false to make the port an active feeding port (default
+                is false)
+- 'FeedShift'   shift to port from start by a given distance in drawing
+                units. Default is 0. Only active if 'ExcitePort' is set!
+- 'Feed_R'      Specify a lumped port resistance. Default is no lumped
+                port resistance --> port has to end in an ABC.
+- 'MeasPlaneShift'  Shift the measurement plane from start t a given distance 
+                    in drawing units. Default is the middle of start/stop.
+- 'PortNamePrefix' a prefix to the port name
+
+Important: The mesh has to be already set and defined by DefineRectGrid!
+
+example:
+
+    CSX = AddMetal( CSX, 'metal' ); %create a PEC called 'metal'
+    start = [0       -width/2  height];
+    stop  = [length  +width/2  0     ];
+    [CSX,port] = AddMSLPort( CSX, 0, 1, 'metal', start, stop, 'x', [0 0 -1], ...
+                          'ExcitePort', true, 'Feed_R', 50 )
+Explanation:
+  - this defines a MSL in x-direction (dir='x')
+    --> the wave travels along the x-direction
+  - with an e-field excitation in -z-direction (evec=[0 0 -1])
+  - the excitation is active and placed at x=start(1) ('ExcitePort', true)
+  - a 50 Ohm lumped port resistance is placed at x=start(1) ('Feed_R', 50)
+  - the width-direction is determined by the cross product of the
+      direction of propagation (dir='x') and the excitation vector
+      (evec=[0 0 -1]), in this case it is the y-direction
+  - the MSL-metal is created in a xy-plane at a height at z=start(3)
+    --> It is important to define the MSL height in the start coordinate!
+  - the ground (xy-plane, not defined by the port) is assumed at z=stop(3)
+    --> The reference plane (ground) is defined in the stop coordinate!
+
+Sebastian Held <sebastian.held@gmx.de> May 13 2010
+Thorsten Liebig <thorsten.liebig@gmx.de> (c) 2011-2013
+
+See also InitCSX DefineRectGrid AddMetal AddMaterial AddExcitation calcPort
+

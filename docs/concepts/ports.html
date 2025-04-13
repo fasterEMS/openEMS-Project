@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ports &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Ports</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/ports.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ports">
+<h1>Ports<a class="headerlink" href="#ports" title="Permalink to this headline"></a></h1>
+<p>Ports are best understood as the virtual 3D counterpart of physical ports
+on RF/microwave components, such as the standard 50 Ω input or output ports
+on circuit boards, signal generators, oscilloscopes, and especially Vector
+Network Analyzers (VNA). A port is treated as a lumped circuit, located
+at a defined position. It acts as a voltage source or load with a
+resistive impedance. It can inject a signal to the Device-Under-Test (DUT)
+or measure the DUT’s response, either from its own signal or from another
+port.</p>
+<p>Internally, a port is implemented by locating the Yee cells occupied
+by the port, and setting the numerical values of the electric fields in
+these cells based on the excitation waveform.
+Thus, a
+port can be understood as a source that injects electromagnetic energy
+into the simulation, helping establish initial conditions for the system.
+Simultaneously, a lumped resistor and a probe are also created at the
+same location as the port, allowing it to provide a matched load for the
+signal, or to measure the voltage or current at this region.</p>
+<figure class="align-default" id="id3">
+<a class="with-border reference internal image-reference" href="../_images/vna_ports.svg"><img alt="../_images/vna_ports.svg" class="with-border" src="../_images/vna_ports.svg" width="49%" /></a>
+<figcaption>
+<p><span class="caption-text">The “port” in openEMS serves a purpose similar to the physical
+ports on Vector Network Analyzers and circuit boards. Both kinds of
+ports are used to inject an input signal at a particular point in the
+Device-Under-Test (DUT), and to measure what comes out at another point.
+The DUT is thus characterized as a black box, solely represented using
+its input-output relationships without an internal structure.
+Note that port implementations are fundamentally different in
+physical instruments (via circuits) and in openEMS simulations
+(by loading numerical values into Yee cells). Image by Julien Hillairet,
+from the <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code> project, licensed under BSD-3, modified for clarity.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<section id="port-types">
+<h2>Port Types<a class="headerlink" href="#port-types" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 24%" />
+<col style="width: 29%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Port Type</p></th>
+<th class="head"><p>Matlab/Octave</p></th>
+<th class="head"><p>Python</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lumped</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddLumpedPort()</span></code></p></td>
+<td><p><a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.AddLumpedPort" title="openEMS.openEMS.AddLumpedPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedPort()</span></code></a></p></td>
+<td><p>General Purpose</p></td>
+</tr>
+<tr class="row-odd"><td><p>Curved</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddCurvePort()</span></code></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Microstrip</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddMSLPort()</span></code></p></td>
+<td><p><a class="reference internal" href="../python/openEMS/ports.html#openEMS.ports.MSLPort" title="openEMS.ports.MSLPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MSLPort()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Stripline</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddStripLinePort()</span></code></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Coplanar Waveguide</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddCPWPort()</span></code></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Generic Waveguide</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddWaveGuidePort()</span></code></p></td>
+<td><p><a class="reference internal" href="../python/openEMS/ports.html#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">WaveguidePort()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Rectangular Waveguide</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddRectWaveGuidePort()</span></code></p></td>
+<td><p><a class="reference internal" href="../python/openEMS/ports.html#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-meth docutils literal notranslate"><span class="pre">RectWGPort()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Circular Waveguide</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">AddCircWaveGuidePort()</span></code></p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some port types are not <em>ported</em> to Python yet.</p>
+</div>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h3>
+<p>Matlab/Octave:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">z0</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span><span class="w"></span>
+
+<span class="nb">start</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">];</span><span class="w"></span>
+<span class="nb">stop</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">50</span><span class="p">];</span><span class="w"></span>
+<span class="p">[</span><span class="n">CSX</span><span class="w"> </span><span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">z0</span><span class="p">,</span><span class="w"> </span><span class="nb">start</span><span class="p">,</span><span class="w"> </span><span class="nb">stop</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span><span class="w"></span>
+
+<span class="nb">start</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="mi">100</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">];</span><span class="w"></span>
+<span class="nb">stop</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="mi">100</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">50</span><span class="p">];</span><span class="w"></span>
+<span class="p">[</span><span class="n">CSX</span><span class="w"> </span><span class="n">port</span><span class="p">{</span><span class="mi">2</span><span class="p">}]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">z0</span><span class="p">,</span><span class="w"> </span><span class="nb">start</span><span class="p">,</span><span class="w"> </span><span class="nb">stop</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z0</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">port</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">50</span><span class="p">]</span>
+<span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdtd</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">50</span><span class="p">]</span>
+<span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdtd</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="port-attributes">
+<h2>Port Attributes<a class="headerlink" href="#port-attributes" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+<col style="width: 42%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Matlab / Octave</p></td>
+<td><p>Python</p></td>
+<td><p>Domain</p></td>
+<td><p>Definition</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ZL_ref</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Z_ref</span></code></p></td>
+<td><p>Impedance</p></td>
+<td><p>Reference Impedance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uf_inc{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uf_inc[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Incident Voltage</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uf_ref{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uf_ref[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Reflected Voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">if_tot{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">if_tot[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Total Voltage</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">if_inc{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">if_inc[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Incident Current</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">if_ref{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">if_ref[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Reflected Current</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">if_tot{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">if_tot[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Total Current</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">P_inc{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">P_inc[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Incident Power</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">P_ref{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">P_ref[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Reflected Power</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">P_acc{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">P_acc[n]</span></code></p></td>
+<td><p>Frequency</p></td>
+<td><p>Accepted Power (Incident - Reflected)</p></td>
+</tr>
+<tr class="row-even"><td><p>N/A (see notes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ut_inc[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Incident Voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>N/A (see notes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ut_ref[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Reflected Voltage</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ut_tot{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ut_tot[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Total Voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>N/A (see notes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">it_inc[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Incident Current</p></td>
+</tr>
+<tr class="row-even"><td><p>N/A (see notes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">it_ref[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Reflected Current</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it_tot{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">it_tot[n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Total Current</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">raw.U.TD{1}.val{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u_data.ui_val[0][n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Raw Voltage (<code class="docutils literal notranslate"><span class="pre">ut_tot</span></code> Recommended)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">raw.U.TD{1}.t{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u_data.ui_time[0][n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Raw Time of Voltage Samples</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">raw.I.TD{1}.val{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">i_data.ui_val[0][n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Raw Current (<code class="docutils literal notranslate"><span class="pre">it_tot</span></code> Recommended)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">raw.I.TD{1}.t{n}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">i_data.ui_time[0][n]</span></code></p></td>
+<td><p>Time</p></td>
+<td><p>Raw Time of Current Samples</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Voltage symbol</strong>. <code class="docutils literal notranslate"><span class="pre">u</span></code> is the unambiguous symbol of voltage (<span class="math notranslate nohighlight">\(U\)</span>) in ISO/IEC
+convention,
+so frequency-domain variables have the prefix <code class="docutils literal notranslate"><span class="pre">uf</span></code>, time-domain variables have the
+prefix <code class="docutils literal notranslate"><span class="pre">ut</span></code>. In American literature, symbols such as <span class="math notranslate nohighlight">\(V\)</span>, <span class="math notranslate nohighlight">\(E\)</span> and
+<span class="math notranslate nohighlight">\(\mathcal{E}\)</span> are used.</p>
+<p><strong>Incident and reflected signals.</strong> In Matlab/Octave, only total time-domain port
+voltage and current are given, while their incident, reflected components are not.
+They can be calculated using the following expressions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ut_inc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">ut_tot</span> <span class="o">+</span> <span class="n">it_tot</span> <span class="o">*</span> <span class="n">ZL_ref</span><span class="p">)</span>
+<span class="n">ut_ref</span> <span class="o">=</span> <span class="n">ut_tot</span> <span class="o">-</span> <span class="n">ut_inc</span>
+
+<span class="n">it_inc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">it_tot</span> <span class="o">+</span> <span class="n">ut_tot</span> <span class="o">./</span> <span class="n">ZL_ref</span><span class="p">)</span>
+<span class="n">it_ref</span> <span class="o">=</span> <span class="n">it_inc</span> <span class="o">-</span> <span class="n">it_tot</span>
+</pre></div>
+</div>
+</div>
+<section id="id1">
+<h3>Usage<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This page is incomplete. See the
+<a class="reference external" href="CSXCAD.ContinuousStructure.AddProbe">Legacy Wiki</a> for more information.</p>
+</div>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">1e9</span>
+<span class="n">points</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">freq_list</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="n">points</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">numel</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+    <span class="n">port</span><span class="p">{</span><span class="n">i</span><span class="p">}</span> <span class="o">=</span> <span class="n">calcPort</span><span class="p">(</span><span class="n">port</span><span class="p">{</span><span class="n">i</span><span class="p">},</span> <span class="n">simpath</span><span class="p">,</span> <span class="n">freq_list</span><span class="p">);</span>
+<span class="n">endfor</span>
+
+<span class="n">s11_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">uf</span><span class="o">.</span><span class="n">ref</span> <span class="o">./</span> <span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">uf</span><span class="o">.</span><span class="n">inc</span><span class="p">;</span>
+<span class="n">s21_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">.</span><span class="n">uf</span><span class="o">.</span><span class="n">ref</span> <span class="o">./</span> <span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">uf</span><span class="o">.</span><span class="n">inc</span><span class="p">;</span>
+<span class="n">z21_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">uf</span><span class="o">.</span><span class="n">tot</span> <span class="o">./</span> <span class="n">port</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">if_tot</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">f_min</span> <span class="o">=</span> <span class="mf">100e6</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">1e9</span>
+<span class="n">points</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">freq_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+
+<span class="c1"># after running the simulation</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">port</span><span class="p">:</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">CalcPort</span><span class="p">(</span><span class="n">simdir</span><span class="p">,</span> <span class="n">freq_list</span><span class="p">,</span> <span class="n">ref_impedance</span><span class="o">=</span><span class="n">z0</span><span class="p">)</span>
+
+<span class="n">s11_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+<span class="n">s21_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+<span class="n">z11_list</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_tot</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">if_tot</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">u_data</span><span class="o">.</span><span class="n">ui_time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ut_tot</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Input Voltage&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">u_data</span><span class="o">.</span><span class="n">ui_time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ut_tot</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Output Voltage&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (V)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="port-selection">
+<h2>Port Selection<a class="headerlink" href="#port-selection" title="Permalink to this headline"></a></h2>
+<p>In openEMS, ports are ideal sources of E&amp;M fields, but they are not ideal
+<em>launchers</em> of E&amp;M waves into structures due to a discontinuity at the
+boundary between the port and the structure.
+If port placement is not optimized,
+this region of discontinuity may introduce artifacts such
+as reflections or excitation of spurious modes. Optimizing the placement
+and implementation of a port reduces these artifacts. This can be done
+by using smooth transitions or by shaping the electric fields initially
+injected by the port.</p>
+<p>In openEMS, the standard port is the lumped port that works with most
+structures. If an optimal transition is needed, openEMS also provides
+optimized implementations of curved, microstrip, stripline, coplanar
+waveguide, and coax cable ports.</p>
+<p>Most specialized ports in openEMS are signal integrity optimizations
+rather than strict requirements. However, in enclosed waveguides,
+specialized ports are <em>required</em> to excite those structures properly.
+These waveguides only have one conductor, unlike the usual two-conductor
+transmission lines. An ordinary port can’t excite them correctly,
+as the waveguide is essentially a DC short circuit. Special waveguide
+ports must be used to excite the unique TE-mode waves. These include
+general waveguide ports, rectangular waveguides ports, and circular
+waveguides ports</p>
+<p>Ports are a high-level concept in openEMS. Internally, they’re
+implemented by first calling <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddExcitation" title="CSXCAD.ContinuousStructure.AddExcitation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>
+to create a source of E&amp;M field. Later, <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>
+and <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddProbe" title="CSXCAD.ContinuousStructure.AddProbe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddProbe()</span></code></a> are used to add termination
+resistances and probes. One can create new port types based on these
+low-level primitives.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Like physical ports on real devices, the virtual ports in openEMS are not
+perfect. They’re ideal sources of E&amp;M fields, but they are not ideal
+<em>launchers</em> of E&amp;M waves into structures. A port creates a region of
+discontinuity, so they may introduce artifacts.
+Optimizing the placement and implementation of a port reduces artifacts.
+Alternatively, these artifacts
+can be removed through calibration or de-embedding algorithms, an
+advanced topic beyond the scope of this tutorial.</p>
+<figure class="align-default" id="id4">
+<a class="with-border reference internal image-reference" href="../_images/error-box.svg"><img alt="../_images/error-box.svg" class="with-border" src="../_images/error-box.svg" width="60%" /></a>
+<figcaption>
+<p><span class="caption-text">The artifacts introduced by a two-port measurement can be viewed
+as two linear circuits (left error box, right error box) cascaded in
+series with the DUT. All three circuits are represented as three matrices,
+called their S-parameters. Measurement error can be reduced by making
+error boxes nearly transparent using optimized port transitions.
+Alternatively, by mathematically removing the port’s contributions from
+the measured response using linear algebra, a process known as
+calibration or de-embedding (image by Ziad Hatab et, al., licensed
+under CC BY-SA 4.0 <a href="#id5"><span class="problematic" id="id2">[1]_</span></a>)</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

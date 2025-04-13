@@ -1,0 +1,14 @@
+queue_delProcess
+================
+```{function}  queue_delProcess( pid, filenames )
+```
+Full definition:
+```{code-block} matlab
+[stdout,stderr] = queue_delProcess( pid, filenames )
+```
+
+if pid == 0, do not kill a process, but clean up files
+
+Sebastian Held <sebastian.held@uni-due.de>
+12.5.2010
+

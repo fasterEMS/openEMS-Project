@@ -1,0 +1,20 @@
+Add2Queue
+=========
+```{function}  Add2Queue(queue,func_name, func_args, varargin)
+```
+Full definition:
+```{code-block} matlab
+function [queue] = Add2Queue(queue,func_name, func_args, varargin)
+```
+
+Use this function to add a function to the queue.
+
+For more details see: InitQueue
+
+See also: InitQueue, FinishQueue, ResultsQueue, RunOpenEMS
+
+
+
+-----------------------
+author: Thorsten Liebig
+

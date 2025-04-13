@@ -1,0 +1,12 @@
+queue_addProcess
+================
+```{function}  queue_addProcess( command )
+```
+Full definition:
+```{code-block} matlab
+[pid,filenames] = queue_addProcess( command )
+```
+
+Sebastian Held <sebastian.held@uni-due.de>
+12.5.2010
+

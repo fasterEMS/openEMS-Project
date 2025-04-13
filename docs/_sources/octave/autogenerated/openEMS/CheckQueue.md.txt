@@ -1,0 +1,24 @@
+CheckQueue
+==========
+```{function}  CheckQueue(queue, <query_time>)
+```
+Full definition:
+```{code-block} matlab
+function [queue running] = CheckQueue(queue, <query_time>)
+```
+
+Check the given queue for finished tasks.
+
+Parameter:
+- query_time (optional): time interval to check for finished tasks
+                         (in seconds, default is 5)
+
+For more details see: InitQueue
+
+See also: InitQueue, ResultsQueue, Add2Queue, RunOpenEMS
+
+
+
+-----------------------
+author: Thorsten Liebig
+

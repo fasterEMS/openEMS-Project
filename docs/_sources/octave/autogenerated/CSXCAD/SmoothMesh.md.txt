@@ -1,0 +1,46 @@
+SmoothMesh
+==========
+```{function}  SmoothMesh( mesh, max_res, <ratio, varargin>)
+```
+Full definition:
+```{code-block} matlab
+function [mesh] = SmoothMesh( mesh, max_res, <ratio, varargin>)
+```
+
+  Convienent function to create a smooth mesh in all directions.
+  Generate smooth mesh by choosing an appropriate algorithm in each direction.
+
+  Currently supported smoothing algorithm:
+      SmoothMeshLines, SmoothMeshLines2 and RecursiveSmoothMesh
+
+ arguments:
+ - lines:      given fixed lines to create a smooth mesh in between
+ - max_res:    scalar or vector of desired max. allowed resolution
+ - ratio:      grading ratio: scalar or vector of desired neighboring
+                  line-delta ratio (optional, default is 1.5)
+                  - see also 'allowed_max_ratio' argument
+
+ variable arguments ('keyword',value):
+ - algorithm:          define subset of tried algorihm, e.g. [1 3]
+ - symmetric:          0/1 force symmetric mesh (default is input symmetry)
+ - homogeneous:        0/1 force homogeneous mesh
+ - allowed_min_res:    allow a given min resolution only
+ - allowed_max_ratio:  allow only a given max. grading ratio
+                          (default --> ratio*1.25)
+ - debug:              0/1 off/on
+
+example:
+
+    mesh.x = [-BoundBox 0 BoundBox];
+    mesh.y = [-BoundBox 0 BoundBox];
+    mesh.z = [0 BoundBox];
+    mesh = SmoothMesh(mesh, lambda/20/unit);
+    CSX = DefineRectGrid(CSX, unit, mesh);
+
+See also AutoSmoothMeshLines, InitCSX, DefineRectGrid, DetectEdges
+
+
+
+-----------------------
+author: Thorsten Liebig (C) 2012
+

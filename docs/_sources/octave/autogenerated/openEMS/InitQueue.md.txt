@@ -1,0 +1,60 @@
+InitQueue
+=========
+```{function}  InitQueue(varargin)
+```
+Full definition:
+```{code-block} matlab
+function [queue] = InitQueue(varargin)
+```
+
+Use this function to initialize a queue to run one or more matlab scripts
+in parallel.
+This can be used to efficiently run an openEMS parameter sweep in parallel
+on multiple remote machines.
+
+Options:
+- DependPath: Add multiple paths, your script may depend on
+- UseOctave:  Enable/Disable octave usage
+- MaxThreads: max. number of parallel executions
+
+Note:
+  - Currently only Linux/Unix is supported
+  - By default Octave is used to spawn parallel functions (saves
+      licenses), but this can be changed by:
+      [queue] = InitQueue('UseOctave', 0);
+      You may need to change this, if your script is not octave compatible
+  - To efficiently run openEMS in parallel, you need to run it on several
+  machines using a SSH.host_list setting --> See also RunOpenEMS
+
+Example:
+
+    %serial version:
+    for n=1:10
+        % manipulate parameter etc.
+        [result1(n) result2(n)] = Parallel_Func_Name(param1, param2);
+    end
+
+    %parallel version:
+    queue = InitQueue('DependPath',{'/opt/openEMS/CSXCAD/matlab', ...
+                                    '/opt/openEMS/openEMS/matlab'});
+    for n=1:10
+        % manipulate parameter etc.
+        queue = Add2Queue(queue, 'Parallel_Func_Name', {param1, param2});
+    end
+
+    % wait for all to finish
+    [queue] = FinishQueue(queue);
+
+    % retrieve result
+    for n=1:numel(stub_sweep)
+      [result1(n) result2(n)] = ResultsQueue(queue,n);
+    end
+
+See also: Add2Queue, FinishQueue, ResultsQueue, RunOpenEMS,
+          RunOpenEMS_Parallel, FindFreeSSH
+
+
+
+-----------------------
+author: Thorsten Liebig
+

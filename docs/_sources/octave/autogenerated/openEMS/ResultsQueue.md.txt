@@ -1,0 +1,20 @@
+ResultsQueue
+============
+```{function}  ResultsQueue(queue, n)
+```
+Full definition:
+```{code-block} matlab
+function [varargout] = ResultsQueue(queue, n)
+```
+
+Use this function to retrieve the results from a finished queue.
+
+For more details see: InitQueue
+
+See also: InitQueue, FinishQueue, Add2Queue, RunOpenEMS
+
+
+
+-----------------------
+author: Thorsten Liebig
+

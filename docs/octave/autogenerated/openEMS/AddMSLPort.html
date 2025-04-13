@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AddMSLPort &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="AddRectWaveGuidePort" href="AddRectWaveGuidePort.html" />
+    <link rel="prev" title="AddMRStub" href="AddMRStub.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/python.html">Python Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../octave.html">Octave/Matlab Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/index.html">CSXCAD API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../openEMS/index.html">openEMS API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_excitations.html">Excitations</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../openEMS/openEMS_API_ports.html">Ports</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="AddCPWPort.html">AddCPWPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddCircWaveGuidePort.html">AddCircWaveGuidePort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddCoaxialPort.html">AddCoaxialPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddCurvePort.html">AddCurvePort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddLumpedPort.html">AddLumpedPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddMRStub.html">AddMRStub</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">AddMSLPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddRectWaveGuidePort.html">AddRectWaveGuidePort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddStripLinePort.html">AddStripLinePort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AddWaveGuidePort.html">AddWaveGuidePort</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_fielddump.html">Field Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_simulation.html">Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_postprocessing.html">Post-processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_optimization.html">Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_nf2ff.html">Near-Field to Far-Field Transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_misc.html">Misc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../octave.html">Octave/Matlab Interface</a> &raquo;</li>
+          <li><a href="../../openEMS/index.html">openEMS API</a> &raquo;</li>
+          <li><a href="../../openEMS/openEMS_API_ports.html">Ports</a> &raquo;</li>
+      <li>AddMSLPort</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/octave/autogenerated/openEMS/AddMSLPort.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="addmslport">
+<h1>AddMSLPort<a class="headerlink" href="#addmslport" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="AddMSLPort">
+<span class="sig-name descname"><span class="pre">AddMSLPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portnr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varargin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AddMSLPort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Full definition:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">CSX</span><span class="p">,</span><span class="n">port</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">AddMSLPort</span><span class="p">(</span><span class="w"> </span><span class="n">CSX</span><span class="p">,</span><span class="w"> </span><span class="n">prio</span><span class="p">,</span><span class="w"> </span><span class="n">portnr</span><span class="p">,</span><span class="w"> </span><span class="n">materialname</span><span class="p">,</span><span class="w"> </span><span class="nb">start</span><span class="p">,</span><span class="w"> </span><span class="nb">stop</span><span class="p">,</span><span class="w"> </span><span class="nb">dir</span><span class="p">,</span><span class="w"> </span><span class="n">evec</span><span class="p">,</span><span class="w"> </span><span class="nb">varargin</span><span class="w"> </span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>CSX:          CSX-object created by InitCSX()</p></li>
+<li><p>prio:         priority for excitation and probe boxes</p></li>
+<li><p>portnr:       (integer) number of the port</p></li>
+<li><p>materialname: property for the MSL (created by AddMetal())</p></li>
+<li><p>start:        3D start rowvector for port definition</p></li>
+<li><p>stop:         3D end rowvector for port definition</p></li>
+<li><p>dir:          direction of wave propagation (choices: 0, 1, 2 or ‘x’,’y’,’z’)</p></li>
+<li><p>evec:         excitation vector, which defines the direction of the e-field (must be the same as used in AddExcitation())</p></li>
+</ul>
+<p>variable input:</p>
+<ul class="simple">
+<li><p>varargin:    optional additional excitations options, see also AddExcitation</p></li>
+<li><p>‘ExcitePort’  true/false to make the port an active feeding port (default
+is false)</p></li>
+<li><p>‘FeedShift’   shift to port from start by a given distance in drawing
+units. Default is 0. Only active if ‘ExcitePort’ is set!</p></li>
+<li><p>‘Feed_R’      Specify a lumped port resistance. Default is no lumped
+port resistance –&gt; port has to end in an ABC.</p></li>
+<li><p>‘MeasPlaneShift’  Shift the measurement plane from start t a given distance
+in drawing units. Default is the middle of start/stop.</p></li>
+<li><p>‘PortNamePrefix’ a prefix to the port name</p></li>
+</ul>
+<p>Important: The mesh has to be already set and defined by DefineRectGrid!</p>
+<p>example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CSX = AddMetal( CSX, &#39;metal&#39; ); %create a PEC called &#39;metal&#39;
+start = [0       -width/2  height];
+stop  = [length  +width/2  0     ];
+[CSX,port] = AddMSLPort( CSX, 0, 1, &#39;metal&#39;, start, stop, &#39;x&#39;, [0 0 -1], ...
+                      &#39;ExcitePort&#39;, true, &#39;Feed_R&#39;, 50 )
+</pre></div>
+</div>
+<p>Explanation:</p>
+<ul class="simple">
+<li><p>this defines a MSL in x-direction (dir=’x’)
+–&gt; the wave travels along the x-direction</p></li>
+<li><p>with an e-field excitation in -z-direction (evec=[0 0 -1])</p></li>
+<li><p>the excitation is active and placed at x=start(1) (‘ExcitePort’, true)</p></li>
+<li><p>a 50 Ohm lumped port resistance is placed at x=start(1) (‘Feed_R’, 50)</p></li>
+<li><p>the width-direction is determined by the cross product of the
+direction of propagation (dir=’x’) and the excitation vector
+(evec=[0 0 -1]), in this case it is the y-direction</p></li>
+<li><p>the MSL-metal is created in a xy-plane at a height at z=start(3)
+–&gt; It is important to define the MSL height in the start coordinate!</p></li>
+<li><p>the ground (xy-plane, not defined by the port) is assumed at z=stop(3)
+–&gt; The reference plane (ground) is defined in the stop coordinate!</p></li>
+</ul>
+<p>Sebastian Held <a class="reference external" href="mailto:sebastian&#46;held&#37;&#52;&#48;gmx&#46;de">sebastian<span>&#46;</span>held<span>&#64;</span>gmx<span>&#46;</span>de</a> May 13 2010
+Thorsten Liebig <a class="reference external" href="mailto:thorsten&#46;liebig&#37;&#52;&#48;gmx&#46;de">thorsten<span>&#46;</span>liebig<span>&#64;</span>gmx<span>&#46;</span>de</a> (c) 2011-2013</p>
+<p>See also InitCSX DefineRectGrid AddMetal AddMaterial AddExcitation calcPort</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="AddMRStub.html" class="btn btn-neutral float-left" title="AddMRStub" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="AddRectWaveGuidePort.html" class="btn btn-neutral float-right" title="AddRectWaveGuidePort" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

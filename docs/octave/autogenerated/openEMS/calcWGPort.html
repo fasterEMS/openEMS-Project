@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>calcWGPort &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="calc_ypar" href="calc_ypar.html" />
+    <link rel="prev" title="calcTLPort" href="calcTLPort.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../python/python.html">Python Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../octave.html">Octave/Matlab Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/index.html">CSXCAD API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../openEMS/index.html">openEMS API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_excitations.html">Excitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_ports.html">Ports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_fielddump.html">Field Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_simulation.html">Simulation</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../openEMS/openEMS_API_postprocessing.html">Post-processing</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="calcLumpedPort.html">calcLumpedPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="calcPort.html">calcPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="calcTLPort.html">calcTLPort</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">calcWGPort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="calc_ypar.html">calc_ypar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plotFF3D.html">plotFF3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plotFFdB.html">plotFFdB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plotRefl.html">plotRefl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polarFF.html">polarFF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PlotHDF5FieldData.html">PlotHDF5FieldData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GetField_Interpolation.html">GetField_Interpolation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GetField_Range.html">GetField_Range</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GetField_SubSampling.html">GetField_SubSampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GetField_TD2FD.html">GetField_TD2FD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ReadHDF5Attribute.html">ReadHDF5Attribute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ReadHDF5Dump.html">ReadHDF5Dump</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ReadHDF5FieldData.html">ReadHDF5FieldData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ReadHDF5Mesh.html">ReadHDF5Mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ReadUI.html">ReadUI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="WriteHDF5.html">WriteHDF5</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ConvertHDF5_VTK.html">ConvertHDF5_VTK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="AR_estimate.html">AR_estimate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DFT_time2freq.html">DFT_time2freq</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DelayFidelity.html">DelayFidelity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="FFT_time2freq.html">FFT_time2freq</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harminv.html">harminv</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_optimization.html">Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_nf2ff.html">Near-Field to Far-Field Transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../openEMS/openEMS_API_misc.html">Misc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../octave.html">Octave/Matlab Interface</a> &raquo;</li>
+          <li><a href="../../openEMS/index.html">openEMS API</a> &raquo;</li>
+          <li><a href="../../openEMS/openEMS_API_postprocessing.html">Post-processing</a> &raquo;</li>
+      <li>calcWGPort</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/octave/autogenerated/openEMS/calcWGPort.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calcwgport">
+<h1>calcWGPort<a class="headerlink" href="#calcwgport" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcWGPort">
+<span class="sig-name descname"><span class="pre">calcWGPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SimDir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varargin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcWGPort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Full definition:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">port</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">calcWGPort</span><span class="p">(</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">SimDir</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="nb">varargin</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Calculate voltages and currents, the propagation constant beta
+and the characteristic impedance ZL of the given waveguide port.</p>
+<p>The port has to be created by e.g. AddWaveGuidePort().</p>
+<p>input:</p>
+<ul class="simple">
+<li><p>port:       return value of e.g. AddWaveGuidePort()</p></li>
+<li><p>SimDir:     directory, where the simulation files are</p></li>
+<li><p>f:          frequency vector for DFT</p></li>
+</ul>
+<p>variable input:</p>
+<ul class="simple">
+<li><p>‘RefImpedance’:    use a given reference impedance to calculate inc and
+ref voltages and currents
+default is given port or calculated line impedance</p></li>
+<li><p>‘RefPlaneShift’:   use a given reference plane shift from port beginning
+for a desired phase correction
+default is the measurement plane at the end of the
+port
+the plane shift has to be given in drawing units!</p></li>
+<li><p>‘RefractiveIndex’: set a material refractive index</p></li>
+<li><p>‘SwitchDirection’: 0/1, switch assumed direction of propagation</p></li>
+</ul>
+<p>output:</p>
+<ul class="simple">
+<li><p>output signals/values in time domain (TD):</p>
+<ul>
+<li><p>port.ut.tot:    total voltage (time-domain)</p></li>
+<li><p>port.ut.time:   voltage time vector</p></li>
+<li><p>port.it.tot:    total current (time-domain)</p></li>
+<li><p>port.it.time:   current time vector</p></li>
+</ul>
+</li>
+<li><p>output signals/values in frequency domain (FD):</p>
+<ul>
+<li><p>port.f:                 the given frequency fector</p></li>
+<li><p>port.uf.tot/inc/ref:    total, incoming and reflected voltage</p></li>
+<li><p>port.if.tot/inc/ref:    total, incoming and reflected current</p></li>
+<li><p>port.beta:              propagation constant</p></li>
+<li><p>port.ZL:                characteristic line impedance</p></li>
+<li><p>port.ZL_ref:            used reference impedance</p></li>
+</ul>
+</li>
+</ul>
+<p>example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>port{1} = calcWGPort( port{1}, Sim_Path, f, &#39;RefImpedance&#39;, 50);
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>(C) 2013 Thorsten Liebig (thorsten.liebig&#64;gmx.de)</p>
+<p>See also AddWaveGuidePort, calcPort</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="calcTLPort.html" class="btn btn-neutral float-left" title="calcTLPort" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="calc_ypar.html" class="btn btn-neutral float-right" title="calc_ypar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
