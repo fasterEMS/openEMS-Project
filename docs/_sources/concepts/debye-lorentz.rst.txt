@@ -1,0 +1,32 @@
+.. _drude_debye_lorentz:
+
+Drude, Debye and Lorentz Materials
+"""""""""""""""""""""""""""""""""""
+
+Debye, Drude, and Lorentz materials are advanced materials models that
+capture the material's frequency-dependent changes in permittivity and
+permeability. Since nearly all real-world materials exhibit this behavior,
+they're used when the material's wideband response (such as dispersion)
+must be accurately simulated.
+
+These models were originally proposed in the early 20th century by
+solid-state physicists to explain the microscopic origins of electrical
+and optical properties of matter. Thus, these models do not accept a
+simple array of frequency-dependent material properties, but instead
+are controlled by parameters like *plasma frequency*, *plasma relaxation
+time*, and *Lorentz pole frequency*.
+
+These terms may mean very little to an RF/microwave engineer, but in FDTD, 
+they act as calculation tools rather than physical theories. The required
+parameters are obtained by numerically fitting them to the measured material
+curves, so that these models produce the same curves which is then used in
+the simulation. Both first-order models and high-order models are supported,
+there are many "degrees of freedom" in the fitting process. If a first-order
+fit fails to produce the desired curves, more parameters can be added until
+one obtains a satisfactory fit.
+
+.. note::
+   FDTD only borrows these solid-state physics models as tools of calculations,
+   the fitted parameters are generally not physically meaningful. 
+   As von Neumann once said, "With four parameters I can fit an elephant,
+   and with five I can make him wiggle his trunk."

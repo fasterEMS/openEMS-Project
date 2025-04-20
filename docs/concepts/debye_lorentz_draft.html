@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>&lt;no title&gt; &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>&lt;no title&gt;</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/debye_lorentz_draft.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>Definitions of other parameters are identical to the Drude model.</p>
+<p>defines electrical susceptibility of
+a dielectric material as the following equation.</p>
+<div class="math notranslate nohighlight">
+\[\chi(\omega) = \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}\]</div>
+<p>Its permittivity is given by:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_r(\infty) + \chi(\omega)\]</div>
+<p>The first-order Debye model is given by:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_r(\omega) = \epsilon_r(\infty) +
+                \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}\]</div>
+<p>If the material has a non-zero DC conductivity <span class="math notranslate nohighlight">\(\kappa\)</span>, an extra
+loss term appears.</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_r(\omega) = \epsilon_r(\infty) +
+                \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}
+                - j \frac{\kappa}{\omega \epsilon_0}\]</div>
+<p>By generalizing the Debye model to multiple oscillation poles, a high-order
+model is obtained. This is the model implemented in openEMS.</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_r(\omega) = \epsilon_r(\infty) +
+                \sum^N_{p=1}{\frac{\Delta \epsilon_{r,p}}{1+ j \omega t_\mathrm{relax}(p)}}
+                - j \frac{\kappa}{\omega \epsilon_0}\]</div>
+<p>In terms of absolute permittivity:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\epsilon(\omega) = \epsilon_0 \left[ \epsilon_r(\infty) +
+                \sum^N_{p=1}{\frac{\Delta \epsilon_{r,p}}{1+ j \omega t_\mathrm{relax}(p)}}
+                - j \frac{\kappa}{\omega} \right] \\\end{split}\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f\)</span> is the frequency.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_r(f)\)</span> is the material’s relative permittivity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_r(\infty)\)</span> is the material’s relative permittivity</p></li>
+</ul>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

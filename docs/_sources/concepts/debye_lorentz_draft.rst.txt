@@ -1,0 +1,51 @@
+
+
+Definitions of other parameters are identical to the Drude model.
+
+
+defines electrical susceptibility of
+a dielectric material as the following equation.
+
+.. math::
+   \chi(\omega) = \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}
+
+Its permittivity is given by:
+
+.. math::
+
+   \epsilon(\omega) = \epsilon_r(\infty) + \chi(\omega)
+
+The first-order Debye model is given by:
+
+.. math::
+   \epsilon_r(\omega) = \epsilon_r(\infty) +
+                   \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}
+
+If the material has a non-zero DC conductivity :math:`\kappa`, an extra
+loss term appears.
+
+.. math::
+   \epsilon_r(\omega) = \epsilon_r(\infty) +
+                   \frac{\Delta \epsilon_{r}}{1+ j \omega t_\mathrm{relax}}
+                   - j \frac{\kappa}{\omega \epsilon_0}
+
+By generalizing the Debye model to multiple oscillation poles, a high-order
+model is obtained. This is the model implemented in openEMS.
+
+.. math::
+   \epsilon_r(\omega) = \epsilon_r(\infty) +
+                   \sum^N_{p=1}{\frac{\Delta \epsilon_{r,p}}{1+ j \omega t_\mathrm{relax}(p)}}
+                   - j \frac{\kappa}{\omega \epsilon_0}
+
+
+In terms of absolute permittivity:
+
+.. math::
+   \epsilon(\omega) = \epsilon_0 \left[ \epsilon_r(\infty) +
+                   \sum^N_{p=1}{\frac{\Delta \epsilon_{r,p}}{1+ j \omega t_\mathrm{relax}(p)}}
+                   - j \frac{\kappa}{\omega} \right] \\
+
+
+* :math:`f` is the frequency.
+* :math:`\epsilon_r(f)` is the material's relative permittivity.
+* :math:`\epsilon_r(\infty)` is the material's relative permittivity

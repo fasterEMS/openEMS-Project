@@ -9,6 +9,7 @@ Contents:
    intro
 
    install/index
+   concepts/index
    python/openEMS/Tutorials/index
 
    python/python

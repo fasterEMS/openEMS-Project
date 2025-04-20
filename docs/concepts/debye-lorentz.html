@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drude, Debye and Lorentz Materials &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Drude, Debye and Lorentz Materials</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/debye-lorentz.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="drude-debye-and-lorentz-materials">
+<span id="drude-debye-lorentz"></span><h1>Drude, Debye and Lorentz Materials<a class="headerlink" href="#drude-debye-and-lorentz-materials" title="Permalink to this headline"></a></h1>
+<p>Debye, Drude, and Lorentz materials are advanced materials models that
+capture the material’s frequency-dependent changes in permittivity and
+permeability. Since nearly all real-world materials exhibit this behavior,
+they’re used when the material’s wideband response (such as dispersion)
+must be accurately simulated.</p>
+<p>These models were originally proposed in the early 20th century by
+solid-state physicists to explain the microscopic origins of electrical
+and optical properties of matter. Thus, these models do not accept a
+simple array of frequency-dependent material properties, but instead
+are controlled by parameters like <em>plasma frequency</em>, <em>plasma relaxation
+time</em>, and <em>Lorentz pole frequency</em>.</p>
+<p>These terms may mean very little to an RF/microwave engineer, but in FDTD,
+they act as calculation tools rather than physical theories. The required
+parameters are obtained by numerically fitting them to the measured material
+curves, so that these models produce the same curves which is then used in
+the simulation. Both first-order models and high-order models are supported,
+there are many “degrees of freedom” in the fitting process. If a first-order
+fit fails to produce the desired curves, more parameters can be added until
+one obtains a satisfactory fit.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>FDTD only borrows these solid-state physics models as tools of calculations,
+the fitted parameters are generally not physically meaningful.
+As von Neumann once said, “With four parameters I can fit an elephant,
+and with five I can make him wiggle his trunk.”</p>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

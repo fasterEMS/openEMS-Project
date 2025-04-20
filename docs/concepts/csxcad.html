@@ -12,9 +12,12 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mesh" href="mesh.html" />
+    <link rel="prev" title="Concepts" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,9 +38,72 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3D Modeling (CSXCAD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#properties">Properties</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#metal">Metal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thin-conducting-sheet">Thin Conducting Sheet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#general-material">General Material</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispersive-materials">Dispersive Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#primitives">Primitives</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#box">Box</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#sphere">Sphere</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#spherical-shell">Spherical Shell</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id1">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#cylinder">Cylinder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cylindrical-shell">Cylindrical Shell</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#curve">Curve</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#wire">Wire</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id4">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#polygon">Polygon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#extruded-polygon">Extruded Polygon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#rotational-polygon">Rotational Polygon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id7">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#polyhedron">Polyhedron</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#verteces-and-faces">Verteces and Faces</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id8">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debye_lorentz.html">Dispersive Materials</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
@@ -59,6 +125,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Concepts</a> &raquo;</li>
       <li>3D Modeling (CSXCAD)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/concepts/csxcad.rst.txt" rel="nofollow"> View page source</a>
@@ -71,14 +138,614 @@
              
   <section id="d-modeling-csxcad">
 <h1>3D Modeling (CSXCAD)<a class="headerlink" href="#d-modeling-csxcad" title="Permalink to this headline"></a></h1>
-<p>An openEMS simulation always starts by creating a 3D model of the Device-Under-Test
-(DUT) using the CSXCAD library.</p>
+<p>An openEMS simulation always starts by creating a 3D model of the structure
+using the CSXCAD library. The functions provided by CSXCAD can be classified
+into two types, <em>properties</em> and <em>primitives</em>. They define material properties
+and shapes respectively.</p>
+<p>All created entities for the simulation are stored in the CSXCAD data structure,
+and is usually saved to disk as an <code class="docutils literal notranslate"><span class="pre">.xml</span></code> file.</p>
+<section id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline"></a></h2>
+<p><em>Properties</em> defines the physical property of a material, such as a metal,
+a thin conducting sheet, a dielectric metarial, a magnetic material.
+Technically, excitation sources, probes, and field dump boxes are also
+Properties.</p>
+<section id="metal">
+<h3>Metal<a class="headerlink" href="#metal" title="Permalink to this headline"></a></h3>
+<p>A metal is a modeled as a Perfect Electric Conductor (PEC) with infinite
+conductivity. Internally, the PEC is implemented by forcing the tangential
+electric field in this region to be zero, which is characteristic of an
+ideal conductor that can’t be penetrated by electric field lines.</p>
+<p>If resistive losses are unimportant, one can use PEC rather than a realistic
+material model for simplicity and efficiency.</p>
+<p>Matlab/Octave:</p>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">CSXCAD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">metal</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span><span class="s1">&#39;plate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="thin-conducting-sheet">
+<h3>Thin Conducting Sheet<a class="headerlink" href="#thin-conducting-sheet" title="Permalink to this headline"></a></h3>
+<p>A Thin Conducting Sheet is a simplified model of a resistive conductor,
+and is the standard choice for modeling resistive metal sheets, plates,
+and traces.</p>
+<p>Modeling thin metal sheets is challenging in FDTD. To capture effects like
+surface current (skin effect) requires an impractically high resolution mesh.
+Thus, Thin Conducting Sheet treats the metal as a zero-thickness 2D plane.
+The resistive loss in metals is simulated using a simplified, behavioral model
+to “fit” the observed loss rather than the full physics.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Surface roughness modeling is currently not supported.</p>
+</div>
+</section>
+<section id="general-material">
+<h3>General Material<a class="headerlink" href="#general-material" title="Permalink to this headline"></a></h3>
+<p>A general material is defined by a relative permittivity <span class="math notranslate nohighlight">\(\epsilon_r\)</span>,
+a relative permeability (<span class="math notranslate nohighlight">\(\mu_r\)</span>), an electric conductivity <span class="math notranslate nohighlight">\(\kappa\)</span>,
+and a hypothetical magnetic conductivity <span class="math notranslate nohighlight">\(\sigma\)</span>. All parameters are
+constants that don’t vary with frequency.
+It can model dielectric materials (such as circuit board substrate), magnetic
+materials (such as magnetic cores), resistive materials, and 3D metals.
+Due to the constant-property assumption, this model is not realistic. But
+it produces acceptable results in simpler applications, and has no simulation
+overhead.</p>
+</section>
+<section id="dispersive-materials">
+<h3>Dispersive Materials<a class="headerlink" href="#dispersive-materials" title="Permalink to this headline"></a></h3>
+<p>Debye, Drude, Lorentz materials are advanced models to model dispersive
+materials.</p>
+<p>Nearly all real-world materials exhibit a phenomenon known as dispersion. That
+is, the speed of light in the medium depends on the EM wave’s frequency. In
+optics, it manifests as a frequency-dependent refractive index. In RF/microwave
+engineering, it appears as a frequency-dependent permittivity and permeability.
+In metamaterial research, one can even deliberately introduce dispersion to
+control electromagnetic wave propagation in unusual ways.</p>
+<p>As a result, while the basic material model with constant permittivity and
+permeability is sufficient if dispersion is negligible, more demanding
+simulations call for dispersion models for accurately calculating a material’s
+wideband response.</p>
+<p>See <a class="reference internal" href="debye_lorentz.html#dispersive-materials"><span class="std std-ref">Dispersive Materials</span></a> for usage.</p>
+</section>
+</section>
+<section id="primitives">
+<h2>Primitives<a class="headerlink" href="#primitives" title="Permalink to this headline"></a></h2>
+<p><em>Primitives</em> are the building blocks to create 1D, 2D, 3D shapes, so that one
+can create simple object such as a Curve, a Polygon, a Box, or a Sphere. More
+complex structures can be created by combining various primitives. For example,
+a metal sheet with cylindrical holes can be achieved by combining a metal box
+with several air cylinders.</p>
+<p>Each shape created by a <em>Primitive</em> function is associated with a <em>Property</em>.</p>
+<p>List of all available primitives:</p>
+<ul class="simple">
+<li><p>Box</p></li>
+<li><p>Sphere</p></li>
+<li><p>Spherical Shell</p></li>
+<li><p>Cylinder</p></li>
+<li><p>Cylindrical Shell</p></li>
+<li><p>Curve</p></li>
+<li><p>Wire</p></li>
+<li><p>Polygon</p></li>
+<li><p>Extruded polygon</p></li>
+<li><p>Rotational solid (based on a polygon)</p></li>
+<li><p>Polyhedron</p></li>
+</ul>
+<p>Other examples of more complex structures:</p>
+<ul class="simple">
+<li><p>Mickey</p></li>
+<li><p>Sphere Aggregation</p></li>
+</ul>
+<section id="box">
+<h3>Box<a class="headerlink" href="#box" title="Permalink to this headline"></a></h3>
+<p>The Box is the most simple primitive in CSXCAD. It is as well the most used primitive
+since it usually matches the given Cartesian or cylindrical FDTD mesh. Furthermore this
+primitive is the only one which shape depends on the chosen coordinate system it is defined
+with.</p>
+<p>It’s created by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddBox.html#AddBox" title="AddBox"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddBox()</span></code></a> function in Octave/Matlab, or the <code class="xref py py-meth docutils literal notranslate"><span class="pre">CSXCAD.AddBox()</span></code>
+method in Python.</p>
+<p>Matlab/Octave Definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;propName&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">varargin</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code>: <code class="docutils literal notranslate"><span class="pre">[x</span> <span class="pre">y</span> <span class="pre">z]</span></code> first/start coordinate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stop</span></code>: <code class="docutils literal notranslate"><span class="pre">[x</span> <span class="pre">y</span> <span class="pre">z]</span></code> second/stop coordinate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<section id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h4>
+<ol class="arabic">
+<li><p>Create a Cartesian box from <code class="docutils literal notranslate"><span class="pre">x=[-100</span> <span class="pre">to</span> <span class="pre">+100]</span></code>, <code class="docutils literal notranslate"><span class="pre">y=[-50</span> <span class="pre">to</span> <span class="pre">0]</span></code>
+and <code class="docutils literal notranslate"><span class="pre">z=[-50</span> <span class="pre">to</span> <span class="pre">10]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="o">-</span><span class="mi">50</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">50</span><span class="p">]);</span>
+</pre></div>
+</div>
+</li>
+<li><p>In case of a cylindrical system, create a cylindrical box from
+<code class="docutils literal notranslate"><span class="pre">r=[50</span> <span class="pre">to</span> <span class="pre">70]</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha=[pi/2</span> <span class="pre">to</span> <span class="pre">3*pi/2]</span></code> and <code class="docutils literal notranslate"><span class="pre">z=[-50</span> <span class="pre">to</span> <span class="pre">10]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span> <span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">70</span> <span class="mi">3</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">50</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Note that although AddCylindricalShell may appear to be the appropriate function
+to define a cylinder when using a cylindrical coordinate system, AddBox is
+actually better suited because the structure will be meshed correctly. If
+AddCylindricalShell is used, it is possible that the meshed cylinder will
+not be meshed correctly, as shown in the example below.</p>
+</li>
+<li><p>In case of a Cartesian FDTD setup, define a cylindrically shaped box from
+<code class="docutils literal notranslate"><span class="pre">r=[50</span> <span class="pre">to</span> <span class="pre">70]</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha=[pi/2</span> <span class="pre">to</span> <span class="pre">3*pi/2]</span></code> and <code class="docutils literal notranslate"><span class="pre">z=[-50</span> <span class="pre">to</span> <span class="pre">10]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">50</span> <span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="mi">10</span><span class="p">],[</span><span class="mi">70</span> <span class="mi">3</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="s1">&#39;CoordSystem&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="sphere">
+<h3>Sphere<a class="headerlink" href="#sphere" title="Permalink to this headline"></a></h3>
+<p>The sphere primitive is defined by its central point and radius. It is created with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddSphere</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">center</span></code>: coordinate of the center point of the sphere</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rad</span></code>: radius of the sphere</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h4>
+<ol class="arabic">
+<li><p>Create a sphere at (0,0,0) with radius 200:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddSphere</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;material&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">200</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="spherical-shell">
+<h3>Spherical Shell<a class="headerlink" href="#spherical-shell" title="Permalink to this headline"></a></h3>
+<p>The spherical shell primitive is defined by its central point, radius and thickness. It is created with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddSphericalShell</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">shell_width</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">center</span></code>: coordinate of the center point of the sphere</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rad</span></code>: radius of the spherical shell</p></li>
+<li><p>shell_width: thickness of the shell
+* the inner radius of this shell is rad-shell_width/2
+* the outer radius of this shell is rad+shell_width/2</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<section id="id1">
+<h4>Example<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h4>
+<p>Create a metal sphere at (0,0,0) with radius 50 and thickness 10:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMetal</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">);</span> <span class="o">%</span><span class="n">create</span> <span class="n">PEC</span> <span class="k">with</span> <span class="n">propName</span> <span class="s1">&#39;metal&#39;</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddSphericalShell</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">],</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="cylinder">
+<h3>Cylinder<a class="headerlink" href="#cylinder" title="Permalink to this headline"></a></h3>
+<p>A cylindrical primitive is added by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCylinder</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned material</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code>: [x y z] start point of the cylinder (midpoint of the first cylinder face)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stop</span></code>: [x y z] stop point of the cylinder (midpoint of the second cylinder face)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rad</span></code>: radius of the cylinder</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<p>The axis of the cylinder will be along the start - stop points with the two cylinder faces being perpendicular to this axis.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCylinder</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">0</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">300</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">200</span> <span class="mi">300</span><span class="p">],</span> <span class="mi">300</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="cylindrical-shell">
+<h3>Cylindrical Shell<a class="headerlink" href="#cylindrical-shell" title="Permalink to this headline"></a></h3>
+<p>A cylindrical shell is created by the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCylindricalShell</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">shell_width</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: default first argument, containing the CSXCAD data structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the (previously defined) property (e.g. a metal or material)</p></li>
+<li><p>start, <code class="docutils literal notranslate"><span class="pre">stop</span></code>: [x y z] coordinates of the start and end points of the cylinder central axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rad</span></code>: radius of the cylinder</p></li>
+<li><p>shell_width: width of the cylinder shell</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<p>Note:</p>
+<blockquote>
+<div><p>The inner radius of this shell is: rad – shell_width/2
+The outer radius of this shell is: rad + shell_width/2</p>
+</div></blockquote>
+<section id="id2">
+<h4>Example<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h4>
+<p>Create a cylindrical shell with radius 30 drawing unit and shell thickness of 5 drawing unit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span><span class="o">=</span><span class="n">AddMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;plexi_shield&#39;</span><span class="p">);</span>
+<span class="n">CSX</span><span class="o">=</span><span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;plexi_shield&#39;</span><span class="p">,</span><span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span><span class="mf">2.22</span><span class="p">);</span>
+<span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">40</span> <span class="p">];</span>
+<span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">40</span> <span class="p">];</span>
+<span class="n">CSX</span><span class="o">=</span><span class="n">AddCylindricalShell</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;plexi_shield&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="curve">
+<h3>Curve<a class="headerlink" href="#curve" title="Permalink to this headline"></a></h3>
+<p>A 1D curve is defined by its coordinate arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCurve</span><span class="p">(</span> <span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the parameters:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: two-dimensional coordinates of the base polygon
+* array column refers to point number, array row refers to its x,y,z- <code class="docutils literal notranslate"><span class="pre">position</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>points(1,point_number): position-x of ‘point_number’.</p></li>
+<li><p>points(2,point_number): position-y of ‘point_number’.</p></li>
+<li><p>points(3,point_number): position-z of ‘point_number’.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<section id="id3">
+<h4>Example<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h4>
+<p>This example creates a Biquad antenna from thin metal on y=0, with length of each side=
+<span class="math notranslate nohighlight">\(\sqrt{50}\)</span>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">5</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">5</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMetal</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCurve</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="n">points</span><span class="p">);</span>
+</pre></div>
+</div>
+<table class="colwidths-given docutils align-center">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="biquad" src="../_images/biquad.png" /></p></td>
+<td><p><img alt="biquad-mesh" src="../_images/biquad-mesh.png" /></p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>Left: Biquad with points annotated.</p>
+<p>Right: Biquad model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="wire">
+<h3>Wire<a class="headerlink" href="#wire" title="Permalink to this headline"></a></h3>
+<p>Define a cylinder-like wire by its coordinate arrays and radius:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddWire</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">wire_rad</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the parameters</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: two-dimensional coordinates of the base polygon
+* array column refers to point number, array row refers to its x,y,z- <code class="docutils literal notranslate"><span class="pre">position</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>points(1,point_number): position-x of ‘point_number’.</p></li>
+<li><p>points(2,point_number): position-y of ‘point_number’.</p></li>
+<li><p>points(3,point_number): position-z of ‘point_number’.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>wire_rad: wire radius</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments</p></li>
+</ul>
+<section id="id4">
+<h4>Example<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h4>
+<p>This example creates a Biquad antenna from wire of radius 0.1 on xz-plane, with length of each
+side=:math:<cite>sqrt{50}</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">5</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">5</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">points</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMetal</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddWire</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span><span class="mf">0.1</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="polygon">
+<h3>Polygon<a class="headerlink" href="#polygon" title="Permalink to this headline"></a></h3>
+<p>A polygon is defined by its two dimensional shape in form of a polygon,
+its normal direction and elevation. It is created by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddPolygon</span><span class="p">(</span> <span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">normDir</span><span class="p">,</span> <span class="n">elevation</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normDir</span></code>: the normal direction of the polygon (0-&gt;x, 1-&gt;y, 2-&gt;z).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: two-dimensional coordinates p(i,j) of the base polygon.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">elevation</span></code>: elevation in normal direction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>The polygon has to be defined using Cartesian coordinates.
+For use with cylindrical mesh, set <code class="docutils literal notranslate"><span class="pre">CoordSystem</span></code>  to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>Each column <code class="docutils literal notranslate"><span class="pre">j</span></code> represents a vertex in the points matrix.
+The number of columns equals the number of points.</p></li>
+<li><p>Each row represents projection of the point on the axis in the
+order of right hand rule. For example: if object is normal to <code class="docutils literal notranslate"><span class="pre">y</span></code>
+axis (<code class="docutils literal notranslate"><span class="pre">normDir</span> <span class="pre">=</span> <span class="pre">1</span></code>), the first and second row contain <code class="docutils literal notranslate"><span class="pre">z</span></code>
+and <code class="docutils literal notranslate"><span class="pre">x</span></code> coordinates respectively. The number of rows is two.</p></li>
+</ol>
+</div>
+<section id="id5">
+<h4>Example<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h4>
+<p>A star shaped polygon located in normal direction at z = 0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>   <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">p</span>
+<span class="n">p</span> <span class="o">=</span>
+
+  <span class="o">-</span><span class="mi">100</span>     <span class="mi">0</span>   <span class="mi">100</span>    <span class="mi">50</span>   <span class="mi">100</span>     <span class="mi">0</span>  <span class="o">-</span><span class="mi">100</span>   <span class="o">-</span><span class="mi">50</span>
+  <span class="o">-</span><span class="mi">100</span>   <span class="o">-</span><span class="mi">50</span>  <span class="o">-</span><span class="mi">100</span>     <span class="mi">0</span>   <span class="mi">100</span>    <span class="mi">50</span>   <span class="mi">100</span>     <span class="mi">0</span>
+
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddPolygon</span><span class="p">(</span> <span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p</span> <span class="p">,</span> <span class="s1">&#39;CoordSystem&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id9">
+<a class="with-border reference internal image-reference" href="../_images/polygon.png"><img alt="../_images/polygon.png" class="with-border" src="../_images/polygon.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-text">Polygon example.</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="extruded-polygon">
+<h3>Extruded Polygon<a class="headerlink" href="#extruded-polygon" title="Permalink to this headline"></a></h3>
+<p>An extruded polygon is defined by its two dimensional base shape in form
+of a polygon, its normal direction, elevation and thickness. It is created
+by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLinPoly</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">normDir</span><span class="p">,</span> <span class="n">elevation</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">Length</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the parameters</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normDir</span></code>: the normal direction of the polygon (0-&gt;x, 1-&gt;y, 2-&gt;z).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: two-dimensional coordinates of the base polygon; see above.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">length</span></code>: linear extrusion in normal direction, starting at elevation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: see primitives variable arguments.</p></li>
+</ul>
+<p>Note: The polygon has to be defined using Cartesian coordinates. For use
+with cylindrical mesh, set <code class="docutils literal notranslate"><span class="pre">CoordSystem</span></code> to 0.</p>
+<section id="id6">
+<h4>Example<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h4>
+<p>A star shaped polygon extruded in z direction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>   <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLinPoly</span><span class="p">(</span> <span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">p</span> <span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;CoordSystem&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id10">
+<a class="with-border reference internal image-reference" href="../_images/star-rot-poly.png"><img alt="../_images/star-rot-poly.png" class="with-border" src="../_images/star-rot-poly.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-text">LinPoly example.</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="rotational-polygon">
+<h3>Rotational Polygon<a class="headerlink" href="#rotational-polygon" title="Permalink to this headline"></a></h3>
+<p>An rotational polygon is defined by its two dimensional base shape in form
+of a polygon, its normal direction, rotational axis and angle of rotation.</p>
+<p>It is created by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddRotPoly</span><span class="p">(</span> <span class="n">CSX</span><span class="p">,</span> <span class="n">materialname</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">normDir</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">RotAxisDir</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">materialname</span></code>: Name of the assigned material property, created
+by :func:<code class="docutils literal notranslate"><span class="pre">AddMetal`</span> <span class="pre">or</span> <span class="pre">:func:``AddMaterial</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: Priority of the primitive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normDir</span></code>: The normal direction of the polygon e.g.
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> or <code class="docutils literal notranslate"><span class="pre">z</span></code>, or numeric (0-&gt;x, 1-&gt;y, 2-&gt;z).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotAxisDir</span></code>: Rotational axis direction e.g.
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> or <code class="docutils literal notranslate"><span class="pre">z</span></code>, or numeric (0-&gt;x, 1-&gt;y, 2-&gt;z).
+* Note` it should be different to normal direction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon; see above</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: Rotation angle, optional, default is <code class="docutils literal notranslate"><span class="pre">[0</span> <span class="pre">2*pi]</span></code> (e.g.
+<code class="docutils literal notranslate"><span class="pre">[0</span> <span class="pre">2*pi]</span></code> for a full rotation).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: see primitives variable arguments.</p></li>
+</ul>
+<p>Note: The polygon has to be defined using Cartesian coordinates. For use
+with cylindrical mesh, set <code class="docutils literal notranslate"><span class="pre">CoordSystem</span></code>  to 0.</p>
+<section id="id7">
+<h4>Example<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h4>
+<table class="colwidths-given docutils align-center">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="star-rot-poly" src="../_images/star-rot-poly.png" /></p></td>
+<td><p><img alt="cone" src="../_images/cone.png" /></p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>Left: Rotational Polygon example.</p>
+<p>Right: Cone example.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The same star shaped polygon, shifted in x-direction and rotated around
+the x-axis:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>   <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span><span class="p">;</span>  <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,:)</span><span class="o">=</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,:)</span><span class="o">+</span><span class="mi">200</span><span class="p">;</span> <span class="o">%</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">x</span><span class="o">-</span><span class="n">direction</span> <span class="n">by</span> <span class="mi">200</span>
+
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddRotPoly</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span> <span class="n">pi</span><span class="p">],</span> <span class="s1">&#39;CoordSystem&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A conical solid can be created by rotating a triangular polygon:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddRotPoly</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="n">p</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="polyhedron">
+<h3>Polyhedron<a class="headerlink" href="#polyhedron" title="Permalink to this headline"></a></h3>
+<p>A polyhedron is the most general 3D Primitive available for openEMS. It
+can be used to create a body with (nearly) any shape by defining a closed
+surface using verteces and faces.</p>
+<table class="colwidths-given docutils align-center">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="tetrahedron" src="../_images/tetrahedron.png" /></p></td>
+<td><p><img alt="right-hand-rule" src="../_images/right-hand-rule.png" /></p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>Left: Tetrahedron, the simplest polyhedron.</p>
+<p>Right: The right hand rule. When using the right hand the thumb indicates the normal direction</p>
+<p>of the face and the fingers show the direction how to order the vertices for each face.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A polyhedron is added by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddPolyhedron</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: name of the assigned property.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: priority of the primitive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: cell array of all vertices.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">faces</span></code>: cell array of all faces.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: a key/value list of primitives variable arguments.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The polyhedron must be a closed surface for 3D discretisation</p></li>
+<li><p>All faces must contain the vertices in a right-handed order with
+the normal direction for each face pointing out of the solid</p></li>
+</ul>
+</div>
+<section id="verteces-and-faces">
+<h4>Verteces and Faces<a class="headerlink" href="#verteces-and-faces" title="Permalink to this headline"></a></h4>
+<p>A polyhedron is the most general shape that can be defined in openEMS.
+Polyhedrons are defined by their vertices and faces. In openEMS each
+vertex is an array containing the x, y and z coordinates of the point.
+All faces must contain the vertices in a right-handed order with the
+normal direction for each face pointing out of the solid. In the example
+of the tetrahedron the four faces would be <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2,</span> <span class="pre">3}</span></code>, <code class="docutils literal notranslate"><span class="pre">{2,</span> <span class="pre">4,</span> <span class="pre">3}</span></code>
+and <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">3,</span> <span class="pre">4}</span></code>.</p>
+</section>
+<section id="id8">
+<h4>Example<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h4>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">example</span> <span class="n">tetrahedron</span>
+<span class="n">vertices</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">vertices</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">vertices</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">vertices</span><span class="p">{</span><span class="mi">4</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
+<span class="n">faces</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">];</span>
+<span class="n">faces</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">];</span>
+<span class="n">faces</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">];</span>
+<span class="n">faces</span><span class="p">{</span><span class="mi">4</span><span class="p">}</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">];</span>
+
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMetal</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddPolyhedron</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mesh.html" class="btn btn-neutral float-right" title="Mesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
