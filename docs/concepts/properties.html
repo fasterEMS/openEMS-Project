@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Properties &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Primitives" href="primitives.html" />
+    <link rel="prev" title="Concepts" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#metal">Metal</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#thin-conducting-sheet">Thin Conducting Sheet</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#general-material">General Material</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dispersive-materials">Dispersive Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Concepts</a> &raquo;</li>
+      <li>Properties</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/properties.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="properties">
+<h1>Properties<a class="headerlink" href="#properties" title="Permalink to this headline"></a></h1>
+<p><em>Properties</em> defines the physical property of a material, such as a metal,
+a thin conducting sheet, a dielectric metarial, a magnetic material.
+Technically, excitation sources, probes, and field dump boxes are also
+<em>Properties</em>.</p>
+<p>An openEMS simulation always starts by creating a 3D model of the structure
+using the CSXCAD library. The functions provided by CSXCAD can be classified
+into two types, <em>properties</em> and <em>primitives</em>. They define material properties
+and shapes respectively.</p>
+<p>All created entities for the simulation are stored in the CSXCAD data structure,
+and is usually saved to disk as an <code class="docutils literal notranslate"><span class="pre">.xml</span></code> file.</p>
+<section id="metal">
+<h2>Metal<a class="headerlink" href="#metal" title="Permalink to this headline"></a></h2>
+<p>A metal is a modeled as a Perfect Electric Conductor (PEC) with infinite
+conductivity. Internally, the PEC is implemented by forcing the tangential
+electric field in this region to be zero, which is characteristic of an
+ideal conductor that can’t be penetrated by electric field lines.</p>
+<p>If resistive losses are unimportant, one can use PEC rather than a realistic
+material model for simplicity and efficiency.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h3>
+<p>Create a Perfect Electric Conductor named <code class="docutils literal notranslate"><span class="pre">plate</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
+<span class="o">%</span> <span class="n">TBD</span>
+
+<span class="c1"># Python</span>
+<span class="kn">import</span> <span class="nn">CSXCAD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">metal</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span><span class="s1">&#39;plate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="thin-conducting-sheet">
+<h2>Thin Conducting Sheet<a class="headerlink" href="#thin-conducting-sheet" title="Permalink to this headline"></a></h2>
+<p>A Thin Conducting Sheet is a simplified model of a resistive conductor,
+and is the standard choice for modeling resistive metal sheets, plates,
+and traces.</p>
+<p>Modeling thin metal sheets is challenging in FDTD. To capture effects like
+surface current (skin effect) requires an impractically high resolution mesh.
+Thus, Thin Conducting Sheet treats the metal as a zero-thickness 2D plane.
+The resistive loss in metals is simulated using a simplified, behavioral model
+to “fit” the observed loss rather than the full physics.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The geometrical thickness of the created shape (primitive) must be
+zero.</p></li>
+<li><p>Surface roughness modeling is currently not supported.</p></li>
+</ul>
+</div>
+<section id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<p>The following example creates a Thin Conducting Sheet material named
+<code class="docutils literal notranslate"><span class="pre">copper_foil</span></code>, with a conductivity of 59.6e6 S and a virtual thickness
+of 35 micrometer (the shape created from it must be a 2D plane with zero
+thickness). This is typical for a 1-oz circuit board:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
+<span class="o">%</span> <span class="n">TBD</span>
+
+<span class="c1"># Python</span>
+<span class="kn">import</span> <span class="nn">CSXCAD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">sheet</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddConductingSheet</span><span class="p">(</span><span class="s1">&#39;copper_foil&#39;</span><span class="p">,</span> <span class="n">conductivity</span><span class="o">=</span><span class="mf">59.6e6</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mf">35e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="general-material">
+<h2>General Material<a class="headerlink" href="#general-material" title="Permalink to this headline"></a></h2>
+<p>A general material is defined by a relative permittivity <span class="math notranslate nohighlight">\(\epsilon_r\)</span>,
+a relative permeability <span class="math notranslate nohighlight">\(\mu_r\)</span>, an electric conductivity <span class="math notranslate nohighlight">\(\kappa\)</span>,
+and a hypothetical magnetic conductivity <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<p>All parameters are constants that don’t vary with frequency.
+It can model dielectric materials (such as circuit board substrate), magnetic
+materials (such as magnetic cores), resistive materials, and 3D metals.
+Due to the constant-property assumption, this model is not realistic. But
+it produces acceptable results in simpler applications, and has no simulation
+overhead.</p>
+<section id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<p>Create a plexiglass material:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">,</span> <span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span> <span class="mf">2.22</span><span class="p">);</span>
+
+<span class="c1"># Python</span>
+<span class="n">plexiglass</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddMaterial</span><span class="p">(</span><span class="s1">&#39;plexiglass&#39;</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">2.22</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dispersive-materials">
+<h2>Dispersive Materials<a class="headerlink" href="#dispersive-materials" title="Permalink to this headline"></a></h2>
+<p>Debye, Drude, Lorentz materials are advanced models to model dispersive
+materials.</p>
+<p>Nearly all real-world materials exhibit a phenomenon known as dispersion. That
+is, the speed of light in the medium depends on the EM wave’s frequency. In
+optics, it manifests as a frequency-dependent refractive index. In RF/microwave
+engineering, it appears as a frequency-dependent permittivity and permeability.
+In metamaterial research, one can even deliberately introduce dispersion to
+control electromagnetic wave propagation in unusual ways.</p>
+<p>As a result, while the basic material model with constant permittivity and
+permeability is sufficient if dispersion is negligible, more demanding
+simulations call for dispersion models for accurately calculating a material’s
+wideband response.</p>
+<p>See <a class="reference internal" href="dispersive.html#dispersive-materials"><span class="std std-ref">Dispersive Materials</span></a> for detailed description.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="primitives.html" class="btn btn-neutral float-right" title="Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

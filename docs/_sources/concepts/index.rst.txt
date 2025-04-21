@@ -9,9 +9,11 @@ Basic concepts of openEMS simulations.
 .. toctree::
    :maxdepth: 1
 
-   csxcad
+   properties
+   primitives
    mesh
    bc
    ports
    excitations
-   debye_lorentz
+   signals
+   dispersive

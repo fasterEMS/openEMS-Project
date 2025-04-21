@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Waveforms &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dispersive Materials" href="dispersive.html" />
+    <link rel="prev" title="Excitation Sources" href="excitations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Signal Waveforms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sinusoid-signal">Sinusoid Signal</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dirac-impulse">Dirac Impulse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#heaviside-step">Heaviside Step</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gaussian-pulse">Gaussian Pulse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-signal">Custom Signal</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-step-excitation-with-finite-rise-time-gaussian-filter">Example: Step Excitation with Finite Rise Time (Gaussian filter)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bibliography">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Concepts</a> &raquo;</li>
+      <li>Signal Waveforms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/signals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="signal-waveforms">
+<span id="signal-concept"></span><h1>Signal Waveforms<a class="headerlink" href="#signal-waveforms" title="Permalink to this headline"></a></h1>
+<p>Both raw <span class="xref std std-ref">concept_excitations</span> or high-level <a class="reference internal" href="ports.html#concept-ports"><span class="std std-ref">Ports</span></a>
+require associated signal waveforms. openEMS provides approximations to
+a sinusoid signal, a Dirac impulse, a Heaviside step, a Gaussian pulse,
+and custom excitation signals (defined by a user-supplied mathematical
+expression).</p>
+<section id="sinusoid-signal">
+<h2>Sinusoid Signal<a class="headerlink" href="#sinusoid-signal" title="Permalink to this headline"></a></h2>
+<p>The sinusoid signal is a CW sine wave at a fixed frequency <span class="math notranslate nohighlight">\(f_0\)</span>
+(i.e. an unmodulated carrier). It can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[e[t] = \sin{(2\pi f_0 t)}\]</div>
+<p>FDTD simulations are fundamentally a time-domain method that typically
+uses a wideband signal (such as a Gaussian pulse) to obtain the
+structure’s wideband response. All frequencies are simultaneously
+excited in a single simulation run, so the sinusoid signal is rarely
+used. It’s still provided, because it’s occasionally useful in
+steady-state analysis - such as visualizing field patterns in waveguides.</p>
+<p>If a sinusoid excitation is used, openEMS enters the “steady-state
+detection” mode that terminates the simulation when system energy
+no longer changes. This is unlike a regular FDTD simulation, in
+which the simulation terminates when the system energy decays to
+near-zero.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Sinusoids are rarely used in FDTD simulations. Start with the
+Gaussian pulse for your first simulations.</p>
+</div>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h3>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f_carrier</span> <span class="o">=</span> <span class="mf">10e9</span><span class="p">;</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">();</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetSinusExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f_carrier</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f_carrier</span> <span class="o">=</span> <span class="mf">10e9</span><span class="p">;</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">()</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetSinusExcite</span><span class="p">(</span><span class="n">f_carrier</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dirac-impulse">
+<h2>Dirac Impulse<a class="headerlink" href="#dirac-impulse" title="Permalink to this headline"></a></h2>
+<p>The Dirac impulse is implemented in the simulation by applying the
+full pulse amplitude in one timestep, and applying the zero pulse
+amplitude in the next timestep. It can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}e[t] =
+\begin{cases}
+0, &amp; t \le 0 \\
+1, &amp; t = \Delta t \\
+0, &amp; t = 2 \Delta t \text{ (implicit)}
+\end{cases}\end{split}\]</div>
+<p>This signal is always two timesteps long, the simulator implicitly
+maintains the t = 0 value after excitation is switched off in later
+timesteps.</p>
+<p>The timestep size <span class="math notranslate nohighlight">\(\Delta t\)</span> is not controlled by the excitation,
+it’s determined globally by the stability criterion (<em>Rennings2</em> or <em>CFL</em>).
+Thus, its actual time duration (in seconds) is meshing-dependent, so is its
+bandwidth.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Bandwidth</strong>. This signal doesn’t have a well-defined bandwidth. The specified
+frequency <code class="docutils literal notranslate"><span class="pre">f_max</span></code> is ignored; bandwidth limitation is currently unimplemented.
+Using these signals may cause unrealistic excitation of rarely-encountered
+high-order E&amp;M wave modes in structures, creating unexpected behavior.
+The rising edge of the waveform may show overshoot and ringing due to
+numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
+pulse or a custom excitation is preferred in most applications.</p>
+<p><strong>Sampling rate of field dumps</strong>. Due to the lack of a well-defined bandwidth,
+a sampling interval of 1 timestep is force-enabled by openEMS. If field dumps
+are enabled, the raw fields of every simulation timestep are written to disk,
+causing an extreme performance hit and inflated output file size. It can
+consume gigabytes of disk space within minutes. Limit the simulation to a
+small number of timesteps before enabling field dumps.</p>
+</div>
+<section id="id1">
+<h3>Usage<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># bandwidth limitation is not implemented, it&#39;s ignored by the simulation!</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span><span class="p">;</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">();</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetDiracExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f_max</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># bandwidth limitation is not implemented, it&#39;s ignored by the simulation!</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">()</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetDiracExcite</span><span class="p">(</span><span class="n">f_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="heaviside-step">
+<h2>Heaviside Step<a class="headerlink" href="#heaviside-step" title="Permalink to this headline"></a></h2>
+<p>The Heaviside step is implemented in the simulation by applying the full pulse
+amplitude in the initial timestep, and keeping the same pulse amplitude in the
+next timesteps. It can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}e[t] =
+\begin{cases}
+0, &amp; t \lt 0 \\
+1, &amp; t \ge 0 \\
+\end{cases}\end{split}\]</div>
+<p>This signal is always two timesteps long, the simulator implicitly
+maintains the t = 0 value after excitation is switched off in later
+timesteps.</p>
+<p>The timestep size <span class="math notranslate nohighlight">\(\Delta t\)</span> is not controlled by the excitation,
+it’s determined globally by the stability criterion (<em>Rennings2</em> or <em>CFL</em>).
+Thus, its actual time duration (in seconds) is meshing-dependent, so is its
+bandwidth.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Convergence</strong>. The excitation is always at its full amplitude and never
+falls to the zero amplitude. It prevents the system energy from decaying
+to zero and the simulation never terminates. Use
+<a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.SetNumberOfTimeSteps" title="openEMS.openEMS.SetNumberOfTimeSteps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetNumberOfTimeSteps()</span></code></a> and
+<a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.SetMaxTime" title="openEMS.openEMS.SetMaxTime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetMaxTime()</span></code></a> to limit the total
+number of timesteps (in iterations) or wall-clock time
+(in seconds), so that the simulation is truncated without convergence.</p>
+<p><strong>Bandwidth</strong>. This signal doesn’t have a well-defined bandwidth. The specified
+frequency
+<code class="docutils literal notranslate"><span class="pre">f_max</span></code> is ignored; bandwidth limitation is currently unimplemented.
+Using these signals may cause unrealistic excitation of rarely-encountered
+high-order E&amp;M wave modes in structures, creating unexpected behavior.
+The rising edge of the waveform may show overshoot and ringing due to
+numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
+pulse or a custom excitation is preferred in most applications.</p>
+<p><strong>Sampling rate of field dumps</strong>. Due to the lack of a well-defined bandwidth,
+a sampling interval of 1 timestep is force-enabled by openEMS. If field dumps
+are enabled, the raw fields of every simulation timestep are written to disk,
+causing an extreme performance hit and inflated output file size. It can
+consume gigabytes of disk space within minutes. Limit the simulation to a
+small number of timesteps before enabling field dumps.</p>
+</div>
+<section id="id2">
+<h3>Usage<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># bandwidth limitation is not implemented, it&#39;s ignored by the simulation!</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span><span class="p">;</span>
+
+<span class="o">%</span> <span class="n">Limit</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">simulation</span> <span class="n">to</span> <span class="mi">10000</span> <span class="n">timesteps</span><span class="p">,</span>
+<span class="o">%</span> <span class="n">otherwise</span> <span class="n">it</span> <span class="n">never</span> <span class="n">terminates</span><span class="o">.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">(</span><span class="s1">&#39;NrTS&#39;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">);</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetStepExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f_max</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># bandwidth limitation is not implemented, it&#39;s ignored by the simulation!</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+
+<span class="c1"># Limit the maximum simulation to 10000 timesteps,</span>
+<span class="c1"># otherwise it never terminates.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetStepExcite</span><span class="p">(</span><span class="n">f_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="gaussian-pulse">
+<h2>Gaussian Pulse<a class="headerlink" href="#gaussian-pulse" title="Permalink to this headline"></a></h2>
+<p>The Gaussian pulse is implemented in the simulation as a sinusoidal carrier at
+the center frequency, with its amplitude modulated by a Gaussian function.
+This signal produces a wideband and smooth signal without discontinuous
+jumps. It has a well-distributed spectrum with a wide range of frequencies
+in both sidebands around the carrier. It can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[e[t] = \cos{\left[2\pi f_0 \left(t-\frac{9}{2\pi f_c}\right)\right]} \cdot
+       \exp{\left[-\left(\frac{2\pi f_c t}{3}-3\right)^2\right]}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_0\)</span> in the carrier’s central frequency, <span class="math notranslate nohighlight">\(f_c\)</span> is its
+20 dB cutoff frequency.</p>
+<p>In FDTD simulations, a Gaussian pulse is normally used as it provides a
+wideband and smooth signal without discontinuous jumps.
+This relatively clean spectrum enables
+openEMS to accurately extract the structure’s frequency response in the
+frequency domain.
+Once the structure’s frequency response is known, linear circuit analysis
+tools can evaluate its behavior under other input signals, so there’s
+no loss of generality.</p>
+<section id="id3">
+<h3>Usage<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<p>The first argument is its center frequency, the second argument is its
+-20 dB bandwidth, defining the signal’s spectral “spread”. For a wideband
+simulation, both arguments should be set to 1/2 of the simulation’s upper
+frequency target:</p>
+<a class="reference internal image-reference" href="../_images/port1_vt_input.svg"><img alt="../_images/port1_vt_input.svg" src="../_images/port1_vt_input.svg" width="49%" /></a>
+<a class="reference internal image-reference" href="../_images/port1_vt_fft.svg"><img alt="../_images/port1_vt_fft.svg" src="../_images/port1_vt_fft.svg" width="49%" /></a>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Centered around 5 GHz with a 5 GHz 20 dB bandwidth.</span>
+<span class="c1"># Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span><span class="p">;</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="n">f_max</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">f0_bw</span> <span class="o">=</span> <span class="n">f_max</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">();</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetGaussExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f0_bw</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Centered around 5 GHz with a 5 GHz 20 dB bandwidth.</span>
+<span class="c1"># Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">10e9</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="n">f_max</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">f0_bw</span> <span class="o">=</span> <span class="n">f_max</span> <span class="o">/</span> <span class="mi">2</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">()</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">f0_bw</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-signal">
+<h2>Custom Signal<a class="headerlink" href="#custom-signal" title="Permalink to this headline"></a></h2>
+<p>The custom signal is implemented in the simulation by accepting a user-defined
+symbolic expression.</p>
+<p>The first argument <code class="docutils literal notranslate"><span class="pre">f_str</span></code> is a string that contains the expression with
+an independent variable <code class="docutils literal notranslate"><span class="pre">t</span></code>, representing time. It’s parsed by the <code class="docutils literal notranslate"><span class="pre">fparser</span></code>
+library, so the string should be a legal <code class="docutils literal notranslate"><span class="pre">fparser</span></code> expression with proper syntax.
+A complete set of built-in functions (including trigonometry functions such as
+<code class="docutils literal notranslate"><span class="pre">sin(x)</span></code>, as well as conditional functions such as
+<code class="docutils literal notranslate"><span class="pre">if(cond,</span> <span class="pre">eval_when_true,</span> <span class="pre">eval_when_false)</span></code>) are available, making it expressive
+if tricky.
+Two special constants <code class="docutils literal notranslate"><span class="pre">pi</span></code> and <code class="docutils literal notranslate"><span class="pre">e</span></code> are pre-defined and recognized as well
+by openEMS, even though they don’t appear in the <code class="docutils literal notranslate"><span class="pre">fparser</span></code> documentation.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>See the fparser project documentation <a class="footnote-reference brackets" href="#id8" id="id4">2</a> for syntax.</p>
+</div>
+<p>The second argument <code class="docutils literal notranslate"><span class="pre">f0</span></code> is the base frequency of the excitation signal, which
+is set to the excitation signal’s center (or carrier) frequency. It’s meant to
+define the “frequency of interest” of the simulation. The third argument <code class="docutils literal notranslate"><span class="pre">f_max</span></code>
+is the maximum frequency content of the signal.</p>
+<p>The openEMS simulator uses <code class="docutils literal notranslate"><span class="pre">f0</span></code> and <code class="docutils literal notranslate"><span class="pre">f_max</span></code> to calculate the Nyquist frequency
+for sampling field values. It’s recommended to set <code class="docutils literal notranslate"><span class="pre">f_max</span></code> to the signal’s 20 dB
+cutoff frequency. For signals without a well-defined frequency, set <code class="docutils literal notranslate"><span class="pre">f0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">f_max</span></code> to the same value.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p><strong>Field dump sampling rate.</strong> To improve simulation speed, when field dumps are
+enabled, openEMS’s sampling frequency is set to the Nyquist rate based on the
+signal’s highest frequency component. Conceptually, sampling is performed as
+infrequently as possible, just sufficient to reconstruct the signal’s spectrum
+up to <code class="docutils literal notranslate"><span class="pre">f_max</span></code>.</p>
+<p><strong>Impulse and step visualization</strong>. However, if field dumps are enabled to
+visualize the propagation of wavefronts of an impulse or step signal, this
+sampling rate can be too low (even if the signals are bandwidth-limited).
+It’s necessary to use <a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.SetOverSampling" title="openEMS.openEMS.SetOverSampling"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SetOverSampling()</span></code></a> to force
+openEMS to dump the fields more often.</p>
+</div>
+<section id="id5">
+<h3>Usage<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Limit</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">simulation</span> <span class="n">to</span> <span class="mi">10000</span> <span class="n">timesteps</span><span class="p">,</span>
+<span class="o">%</span> <span class="n">otherwise</span> <span class="n">the</span> <span class="n">excitation</span> <span class="n">waveform</span> <span class="n">would</span> <span class="n">exhaust</span> <span class="n">system</span> <span class="n">memory</span><span class="o">.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">(</span><span class="s1">&#39;NrTS&#39;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">);</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetCustomExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="n">f_str</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">If</span> <span class="n">visualization</span> <span class="n">of</span> <span class="n">field</span> <span class="n">dumps</span> <span class="ow">is</span> <span class="n">needed</span><span class="p">,</span> <span class="n">use</span> <span class="n">a</span> <span class="n">much</span> <span class="n">higher</span>
+<span class="o">%</span> <span class="n">cutoff</span> <span class="n">frequency</span> <span class="n">to</span> <span class="n">force</span> <span class="n">openEMS</span> <span class="n">to</span> <span class="n">dump</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">more</span> <span class="n">often</span><span class="o">.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetOverSampling</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Limit the maximum simulation to 10000 timesteps,</span>
+<span class="c1"># otherwise the excitation waveform would exhaust system memory.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="c1"># API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.</span>
+<span class="n">f_bytes</span> <span class="o">=</span> <span class="n">f_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetCustomExcite</span><span class="p">(</span><span class="n">f_bytes</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f_max</span><span class="p">)</span>
+
+<span class="c1"># If visualization of field dumps is needed, use a much higher</span>
+<span class="c1"># cutoff frequency to force openEMS to dump the fields more often.</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetOverSampling</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Custom excitation signals values are precalculated before running the simulation.
+A maximum timestep limit <code class="docutils literal notranslate"><span class="pre">NrTS</span></code> must be set when using a custom excitation
+signal. Otherwise, starting the simulation with a default, unlimited signal length
+would exhaust system memory and crash the system.</p>
+</div>
+</section>
+<section id="example-step-excitation-with-finite-rise-time-gaussian-filter">
+<h3>Example: Step Excitation with Finite Rise Time (Gaussian filter)<a class="headerlink" href="#example-step-excitation-with-finite-rise-time-gaussian-filter" title="Permalink to this headline"></a></h3>
+<p>The following code defines a bandwidth-limited step function with finite
+rise time, which approximates switching signals in practical circuits
+well. It’s constructed by filtering the ideal Heaviside
+step function with a Gaussian filter. The vertical line in the step function
+is smoothed out and becomes an S-curve. Analytically it’s given by the
+expression:</p>
+<div class="math notranslate nohighlight">
+\[e[t] = \frac{1}{2} + \frac{1}{2} \mathrm{erf}\left(\frac{t - t_\mathrm{shift}}{\sigma}\right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{erf}(x)\)</span> is the Gaussian error function.
+The parameter <span class="math notranslate nohighlight">\(\sigma\)</span> is calculated based on the desired 10%-90%
+signal rise time. The waveform is then time-shifted by <span class="math notranslate nohighlight">\(t_\mathrm{shift}\)</span>,
+so it begins at a near-zero value at zero time, such as 1% of its peak
+amplitude.</p>
+<p>This waveform is useful for modeling transient switching signals in practical
+circuits, such as digital logic circuits, pulse generators, or Time-Domain
+Reflectometry (TDR). It avoids the potential simulation artifacts of the
+2-timestep Heaviside step function, such as the unrealistic excitation of
+high-order E&amp;M wave modes.</p>
+<p>It’s originally proposed and implemented by Ted Yapo. The code has been rewritten
+for clarity. For technical details, see <a class="footnote-reference brackets" href="#id7" id="id6">1</a>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Using circuit analysis tools such as <code class="docutils literal notranslate"><span class="pre">scikit-rf</span></code>, it’s possible to
+calculate the equivalent TDR responses based on the frequency response
+(S-parameters) obtained in an existing simulation (with a conventional
+Gaussian pulse), see <a class="reference internal" href="../python/openEMS/Tutorials/Parallel_Plate_Capacitor_Waveguide.html#skrf-tdr"><span class="std std-ref">Time Domain Reflectometry</span></a>.  This approach is recommended for new
+users, as it fits into the existing RF/microwave circuit design workflow,
+and thus easier.</p>
+<p>A custom excitation is not required, it’s reserved for advanced
+use cases. For example, it allows running a native TDR analysis with the DC
+term, which may improve model quality. It also allows one to study
+early reflections without completing a full simulation.</p>
+</div>
+<p>Matlab/Octave:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">This</span> <span class="n">technique</span> <span class="ow">is</span> <span class="n">originally</span> <span class="n">published</span> <span class="n">by</span><span class="p">:</span>
+<span class="o">%</span>
+<span class="o">%</span>   <span class="n">Ted</span> <span class="n">Yapo</span><span class="p">,</span> <span class="ow">in</span> <span class="s2">&quot;A Note on Gaussian Steps in openEMS.&quot;</span>
+<span class="o">%</span>   <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cdn</span><span class="o">.</span><span class="n">hackaday</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="mi">1656277086185568</span><span class="o">/</span><span class="n">gaussian_step_v11</span><span class="o">.</span><span class="n">pdf</span>
+<span class="o">%</span>
+<span class="o">%</span> <span class="n">Code</span> <span class="n">reimplemented</span> <span class="n">here</span> <span class="k">for</span> <span class="n">clarity</span><span class="o">.</span> <span class="n">Copying</span> <span class="ow">and</span> <span class="n">distribution</span> <span class="n">of</span> <span class="n">this</span> <span class="n">file</span><span class="p">,</span>
+<span class="o">%</span> <span class="k">with</span> <span class="ow">or</span> <span class="n">without</span> <span class="n">modification</span><span class="p">,</span> <span class="n">are</span> <span class="n">permitted</span> <span class="ow">in</span> <span class="nb">any</span> <span class="n">medium</span> <span class="n">without</span> <span class="n">royalty</span><span class="o">.</span>
+<span class="o">%</span> <span class="n">This</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">offered</span> <span class="k">as</span><span class="o">-</span><span class="ow">is</span><span class="p">,</span> <span class="n">without</span> <span class="nb">any</span> <span class="n">warranty</span><span class="o">.</span>
+<span class="n">function</span> <span class="p">[</span><span class="n">excitation_str</span><span class="p">,</span> <span class="n">f_max</span><span class="p">]</span> <span class="o">=</span> <span class="n">CalcGaussianStep</span><span class="p">(</span><span class="n">tr_10_90</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">cutoff_db</span><span class="p">)</span>
+    <span class="o">%</span> <span class="n">Calculate</span> <span class="n">parameter</span> <span class="n">sigma</span> <span class="n">to</span> <span class="n">get</span> <span class="n">a</span> <span class="n">Gaussian</span> <span class="n">step</span> <span class="k">with</span> <span class="n">wanted</span> <span class="n">rise</span> <span class="n">time</span><span class="o">.</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">tr_10_90</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">erfinv</span><span class="p">(</span><span class="mf">0.8</span><span class="p">));</span>
+
+    <span class="o">%</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">frequency</span> <span class="n">content</span> <span class="n">at</span> <span class="n">cutoff</span>
+    <span class="n">f_max</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">cutoff_db</span> <span class="o">/</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">));</span>
+
+    <span class="o">%</span> <span class="n">The</span> <span class="n">raw</span> <span class="n">Gaussian</span> <span class="n">step</span> <span class="n">function</span> <span class="n">has</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="n">at</span> <span class="n">the</span> <span class="n">origin</span><span class="p">,</span>
+    <span class="o">%</span> <span class="n">we</span> <span class="n">need</span> <span class="n">to</span> <span class="n">time</span><span class="o">-</span><span class="n">shift</span> <span class="n">it</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">wanted</span> <span class="n">tolerance</span>
+    <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="n">at</span> <span class="n">the</span> <span class="n">origin</span><span class="p">)</span><span class="o">.</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">erfinv</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tolerance</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="n">struct</span><span class="p">(</span>
+        <span class="o">%</span> <span class="n">erf</span><span class="p">()</span> <span class="n">approximation</span> <span class="mf">7.1.25</span> <span class="kn">from</span> <span class="nn">Abramowitz</span> <span class="ow">and</span> <span class="n">Stegun</span><span class="o">.</span> <span class="n">The</span> <span class="n">original</span>
+        <span class="o">%</span> <span class="n">helper</span> <span class="n">function</span> <span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="n">renamed</span> <span class="n">to</span> <span class="n">b</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">since</span> <span class="n">t</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">by</span> <span class="n">openEMS</span>
+        <span class="o">%</span> <span class="k">as</span> <span class="n">the</span> <span class="n">time</span> <span class="n">variable</span><span class="o">.</span>
+        <span class="o">%</span>
+        <span class="o">%</span> <span class="n">This</span> <span class="n">approximation</span> <span class="ow">is</span> <span class="n">only</span> <span class="n">valid</span> <span class="k">for</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">we</span> <span class="n">use</span> <span class="n">the</span> <span class="n">fparser</span><span class="s1">&#39;s</span>
+        <span class="o">%</span> <span class="s2">&quot;if()&quot;</span> <span class="n">function</span> <span class="n">to</span> <span class="n">evaluate</span> <span class="n">erf</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="ow">and</span> <span class="o">-</span><span class="n">erf</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">non</span><span class="o">-</span><span class="n">negative</span>
+        <span class="o">%</span> <span class="ow">and</span> <span class="n">negative</span> <span class="n">inputs</span><span class="o">.</span>
+        <span class="o">%</span> <span class="n">See</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">personal</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">ubc</span><span class="o">.</span><span class="n">ca</span><span class="o">/~</span><span class="n">cbm</span><span class="o">/</span><span class="n">aands</span><span class="o">/</span><span class="n">page_299</span><span class="o">.</span><span class="n">htm</span>
+        <span class="s2">&quot;erf_t&quot;</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s2">&quot;if(x &gt;= 0,&quot;</span> <span class="o">...</span>
+                <span class="s2">&quot; (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2)),&quot;</span> <span class="o">...</span>
+                <span class="s2">&quot; -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;b_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 / (1 + p * t))&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;b_neg&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 / (1 + p * -t))&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p&quot;</span><span class="p">,</span>     <span class="s2">&quot;0.47047&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a1&quot;</span><span class="p">,</span>    <span class="s2">&quot;0.3480242&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a2&quot;</span><span class="p">,</span>    <span class="s2">&quot;-0.0958798&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a3&quot;</span><span class="p">,</span>    <span class="s2">&quot;0.7478556&quot;</span><span class="p">,</span>
+
+        <span class="o">%</span> <span class="nb">input</span> <span class="n">value</span> <span class="n">t</span> <span class="n">to</span> <span class="n">erf_t</span>
+        <span class="s2">&quot;t&quot;</span><span class="p">,</span>     <span class="s2">&quot;((t - shift) / sigma)&quot;</span><span class="p">,</span>
+
+        <span class="o">%</span> <span class="n">calculate</span> <span class="n">parameter</span> <span class="n">sigma</span> <span class="n">to</span> <span class="n">get</span> <span class="n">a</span> <span class="n">Gaussian</span> <span class="n">step</span> <span class="k">with</span> <span class="n">wanted</span> <span class="n">rise</span> <span class="n">time</span>
+        <span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">sigma</span><span class="p">),</span>
+
+        <span class="o">%</span> <span class="n">shift</span> <span class="n">the</span> <span class="n">center</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Gaussian</span> <span class="n">step</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">origin</span>
+        <span class="s2">&quot;shift&quot;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="n">excitation_str</span> <span class="o">=</span> <span class="s2">&quot;0.5 + 0.5 * (erf_t)&quot;</span><span class="p">;</span>
+
+    <span class="o">%</span> <span class="n">Generate</span> <span class="n">a</span> <span class="n">string</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Gaussian</span> <span class="n">error</span> <span class="n">function</span>
+    <span class="o">%</span> <span class="k">with</span> <span class="nb">all</span> <span class="n">variables</span> <span class="n">substituted</span><span class="o">.</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">fieldnames</span><span class="p">(</span><span class="n">variables</span><span class="p">);</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">numel</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">excitation_str</span> <span class="o">=</span> <span class="n">strrep</span><span class="p">(</span><span class="n">excitation_str</span><span class="p">,</span> <span class="n">fields</span><span class="p">{</span><span class="n">i</span><span class="p">},</span> <span class="n">variables</span><span class="o">.</span><span class="p">(</span><span class="n">fields</span><span class="p">{</span><span class="n">i</span><span class="p">}));</span>
+    <span class="n">end</span>
+<span class="n">end</span>
+
+<span class="o">%</span> <span class="n">Limit</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">simulation</span> <span class="n">to</span> <span class="mi">10000</span> <span class="n">timesteps</span><span class="p">,</span>
+<span class="o">%</span> <span class="n">otherwise</span> <span class="n">the</span> <span class="n">excitation</span> <span class="n">waveform</span> <span class="n">would</span> <span class="n">exhaust</span> <span class="n">system</span> <span class="n">memory</span><span class="o">.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">InitFDTD</span><span class="p">(</span><span class="s1">&#39;NrTS&#39;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">Step</span> <span class="n">excitation</span> <span class="k">with</span> <span class="mi">1</span> <span class="n">nanosecond</span> <span class="mi">10</span><span class="o">%-</span><span class="mi">90</span><span class="o">%</span> <span class="n">risetime</span><span class="o">.</span>
+<span class="o">%</span> <span class="n">at</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="ow">is</span> <span class="n">at</span> <span class="mi">1</span><span class="o">%</span> <span class="n">of</span> <span class="n">the</span> <span class="n">final</span> <span class="n">value</span><span class="p">,</span>
+<span class="o">%</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">frequency</span> <span class="n">content</span> <span class="p">(</span><span class="mi">20</span> <span class="n">dB</span> <span class="n">down</span><span class="p">)</span>
+<span class="p">[</span><span class="n">f_str</span><span class="p">,</span> <span class="n">f_max</span><span class="p">]</span> <span class="o">=</span> <span class="n">CalcGaussianStep</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetCustomExcite</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="n">f_str</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">If</span> <span class="n">visualization</span> <span class="n">of</span> <span class="n">field</span> <span class="n">dumps</span> <span class="ow">is</span> <span class="n">needed</span><span class="p">,</span> <span class="n">use</span> <span class="n">a</span> <span class="n">much</span> <span class="n">higher</span>
+<span class="o">%</span> <span class="n">cutoff</span> <span class="n">frequency</span> <span class="n">to</span> <span class="n">force</span> <span class="n">openEMS</span> <span class="n">to</span> <span class="n">dump</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">more</span> <span class="n">often</span><span class="o">.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">SetOverSampling</span><span class="p">(</span><span class="n">fdtd</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">erfinv</span>
+
+
+<span class="c1"># This technique is originally published by:</span>
+<span class="c1">#</span>
+<span class="c1">#   Ted Yapo, in &quot;A Note on Gaussian Steps in openEMS.&quot;</span>
+<span class="c1">#   https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf</span>
+<span class="c1">#</span>
+<span class="c1"># Code reimplemented here for clarity. Copying and distribution of this file,</span>
+<span class="c1"># with or without modification, are permitted in any medium without royalty.</span>
+<span class="c1"># This file is offered as-is, without any warranty.</span>
+<span class="k">def</span> <span class="nf">CalcGaussianStep</span><span class="p">(</span><span class="n">tr_10_90</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">cutoff_db</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="c1"># Calculate parameter sigma to get a Gaussian step with wanted rise time.</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">tr_10_90</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">erfinv</span><span class="p">(</span><span class="mf">0.8</span><span class="p">))</span>
+
+    <span class="c1"># calculate the maximum frequency content at cutoff</span>
+    <span class="n">f_max</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">cutoff_db</span> <span class="o">/</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># The raw Gaussian step function has y = 0.5 at the origin,</span>
+    <span class="c1"># we need to time-shift it based on the wanted tolerance</span>
+    <span class="c1"># (e.g. y = 0.01 at the origin).</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">erfinv</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tolerance</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># erf() approximation 7.1.25 from Abramowitz and Stegun. The original</span>
+        <span class="c1"># helper function t(x) is renamed to b(x), since t is used by openEMS</span>
+        <span class="c1"># as the time variable.</span>
+        <span class="c1">#</span>
+        <span class="c1"># This approximation is only valid for t &gt;= 0, we use the fparser&#39;s</span>
+        <span class="c1"># &quot;if()&quot; function to evaluate erf(t) and -erf(-t) for non-negative</span>
+        <span class="c1"># and negative inputs.</span>
+        <span class="c1"># See: https://personal.math.ubc.ca/~cbm/aands/page_299.htm</span>
+        <span class="s2">&quot;erf_t&quot;</span><span class="p">:</span> <span class="s2">&quot;if(t &gt;= 0,&quot;</span>
+                 <span class="s2">&quot; (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2)),&quot;</span>
+                 <span class="s2">&quot; -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;b_pos&quot;</span><span class="p">:</span> <span class="s2">&quot;(1 / (1 + p * t))&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;b_neg&quot;</span><span class="p">:</span> <span class="s2">&quot;(1 / (1 + p * -t))&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p&quot;</span><span class="p">:</span>     <span class="s2">&quot;0.47047&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a1&quot;</span><span class="p">:</span>    <span class="s2">&quot;0.3480242&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a2&quot;</span><span class="p">:</span>    <span class="s2">&quot;-0.0958798&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a3&quot;</span><span class="p">:</span>    <span class="s2">&quot;0.7478556&quot;</span><span class="p">,</span>
+
+        <span class="c1"># input value t to erf_t</span>
+        <span class="s2">&quot;t&quot;</span><span class="p">:</span>     <span class="s2">&quot;((t - shift) / sigma)&quot;</span><span class="p">,</span>
+
+        <span class="c1"># calculate parameter sigma to get a Gaussian step with wanted rise time</span>
+        <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span>
+
+        <span class="c1"># shift the center of the Gaussian step from the origin</span>
+        <span class="s2">&quot;shift&quot;</span><span class="p">:</span> <span class="n">shift</span>
+    <span class="p">}</span>
+
+    <span class="n">excitation_str</span> <span class="o">=</span> <span class="s2">&quot;0.5 + 0.5 * (erf_t)&quot;</span>
+
+    <span class="c1"># Generate a string representation of the Gaussian error function</span>
+    <span class="c1"># with all variables substituted.</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">excitation_str</span> <span class="o">=</span> <span class="n">excitation_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">variables</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="c1"># API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.</span>
+    <span class="n">excitation_str</span> <span class="o">=</span> <span class="n">excitation_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">excitation_str</span><span class="p">,</span> <span class="n">f_max</span>
+
+
+<span class="c1"># Limit the maximum simulation to 10000 timesteps,</span>
+<span class="c1"># otherwise the excitation waveform would exhaust system memory.</span>
+<span class="n">fdtd</span> <span class="o">=</span> <span class="n">openEMS</span><span class="o">.</span><span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="c1"># Step excitation with 1 nanosecond 10%-90% risetime.</span>
+<span class="c1"># By default, at t = 0, e[t] is at 1% of the final value.</span>
+<span class="c1"># By default, calculate the maximum frequency content (20 dB down)</span>
+<span class="n">f_str</span><span class="p">,</span> <span class="n">f_max</span> <span class="o">=</span> <span class="n">CalcGaussianStep</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">)</span>
+
+<span class="c1"># If visualization of field dumps is needed, use a much higher</span>
+<span class="c1"># cutoff frequency to force openEMS to dump the fields more often.</span>
+<span class="n">fdtd</span><span class="o">.</span><span class="n">SetOverSampling</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="bibliography">
+<h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline"></a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dd><p>fparser, <a class="reference external" href="http://warp.povusers.org/FunctionParser/fparser.html#literals">fparser project documentation</a>.</p>
+</dd>
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p>Ted Yapo, <a class="reference external" href="https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf">A Note on Gaussian Steps in openEMS.</a></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="excitations.html" class="btn btn-neutral float-left" title="Excitation Sources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dispersive.html" class="btn btn-neutral float-right" title="Dispersive Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

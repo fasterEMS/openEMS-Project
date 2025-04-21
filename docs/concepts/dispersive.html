@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dispersive Materials &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorials" href="../python/openEMS/Tutorials/index.html" />
+    <link rel="prev" title="Signal Waveforms" href="signals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dispersive Materials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#complex-permittivity-and-permeability">Complex Permittivity and Permeability</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#debye-model">Debye Model</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#calculation">Calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#drude-model">Drude Model</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Usage</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id3">Calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lorentz-model">Lorentz Model</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id4">Usage</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id5">Calculation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#math-notes">Math Notes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Debye Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Drude Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Lorentz Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#relation-to-other-formulations">Relation to Other Formulations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#first-order-lorentz-model">First-Order Lorentz Model</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#first-order-drude-model">First-Order Drude Model</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#first-order-drude-model-w-o-asymptotic-and-conductivity-terms">First-Order Drude Model w/o Asymptotic and Conductivity Terms</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#oscillator-strength-term-definitions">Oscillator Strength Term Definitions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#relaxation-time-definitions">Relaxation Time Definitions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#asymptotic-term-definitions">Asymptotic Term Definitions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#sign-conventions">Sign Conventions</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#example-taflove-s-drude-model-formulation">Example: Taflove’s Drude Model Formulation</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#example-fox-and-taflove-s-lorentz-model-formulation">Example: Fox and Taflove’s Lorentz Model Formulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bibliography">Bibliography</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Concepts</a> &raquo;</li>
+      <li>Dispersive Materials</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/dispersive.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dispersive-materials">
+<span id="id1"></span><h1>Dispersive Materials<a class="headerlink" href="#dispersive-materials" title="Permalink to this headline"></a></h1>
+<p>Nearly all real-world materials exhibit a phenomenon known as dispersion. That
+is, the speed of light in the medium depends on the EM wave’s frequency. In
+optics, it manifests as a frequency-dependent refractive index, causing the
+separation of sunlight when it passes through a prism. In RF/microwave engineering,
+it appears as a frequency-dependent permittivity and permeability, often causing
+unexpected changes in a filter’s resonant frequency, or a transmission
+line’s characteristic impedance. In high-speed digital data lines,
+dispersion may cause the smearing of signal edges and the
+broadening of signal pulses. In metamaterial research, one can even deliberately
+introduce dispersion to control electromagnetic wave propagation in unusual ways.</p>
+<p>As a result, while the basic material model with constant permittivity and
+permeability is sufficient if dispersion is negligible, more demanding
+simulations call for dispersion models for accurately calculating a material’s
+wideband response.
+In fact, strictly speaking, neglecting this frequency dependence violates
+fundamental physical principles. The assumption of constant material properties
+implies instantaneous polarization or magnetization in a material, thus it
+violates the causality requirement as formalized in the Kramers-Kronig relations.</p>
+<p>In openEMS, three dispersive material models known as Debye, Drude and Lorentz
+materials are used to simulate dispersion.
+These models were originally proposed by solid-state physicists
+in the early 20th century to explain the microscopic origins of
+electrical
+and optical properties of matter.</p>
+<p>Due to their compatibility with Maxwell’s
+equations, FDTD borrows these models for simulating dispersive materials.
+Because these are analytical models, they do not directly take inputs
+in the form of a raw frequency-dependent curve or lookup table of material
+properties. Instead, a material’s permittivity and permeability must
+be parameterized using terms such as <em>plasma frequency</em>, <em>plasma relaxation time</em>,
+and <em>Lorentz pole frequency</em>.</p>
+<p>Although these solid-state physics parameters may appear unrelated to practical
+RF/microwave engineering, in FDTD, they mainly act as calculation tools rather
+than providing physical interpretations.
+The required parameters are obtained by numerically fitting the model to
+measured material response curves for the purpose of simulations. Both first-order
+and higher-order models are supported, using one or more sets of parameters.
+There are many
+“degrees of freedom” in the fitting process. If a first-order fit fails to
+produce the desired curves, more parameters can be added until one obtains a
+satisfactory fit.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Physics vs. Fitting</strong>. FDTD only borrows these solid-state physics models as
+calculation tools. The fitted parameters are usually purely numerical (i.e.
+they fit measured
+data), or phenomenological at best (i.e. they match experimental
+outcomes without explaining the underlying mechanism). As such, they’re generally
+not physically meaningful. As von Neumann famously joked,
+“With four parameters I can fit an elephant,
+and with five I can make him wiggle his trunk.”</p>
+<p><strong>Python</strong>. The functions described below are not ported to Python yet.</p>
+</div>
+<section id="complex-permittivity-and-permeability">
+<h2>Complex Permittivity and Permeability<a class="headerlink" href="#complex-permittivity-and-permeability" title="Permalink to this headline"></a></h2>
+<p>In circuit design, the permittivity of a dielectric material or the
+permeability of a magnetic material is often given as a real-valued
+constant.
+However, this is an incomplete definition that is only suitable for
+DC or narrowband applications. For wideband EM simulation with
+dispersion and loss, one needs the full definition.</p>
+<p>The complex permittivity and permeability are functions of frequency:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega) &amp;= \epsilon'(\omega) + j\epsilon''(\omega) \\
+\mu(\omega) &amp;= \mu'(\omega) + j\mu''(\omega)
+\end{align}\end{split}\]</div>
+<p>In dielectric materials, the complex permittivity function describes
+the polarization and associated energy loss.
+In magnetic materials, the complex permeability describes the magnetization
+and associated energy loss.</p>
+<p>The effects of both dielectric and conductive (ohmic) losses are included
+in the imaginary parts in the complex representation. Thus, the electric
+and magnetic loss tangents can be defined as:</p>
+<div class="math notranslate nohighlight">
+\[\tan{\delta_\epsilon} = \frac{\epsilon''}{\epsilon'},\space\space \tan{\delta_\mu} = \frac{\mu''}{\mu'}\]</div>
+<section id="debye-model">
+<h3>Debye Model<a class="headerlink" href="#debye-model" title="Permalink to this headline"></a></h3>
+<section id="usage">
+<h4>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/AddDebyeMaterial.html#AddDebyeMaterial" title="AddDebyeMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddDebyeMaterial()</span></code></a> creates a material governed by the Debye model of dielectric
+relaxation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddDebyeMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The model is defined by the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eps_r</span></code>: Relative permittivity when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EpsilonDelta_n</span></code>: n-th delta dielectric permittivity, a fitted phenomenological
+term that represents relaxation strength (<span class="math notranslate nohighlight">\(\Delta \epsilon_r\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_n</span></code>: n-th relaxation time, inverse of the damping factor,
+a dissipative term
+(<span class="math notranslate nohighlight">\(\tau_\mathrm{relax}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Kappa</span></code>: Electric conductivity, an ohmic loss term (<span class="math notranslate nohighlight">\(\kappa\)</span>).
+Not to be confused with electric permittivity, sometimes also denoted by the
+same letter.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">Kappa</span></code> (<span class="math notranslate nohighlight">\(\kappa\)</span>) always stands for electric conductivity in openEMS.
+It’s not to be confused with electric permittivity <span class="math notranslate nohighlight">\(\epsilon\)</span>, which is
+sometimes also denoted as <span class="math notranslate nohighlight">\(\kappa\)</span> in the literature (e.g. high-κ
+dielectric). This convention is never used in openEMS, its use in simulation
+code is strongly discouraged.</p>
+</div>
+<p>For the first-order model, use one set of parameters (i.e. <code class="docutils literal notranslate"><span class="pre">EpsilonDelta_1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_1</span></code>). For higher-order modeling, add more parameters with
+increasing indices in their suffixes <code class="docutils literal notranslate"><span class="pre">n</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">EpsilonDelta_2</span></code>, <code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_2</span></code>,
+…)</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddDebyeMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;debye_example&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;debye_example&#39;</span><span class="p">,</span> <span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;EpsilonDelta_1&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;EpsilonRelaxTime_1&#39;</span><span class="p">,</span><span class="mf">1e-9</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">create</span> <span class="n">geometry</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;debye_example&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="calculation">
+<h4>Calculation<a class="headerlink" href="#calculation" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/CalcDebyeMaterial.html#CalcDebyeMaterial" title="CalcDebyeMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">CalcDebyeMaterial()</span></code></a> is a helper function to calculate the numerical values of
+permittivity at specified frequency points in an array. It’s useful for fitting
+material parameters for simulation preparation as part of a numerical optimization
+routine.</p>
+<p>Definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eps_debye</span> <span class="o">=</span> <span class="n">CalcDebyeMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">eps_r</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">eps_Delta</span><span class="p">,</span> <span class="n">t_relax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code>: (vector) Frequency points of interest.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eps_r</span></code>: Relative permittivity when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kappa</span></code>: Electric conductivity, an ohmic loss term
+(<span class="math notranslate nohighlight">\(\kappa\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eps_Delta</span></code>: (vector) Delta relative permittivity, a fitted phenomenological
+term that represents oscillator strength (<span class="math notranslate nohighlight">\(\Delta \epsilon_r\)</span>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t_relax</span></code>: (vector) Relaxation time, the inverse of damping factor, a dissipative term
+(<span class="math notranslate nohighlight">\(\tau_\mathrm{relax}\)</span>).</p></li>
+</ul>
+</section>
+</section>
+<section id="drude-model">
+<h3>Drude Model<a class="headerlink" href="#drude-model" title="Permalink to this headline"></a></h3>
+<section id="id2">
+<h4>Usage<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/AddLorentzMaterial.html#AddLorentzMaterial" title="AddLorentzMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddLorentzMaterial()</span></code></a> creates a material governed by either the Drude
+model or the Lorentz model. The Drude model is obtained as a special case
+of Lorentz when relevant parameters are omitted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLorentzMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For dielectric materials, this model is defined by the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Epsilon</span></code>: Relative permittivity when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EpsilonPlasmaFrequency_n</span></code>: n-th electric plasma frequency in hertz
+(<span class="math notranslate nohighlight">\(f_{p\epsilon}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_n</span></code>: n-th electric plasma relaxation time
+(<span class="math notranslate nohighlight">\(\tau_\epsilon\)</span>), a dissipative term.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Kappa</span></code>: Electric conductivity (<span class="math notranslate nohighlight">\(\kappa\)</span>), an ohmic loss term, optional
+but recommended to improve curve fitting.
+Not to be confused with electric permittivity, sometimes also denoted by the
+same letter.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">Kappa</span></code> (<span class="math notranslate nohighlight">\(\kappa\)</span>) always stands for electric conductivity in openEMS.
+It’s not to be confused with electric permittivity <span class="math notranslate nohighlight">\(\epsilon\)</span>, which is
+sometimes also denoted as <span class="math notranslate nohighlight">\(\kappa\)</span> in the literature (e.g. high-κ
+dielectric). This convention is never used in openEMS, its use in simulation
+code is strongly discouraged.</p>
+</div>
+<p>For magnetic materials, this model is defined by the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Mue</span></code>: Relative permeability when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\mu_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MuePlasmaFrequency_n</span></code>: n-th magnetic plasma frequency in hertz
+(<span class="math notranslate nohighlight">\(f_{p\mu}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MueRelaxTime_n</span></code>: n-th magnetic plasma relaxation time (<span class="math notranslate nohighlight">\(\tau_\mu\)</span>),
+a dissipative term.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Sigma</span></code>: Magnetic conductivity (<span class="math notranslate nohighlight">\(\sigma\)</span>), an ohmic-like loss term.
+This is a non-physical property due to a hypothetical magnetic conduction
+current, optional but useful to improve fitting by introducing artificial
+losses.</p></li>
+</ul>
+<p>Both the dielectric and magnetic parameters can be used simultaneously. If
+the material is not magnetic, magnetic parameters can be omitted.</p>
+<p>The terms <code class="docutils literal notranslate"><span class="pre">Epsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">Mue</span></code>, <code class="docutils literal notranslate"><span class="pre">Kappa</span></code> and <code class="docutils literal notranslate"><span class="pre">Sigma</span></code> are the effects of the
+basic constant-property material model, and are not implemented in
+the Drude/Lorentz model per se. But they should be considered in the curve
+fitting process.</p>
+<p>For the first-order model, use one set of parameters (i.e. <code class="docutils literal notranslate"><span class="pre">EpsilonPlasmaFrequency</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime</span></code>) without suffix <code class="docutils literal notranslate"><span class="pre">_n</span></code>. For higher-order modeling, add more parameters
+with increasing indices in their suffixes <cite>n</cite> (e.g.  <code class="docutils literal notranslate"><span class="pre">EpsilonPlasmaFrequency_1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_1</span></code>, <code class="docutils literal notranslate"><span class="pre">EpsilonPlasmaFrequency_2</span></code>, <code class="docutils literal notranslate"><span class="pre">EpsilonRelaxTime_2</span></code>, …)</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLorentzMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;drude_example&#39;</span><span class="p">);</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;drude_example&#39;</span><span class="p">,</span> <span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;EpsilonPlasmaFrequency&#39;</span><span class="p">,</span> <span class="mf">5e9</span><span class="p">,</span> <span class="s1">&#39;EpsilonRelaxTime&#39;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">optional</span><span class="p">,</span> <span class="k">for</span> <span class="n">magnetic</span> <span class="n">materials</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;drude_example&#39;</span><span class="p">,</span> <span class="s1">&#39;Mue&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;MuePlasmaFrequency&#39;</span><span class="p">,</span> <span class="mf">5e9</span><span class="p">,</span> <span class="s1">&#39;MueRelaxTime&#39;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">create</span> <span class="n">geometry</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddBox</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;drude_example&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Calculation<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/CalcDrudeMaterial.html#CalcDrudeMaterial" title="CalcDrudeMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">CalcDrudeMaterial()</span></code></a> is a helper function to calculate the numerical values of
+permittivity at specified frequency points in an array. It’s useful for fitting
+material parameters for simulation preparation as part of a numerical optimization
+routine.</p>
+<p>Definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eps_drude</span> <span class="o">=</span> <span class="n">CalcDrudeMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">eps_r</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">plasmaFreq</span><span class="p">,</span> <span class="n">t_relax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code>: (vector) Frequency points of interest.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eps_r</span></code>: Relative permittivity when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kappa</span></code>: Electric conductivity, an ohmic loss term
+(<span class="math notranslate nohighlight">\(\kappa\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plasmaFreq</span></code>: (vector) Plasma frequencies in hertz
+(<span class="math notranslate nohighlight">\(f_p\)</span>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t_relax</span></code>: (vector) Relaxation time, the inverse of damping factor, a dissipative term
+(<span class="math notranslate nohighlight">\(\tau_\mathrm{relax}\)</span>).</p></li>
+</ul>
+<p>Since the Drude model can fit both dielectric and magnetic materials with the same formula,
+this function can be used to calculate permeability as well by symmetry - reinterpreting all
+inputs as permeability parameters.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">silver</span> <span class="p">(</span><span class="n">AG</span><span class="p">)</span> <span class="n">at</span> <span class="n">optical</span> <span class="n">frequencies</span> <span class="p">(</span><span class="n">Drude</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">300e12</span><span class="p">,</span> <span class="mf">1100e12</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="n">eps_model</span> <span class="o">=</span> <span class="n">CalcDrudeMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.942</span><span class="p">,</span> <span class="mf">7.97e3</span><span class="p">,</span> <span class="mf">7e15</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mf">2.3e13</span><span class="p">);</span>
+
+<span class="n">figure</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">real</span><span class="p">(</span><span class="n">eps_model</span><span class="p">))</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">grid</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">imag</span><span class="p">(</span><span class="n">eps_model</span><span class="p">),</span><span class="s1">&#39;r--&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lorentz-model">
+<h3>Lorentz Model<a class="headerlink" href="#lorentz-model" title="Permalink to this headline"></a></h3>
+<section id="id4">
+<h4>Usage<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/AddLorentzMaterial.html#AddLorentzMaterial" title="AddLorentzMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddLorentzMaterial()</span></code></a> creates a material governed by the Lorentz
+model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLorentzMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Lorentz model is defined by all Drude parameters as previously
+described, and two additional Lorentz parameters.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f_eps_Lor_Pole_n</span></code>:  Electric Lorentz pole frequency in hertz
+(<span class="math notranslate nohighlight">\(f_{\mathrm{Lor}\epsilon}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f_mue_Lor_Pole_n</span></code>:  Magnetic Lorentz pole frequency in hertz
+(<span class="math notranslate nohighlight">\(f_{\mathrm{Lor}\mu}\)</span>).</p></li>
+</ul>
+<p>If the material is non-magnetic, <code class="docutils literal notranslate"><span class="pre">f_mue_Lor_Pole_n</span></code> is optional.</p>
+<p>For the first-order model, use one set of parameters (i.e. <code class="docutils literal notranslate"><span class="pre">f_eps_Lor_Pole</span></code>)
+without suffix <code class="docutils literal notranslate"><span class="pre">_n</span></code>. For higher-order modeling, add more parameters with increasing
+indices in their suffixes <cite>n</cite> (e.g. <code class="docutils literal notranslate"><span class="pre">f_mue_Lor_Pole_1</span></code>, <code class="docutils literal notranslate"><span class="pre">f_mue_Lor_Pole_2</span></code>, …)</p>
+</section>
+<section id="id5">
+<h4>Calculation<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h4>
+<p><a class="reference internal" href="../octave/autogenerated/CSXCAD/CalcLorentzMaterial.html#CalcLorentzMaterial" title="CalcLorentzMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">CalcLorentzMaterial()</span></code></a> is a helper function to calculate the numerical values of
+permittivity at specified frequency points in an array. It’s useful for fitting
+material parameters for simulation preparation as part of a numerical optimization
+routine.</p>
+<p>Definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eps_lorentz</span> <span class="o">=</span> <span class="n">CalcLorentzMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">eps_r</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">plasmaFreq</span><span class="p">,</span> <span class="n">LorPoleFreq</span><span class="p">,</span> <span class="n">t_relax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code>: (vector) Frequency points of interest.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eps_r</span></code>: Relative permittivity when frequency approaches infinity
+(<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kappa</span></code>: Electric conductivity, an ohmic loss term
+(<span class="math notranslate nohighlight">\(\kappa\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plasmaFreq</span></code>: (vector) Plasma frequencies in hertz
+(<span class="math notranslate nohighlight">\(f_p\)</span>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LorPoleFreq</span></code>: (vector) Lorentz pole frequencies in hertz
+(<span class="math notranslate nohighlight">\(f_{\mathrm{Lor}\epsilon}\)</span>). If zeroed, Lorentz model reduces to Drude model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t_relax</span></code>: (vector) Relaxation time, the inverse of damping factor, a dissipative term
+(<span class="math notranslate nohighlight">\(\tau_\mathrm{relax}\)</span>).</p></li>
+</ul>
+<p>Since the Lorentz model can fit both dielectric and magnetic materials with the same formula,
+it can be used to calculate permeability as well by reinterpreting all inputs as permeability
+parameters.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">silver</span> <span class="p">(</span><span class="n">AG</span><span class="p">)</span> <span class="n">at</span> <span class="n">optical</span> <span class="n">frequencies</span> <span class="p">(</span><span class="n">Drude</span><span class="o">+</span><span class="n">Lorentz</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">300e12</span><span class="p">,</span> <span class="mf">1100e12</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="n">eps_model</span> <span class="o">=</span> <span class="n">CalcLorentzMaterial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.138</span><span class="p">,</span> <span class="mf">4.04e3</span><span class="p">,</span> <span class="p">[</span><span class="mf">13e15</span> <span class="mf">9.61e15</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span> <span class="mf">7.5e15</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">pi</span><span class="p">,[</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.59e13</span> <span class="mi">1</span><span class="o">/</span><span class="mf">3e14</span><span class="p">]);</span>
+
+<span class="n">figure</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">real</span><span class="p">(</span><span class="n">eps_model</span><span class="p">))</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">grid</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">imag</span><span class="p">(</span><span class="n">eps_model</span><span class="p">),</span><span class="s1">&#39;r--&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="math-notes">
+<h2>Math Notes<a class="headerlink" href="#math-notes" title="Permalink to this headline"></a></h2>
+<section id="id6">
+<h3>Debye Model<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
+<p>The Debye model of dielectric relaxation (not to be confused with
+Debye model of specific heat) is defined by the following equation
+( <a class="footnote-reference brackets" href="#id24" id="id7">1</a>, page 222, equation 37; <a class="footnote-reference brackets" href="#id26" id="id8">3</a>, page 354, equation 9.3; <a class="footnote-reference brackets" href="#id27" id="id9">4</a>,
+page 294, equation 10.27):</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_0 \left[ \epsilon_{r,\infty} +
+                \sum^N_{n=1}{\frac{\Delta \epsilon_{r}(n)}{1+ j \omega t_\mathrm{relax}(n)}} \right]
+                - j \frac{\kappa}{\omega}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is the index of the higher-order model term being evaluated.</p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> is the number of model terms in total.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span> is the angular frequency.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon(\omega)\)</span> is the material’s permittivity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_0\)</span> is the vacuum permittivity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span> is the material’s relative permittivity
+at <span class="math notranslate nohighlight">\(f \to \infty\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span> is the material’s electric conductivity.</p>
+<ul>
+<li><p>Note that electric conductivity <span class="math notranslate nohighlight">\(\kappa\)</span> is
+not to be confused with material permittivity, which is sometimes
+also denoted by <span class="math notranslate nohighlight">\(\kappa\)</span> in the literature.</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\Delta \epsilon_{r}(n)\)</span> is the n-th oscillator strength.</p></li>
+<li><p><span class="math notranslate nohighlight">\(t_\mathrm{relax}(n)\)</span> is the n-th relaxation time (inverse of
+the damping factor).</p></li>
+</ul>
+<p>This model is only implemented for dielectric materials, not magnetic
+materials.</p>
+</section>
+<section id="id10">
+<h3>Drude Model<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h3>
+<p>The Drude model of dielectric and magnetic materials is defined
+by the following equations ( <a class="footnote-reference brackets" href="#id24" id="id11">1</a>, page 220, equation 27, 28):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} &amp;\left[ 1 - \sum_{n=1}^{N}
+\frac{\omega^{2}_{p\epsilon}(n)}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}(n)}} \right]
+- j \frac{\kappa}{\omega} \\
+\mu(\omega) = \mu_0 \mu_{r,\infty} &amp;\left[ 1 - \sum_{n=1}^{N}
+\frac{\omega^{2}_{p\mu}(n)}{\omega^2 - j \omega \frac{1}{\tau_{\mu}(n)}} \right]
+- j \frac{\sigma}{\omega}
+\end{align}\end{split}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is the index of the higher-order model term being evaluated.</p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> is the number of model terms in total.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span> is the angular frequency.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega_\mathrm{p\epsilon}(n)\)</span> is
+the material’s n-th electric plasma frequency.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_\epsilon(n)\)</span> is the n-th
+electric relaxation time (inverse of the damping factor).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon(\omega)\)</span> is the material’s permittivity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_0\)</span> is the vacuum permittivity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span> is the material’s relative permittivity
+at <span class="math notranslate nohighlight">\(f \to \infty\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span> is the material’s electric conductivity.</p>
+<ul>
+<li><p>Note that electric conductivity <span class="math notranslate nohighlight">\(\kappa\)</span> is
+not to be confused with material permittivity, which is sometimes
+also denoted by <span class="math notranslate nohighlight">\(\kappa\)</span> in the literature.</p></li>
+</ul>
+</li>
+</ul>
+<p>Analogously, the Drude model of magnetic materials is defined by a
+substitution of variables.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\omega_\mathrm{p\mu}(n)\)</span> is
+the material’s n-th magnetic plasma frequency.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_\mu(n)\)</span> is the n-th magnetic relaxation time
+(inverse of the damping factor).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu(\omega)\)</span> is the material’s permeability.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_{r,\infty}\)</span> is the material’s relative
+permeability at <span class="math notranslate nohighlight">\(f \to \infty\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma\)</span> is the material’s magnetic conductivity. It’s a
+non-physical property due to a hypothetical magnetic current.
+In most formulations, <span class="math notranslate nohighlight">\(\sigma = 0\)</span>. In openEMS, this term
+is optional but useful to improve fitting by introducing
+artificial losses.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h3>Lorentz Model<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h3>
+<p>The Lorentz model of dielectric and magnetic materials is defined
+by the following equations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} &amp;\left[ 1 - \sum_{n=1}^{N}
+\frac{\omega^{2}_{p\epsilon}(n)}{\omega^2 -\omega^2_\mathrm{Lor\epsilon}(n) - j \omega \frac{1}{\tau_{\epsilon}(n)}} \right] -
+j \frac{\kappa}{\omega} \\
+\mu(\omega) = \mu_0 \mu_{r,\infty} &amp;\left[ 1 - \sum_{n=1}^{N}
+\frac{\omega^{2}_{p\mu}(n)}{\omega^2 -\omega^2_\mathrm{Lor\mu}(n) - j \omega \frac{1}{\tau_{\mu}(n)}} \right] -
+j \frac{\sigma}{\omega} \\
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_\mathrm{\mathrm{Lor}\epsilon}(n)\)</span> and
+<span class="math notranslate nohighlight">\(f_\mathrm{\mathrm{Lor}\mu}(n)\)</span> are the material’s
+n-th electric and magnetic Lorentz pole frequencies. Zeroing
+these terms reduces the Lorentz model to the Drude model.</p>
+<p>Other definitions are identical to the Drude model.</p>
+</section>
+<section id="relation-to-other-formulations">
+<h3>Relation to Other Formulations<a class="headerlink" href="#relation-to-other-formulations" title="Permalink to this headline"></a></h3>
+<p>The Drude/Lorentz formulation used by openEMS is not identical
+to the common formulations found in textbooks and the literature.
+In fact, many different variations are in use due to their flexibility.
+They can be formulated as first-order or higher-order models,
+with or without the conductivity term, with or
+without the asymptotic term, with different definitions of the
+asymptotic terms, and with different symbols and sign conventions.</p>
+<p>Thus, it’s necessary to clarify the relationship between openEMS’s
+formulation with other textbooks to understand how these differences
+arise.</p>
+<p>This section is not exhaustive due to the numerous possible
+combinations of the mentioned factors. However, after reading
+this section, readers will hopefully understand how to rewrite
+one formulation to another by simple algebra.</p>
+<section id="first-order-lorentz-model">
+<h4>First-Order Lorentz Model<a class="headerlink" href="#first-order-lorentz-model" title="Permalink to this headline"></a></h4>
+<p>When there’s only one term, these models reduces to their first-order form. For
+example, the first-order Lorentz model of dielectric materials is defined by:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
+\frac{\omega^{2}_{p\epsilon}}{\omega^2 - \omega^2_\mathrm{Lor\mu} - j \omega \frac{1}{\tau_{\epsilon}}} \right]
+- j \frac{\kappa}{\omega}\]</div>
+</section>
+<section id="first-order-drude-model">
+<h4>First-Order Drude Model<a class="headerlink" href="#first-order-drude-model" title="Permalink to this headline"></a></h4>
+<p>When the Lorentz pole frequency term <span class="math notranslate nohighlight">\(\omega^2_\mathrm{Lor\mu} = 0\)</span>,
+the Lorentz model reduces to the Drude model. For example, the first-order
+Drude model of dielectric materials is defined by:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
+\frac{\omega^{2}_{p\epsilon}}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}}} \right]
+- j \frac{\kappa}{\omega}\]</div>
+</section>
+<section id="first-order-drude-model-w-o-asymptotic-and-conductivity-terms">
+<h4>First-Order Drude Model w/o Asymptotic and Conductivity Terms<a class="headerlink" href="#first-order-drude-model-w-o-asymptotic-and-conductivity-terms" title="Permalink to this headline"></a></h4>
+<p>The openEMS’s Drude model contains a conductivity term <span class="math notranslate nohighlight">\(\kappa\)</span>.
+For non-conductive material, the first-order Drude model reduces to:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
+\frac{\omega^{2}_{p\epsilon}}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}}} \right]\]</div>
+<p>This formulation is consistent with <a class="footnote-reference brackets" href="#id26" id="id13">3</a> page 355, equation 9.9;
+<a class="footnote-reference brackets" href="#id27" id="id14">4</a> page 292, equation 10.17.</p>
+<p>At high frequencies, a material’s relative permittivity decreases, but
+never to exactly 1. This residue effect is captured by the asymptotic term
+<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>. Without the asymptotic term, the Drude model
+reduces to:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon(\omega) = \epsilon_0 \left[ 1 -
+\frac{\omega^{2}_{p\epsilon}}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}}} \right]\]</div>
+</section>
+<section id="oscillator-strength-term-definitions">
+<h4>Oscillator Strength Term Definitions<a class="headerlink" href="#oscillator-strength-term-definitions" title="Permalink to this headline"></a></h4>
+<p>There’s a common parameter <span class="math notranslate nohighlight">\(\Delta \epsilon_{r}\)</span> that appears
+in all three models.
+It’s understood as the different between the electrostatic
+relative permittivity and the infinite-frequency permittivity ( <a class="footnote-reference brackets" href="#id26" id="id15">3</a>,
+page 254, equation 9.2).</p>
+<div class="math notranslate nohighlight">
+\[\Delta \epsilon_{r} = \epsilon_{r,\mathrm{static}} - \epsilon_{r,\infty}\]</div>
+<p>In solid-state physics, it has the physical meaning that ( <a class="footnote-reference brackets" href="#id28" id="id16">5</a>,
+page 32, equation 2.19):</p>
+<div class="math notranslate nohighlight">
+\[\Delta \epsilon_{r} = \frac{N e^2}{\epsilon_0 m_0 \omega_0^2}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N\)</span> is the numeber of atoms per unit volume, <span class="math notranslate nohighlight">\(e\)</span> is
+the electron charge, <span class="math notranslate nohighlight">\(\epsilon_0\)</span> is the vacuum permittivity,
+<span class="math notranslate nohighlight">\(m_0\)</span> is the electron mass, <span class="math notranslate nohighlight">\(\omega_0\)</span> is the natural
+frequency of the atoms.</p>
+<p>However, in material modeling and simulation rather than solid-state
+physics, <span class="math notranslate nohighlight">\(\Delta \epsilon_{r}\)</span> is used as a fitting parameter
+and does not represent physical processes at the atomic level.</p>
+</section>
+<section id="relaxation-time-definitions">
+<h4>Relaxation Time Definitions<a class="headerlink" href="#relaxation-time-definitions" title="Permalink to this headline"></a></h4>
+<p>Taflove’s formulation of the first-order Lorentz model
+is ( <a class="footnote-reference brackets" href="#id26" id="id17">3</a>, page 355, equation 9.6):</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_r(\omega) = \epsilon_{r,\infty} + \Delta \epsilon_r \frac{\omega_p^2}{\omega^2_p + 2j\omega\delta_p-\omega^2}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon_p\)</span> is the frequency of the pole pair (the undamped resonant
+frequency of the medium), <span class="math notranslate nohighlight">\(\delta_p\)</span> is the damping coefficient.
+In comparison, openEMS absorbs the constant term 2 into the time constant
+<span class="math notranslate nohighlight">\(\tau_p = \frac{1}{2\delta_p}\)</span>.</p>
+<p>After algebraic manipulations, we obtain the following equation.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon_r(\omega) &amp;= \epsilon_{r,\infty} + \Delta \epsilon_r \frac{\omega_p^2}{\omega^2_p + j\omega\frac{1}{\tau_p}-\omega^2} \left( \frac{-1}{-1} \right) \\
+&amp;= \epsilon_{r,\infty} + \Delta \epsilon_r \frac{\omega_p^2}{\omega^2 -\omega^2_p - j\omega\frac{1}{\tau_p}}
+\end{align}\end{split}\]</div>
+<p>This is the standard textbook Lorentz model, rewritten with variable definitions
+similar to those used in openEMS. However, in addition to the
+time constant definition, textbooks also define the asymptotic term differently.
+See the next section.</p>
+</section>
+<section id="asymptotic-term-definitions">
+<h4>Asymptotic Term Definitions<a class="headerlink" href="#asymptotic-term-definitions" title="Permalink to this headline"></a></h4>
+<p>The formulation of Drude and Lorentz models are slightly different in
+comparison to the forms in standard textbooks, due to how the asymptotic
+term is defined. In most textbooks, the first-order Lorentz model
+(without the conductivity term) is defined as ( <a class="footnote-reference brackets" href="#id26" id="id18">3</a>, page 355, equation 9.6;
+<a class="footnote-reference brackets" href="#id27" id="id19">4</a>, page 293, equation 10.25):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega)_\mathrm{book} &amp;= \epsilon_0 \left[ \epsilon_{r,\infty} - \Delta \epsilon_r
+\frac{\omega^{2}_{p\epsilon\mathrm{(book)}}}{\omega^2 - \omega^2_{\mathrm{Lor}\epsilon} - j \omega \frac{1}{\tau_{\epsilon}(n)}} \right] \\
+&amp;= \epsilon_0 \epsilon_{r,\infty} - \epsilon_0 \Delta \epsilon_r
+\frac{\omega^{2}_{p\epsilon\mathrm{(book)}}}{\omega^2 - \omega^2_{\mathrm{Lor}\epsilon} - j \omega \frac{1}{\tau_{\epsilon}(n)}}
+\end{align}\end{split}\]</div>
+<p>But openEMS follows Rennings’s formulation and defines it as
+( <a class="footnote-reference brackets" href="#id24" id="id20">1</a>, page 235, equation 58, 59):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega)_\mathrm{(openEMS)} &amp;= \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
+\frac{\omega^{2}_{p\epsilon\mathrm{(openEMS)}}}{\omega^2 -\omega^2_\mathrm{Lor\epsilon} - j \omega \frac{1}{\tau_{\epsilon}}} \right] \\
+&amp;= \epsilon_0 \epsilon_{r,\infty} - \epsilon_0 \epsilon_{r,\infty}
+\frac{\omega^{2}_{p\epsilon}}{\omega^2 -\omega^2_{\mathrm{Lor}\epsilon} -
+j \omega \frac{1}{\tau_{\epsilon}}}
+\end{align}\end{split}\]</div>
+<p>The textbook formulation contains two free parameters <span class="math notranslate nohighlight">\(\Delta \epsilon_r\)</span> and
+<span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>, but openEMS only uses <span class="math notranslate nohighlight">\(\epsilon_{r,\infty}\)</span>.
+The <span class="math notranslate nohighlight">\(\Delta \epsilon_r\)</span> term is implicitly absorbed into
+<span class="math notranslate nohighlight">\(\omega^{2}_{p\epsilon}\)</span>. To convert the textbook
+formulation to openEMS’s formulation, the plasma frequency must be redefined:</p>
+<div class="math notranslate nohighlight">
+\[\omega_{p\epsilon\mathrm{(openEMS)}} =
+ \omega_{p\epsilon\mathrm{(book)}}
+ \sqrt{\Delta \epsilon_r}\]</div>
+</section>
+<section id="sign-conventions">
+<h4>Sign Conventions<a class="headerlink" href="#sign-conventions" title="Permalink to this headline"></a></h4>
+<p>Researchers in physics often adopt a different sign convention, in which they
+use <span class="math notranslate nohighlight">\(e^{-j\omega t}\)</span> for time-harmonic quantities rather than
+<span class="math notranslate nohighlight">\(e^{j \omega t}\)</span> in engineering.</p>
+<section id="example-taflove-s-drude-model-formulation">
+<h5>Example: Taflove’s Drude Model Formulation<a class="headerlink" href="#example-taflove-s-drude-model-formulation" title="Permalink to this headline"></a></h5>
+<p>The second edition of Taflove’s book defines the Drude model in
+physics convention, as ( <a class="footnote-reference brackets" href="#id25" id="id21">2</a>, page 230, equation 9.9a):</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\chi(\omega) &amp;= - \frac{\omega_p^2}{\omega^2 + j\omega\gamma}
+\end{align}\]</div>
+<p>In the third edition, it’s redefined in engineering convention,
+for consistency ( <a class="footnote-reference brackets" href="#id26" id="id22">3</a>, page 354, equation 9.1):</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\chi(\omega) = - \frac{\omega_p^2}{\omega^2 - j'\omega\gamma}
+\end{align}\]</div>
+<p>These two equations are the same equation, where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(j' = -j\)</span> due to the sign convention difference.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma = 1/\tau_p\)</span> is the damping factor, which is the inverse of
+pole relaxation time. It’s
+sometimes also denoted as the collision frequency of electrons <span class="math notranslate nohighlight">\(\nu_e\)</span>
+in the context of physics.</p></li>
+</ul>
+<p>From the relationship between electric susceptibility and permittivity,
+without the asymptotic term:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon(\omega) = \epsilon_0 \left[ 1 + \chi(\omega) \right]
+                 &amp;= \epsilon_0 \left[ 1 - \frac{\omega_p^2}{\omega^2 - j'\omega\gamma} \right] \\
+                 &amp;= \epsilon_0 \left[ 1 - \frac{\omega_p^2}{\omega^2 - j'\omega\frac{1}{\tau_p}} \right]
+\end{align}\end{split}\]</div>
+<p>This is our first-order Drude model without asymptotic and conductivity
+terms, which matching the description above. Introducing both additional
+terms according to the aforementioned procedure would reproduce the exact
+openEMS equations.</p>
+</section>
+<section id="example-fox-and-taflove-s-lorentz-model-formulation">
+<h5>Example: Fox and Taflove’s Lorentz Model Formulation<a class="headerlink" href="#example-fox-and-taflove-s-lorentz-model-formulation" title="Permalink to this headline"></a></h5>
+<p>The textbook <em>Optical Properties of Solids</em> by Mark Fox defines the
+Lorentz model as ( <a class="footnote-reference brackets" href="#id28" id="id23">5</a>, page 36, equation 2.24):</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_r(\omega) = 1 + \Delta \epsilon_r \frac{f_j}{\omega_0^2-\omega^2-j\omega\gamma}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_0\)</span> is the plasmonic resonant frequency, <span class="math notranslate nohighlight">\(f_j\)</span> is
+a phenomenological oscillator strength parameter (used together with
+<span class="math notranslate nohighlight">\(\Delta \epsilon_r\)</span>).</p>
+<p>This equation uses the opposite sign convention in comparison to
+most engineering books. By substituting <span class="math notranslate nohighlight">\(j' = -j\)</span>, <span class="math notranslate nohighlight">\(\gamma = 1/\tau_p\)</span>,
+<span class="math notranslate nohighlight">\(f_j = \omega_p^2\)</span>
+and multiplying by <span class="math notranslate nohighlight">\(\frac{-1}{-1}\)</span>, we obtain:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\epsilon_r(\omega) &amp;= 1 + \Delta \epsilon_r \frac{f_j}{\omega_0^2-\omega^2+j'\omega\gamma} \cdot \left( \frac{-1}{-1} \right) \\
+\epsilon_r(\omega) &amp;= 1 - \Delta \epsilon_r \frac{\omega_p^2}{\omega^2-\omega_0^2-j'\omega \frac{1}{\tau_p}} \\
+\end{align}\end{split}\]</div>
+<p>This is our first-order Lorentz model without asymptotic and conductivity
+terms, which matching the description above. Introducing both additional
+terms according to the aforementioned procedure would reproduce the exact
+openEMS equations.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="bibliography">
+<h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline"></a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id24"><span class="brackets">1</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id11">2</a>,<a href="#id20">3</a>)</span></dt>
+<dd><p>Andreas Rennings, et, al.,
+<a class="reference external" href="https://www.researchgate.net/publication/227133697_Equivalent_Circuit_EC_FDTD_Method_for_Dispersive_Materials_Derivation_Stability_Criteria_and_Application_Examples">Equivalent Circuit (EC) FDTD Method for Dispersive Materials: Derivation,
+Stability Criteria and Application Examples</a>, Time Domain Methods in Electrodynamics.</p>
+</dd>
+<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id21">2</a></span></dt>
+<dd><p>Allen Taflove, Susan. C. Hagness,
+Computational Electrodynamics: The Finite-Difference Time-Domain Method, 2nd ed. Artech House, 1995.</p>
+</dd>
+<dt class="label" id="id26"><span class="brackets">3</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id13">2</a>,<a href="#id15">3</a>,<a href="#id17">4</a>,<a href="#id18">5</a>,<a href="#id22">6</a>)</span></dt>
+<dd><p>Allen Taflove, Susan. C. Hagness,
+Computational Electrodynamics: The Finite-Difference Time-Domain Method, 3rd ed. Artech House, 2005.</p>
+</dd>
+<dt class="label" id="id27"><span class="brackets">4</span><span class="fn-backref">(<a href="#id9">1</a>,<a href="#id14">2</a>,<a href="#id19">3</a>)</span></dt>
+<dd><p>John B. Schneider. <a class="reference external" href="https://eecs.wsu.edu/~schneidj/ufdtd/index.php">Understanding the FDTD Method.</a></p>
+</dd>
+<dt class="label" id="id28"><span class="brackets">5</span><span class="fn-backref">(<a href="#id16">1</a>,<a href="#id23">2</a>)</span></dt>
+<dd><p>Mark Fox, Optical Properties of Solids. Oxford, UK: Oxford University Press, 2001.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="signals.html" class="btn btn-neutral float-left" title="Signal Waveforms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../python/openEMS/Tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

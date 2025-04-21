@@ -1,0 +1,119 @@
+Properties
+============
+
+*Properties* defines the physical property of a material, such as a metal,
+a thin conducting sheet, a dielectric metarial, a magnetic material.
+Technically, excitation sources, probes, and field dump boxes are also
+*Properties*.
+
+An openEMS simulation always starts by creating a 3D model of the structure
+using the CSXCAD library. The functions provided by CSXCAD can be classified
+into two types, *properties* and *primitives*. They define material properties
+and shapes respectively.
+
+All created entities for the simulation are stored in the CSXCAD data structure,
+and is usually saved to disk as an ``.xml`` file.
+
+Metal
+------
+
+A metal is a modeled as a Perfect Electric Conductor (PEC) with infinite
+conductivity. Internally, the PEC is implemented by forcing the tangential
+electric field in this region to be zero, which is characteristic of an
+ideal conductor that can’t be penetrated by electric field lines.
+
+If resistive losses are unimportant, one can use PEC rather than a realistic
+material model for simplicity and efficiency.
+
+Example
+"""""""
+
+Create a Perfect Electric Conductor named ``plate``::
+
+    % Matlab/Octave
+    % TBD
+
+    # Python
+    import CSXCAD
+    csx = CSXCAD.ContinuousStructure()
+    metal = csx.AddMetal('plate')
+
+Thin Conducting Sheet
+-----------------------
+
+A Thin Conducting Sheet is a simplified model of a resistive conductor,
+and is the standard choice for modeling resistive metal sheets, plates,
+and traces.
+
+Modeling thin metal sheets is challenging in FDTD. To capture effects like
+surface current (skin effect) requires an impractically high resolution mesh.
+Thus, Thin Conducting Sheet treats the metal as a zero-thickness 2D plane.
+The resistive loss in metals is simulated using a simplified, behavioral model
+to "fit" the observed loss rather than the full physics.
+
+.. note::
+   * The geometrical thickness of the created shape (primitive) must be
+     zero.
+   * Surface roughness modeling is currently not supported.
+
+Example
+"""""""
+
+The following example creates a Thin Conducting Sheet material named
+``copper_foil``, with a conductivity of 59.6e6 S and a virtual thickness
+of 35 micrometer (the shape created from it must be a 2D plane with zero
+thickness). This is typical for a 1-oz circuit board::
+
+    % Matlab/Octave
+    % TBD
+
+    # Python
+    import CSXCAD
+    csx = CSXCAD.ContinuousStructure()
+    sheet = csx.AddConductingSheet('copper_foil', conductivity=59.6e6, thickness=35e-6)
+
+General Material
+-----------------
+
+A general material is defined by a relative permittivity :math:`\epsilon_r`,
+a relative permeability :math:`\mu_r`, an electric conductivity :math:`\kappa`,
+and a hypothetical magnetic conductivity :math:`\sigma`.
+
+All parameters are constants that don't vary with frequency.
+It can model dielectric materials (such as circuit board substrate), magnetic
+materials (such as magnetic cores), resistive materials, and 3D metals.
+Due to the constant-property assumption, this model is not realistic. But
+it produces acceptable results in simpler applications, and has no simulation
+overhead.
+
+Example
+""""""""
+
+Create a plexiglass material::
+
+    % Matlab/Octave
+    CSX = AddMaterial(CSX, 'plexiglass');
+    CSX = SetMaterialProperty(CSX, 'plexiglass', 'Epsilon', 2.22);
+    
+    # Python
+    plexiglass = csx.AddMaterial('plexiglass', epsilon=2.22)
+
+Dispersive Materials
+----------------------
+
+Debye, Drude, Lorentz materials are advanced models to model dispersive
+materials.
+
+Nearly all real-world materials exhibit a phenomenon known as dispersion. That
+is, the speed of light in the medium depends on the EM wave's frequency. In
+optics, it manifests as a frequency-dependent refractive index. In RF/microwave
+engineering, it appears as a frequency-dependent permittivity and permeability.
+In metamaterial research, one can even deliberately introduce dispersion to
+control electromagnetic wave propagation in unusual ways.
+
+As a result, while the basic material model with constant permittivity and
+permeability is sufficient if dispersion is negligible, more demanding
+simulations call for dispersion models for accurately calculating a material's
+wideband response.
+
+See :ref:`dispersive_materials` for detailed description.

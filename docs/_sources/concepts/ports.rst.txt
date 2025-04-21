@@ -1,5 +1,28 @@
+.. _concept_ports:
+
 Ports
 ===========
+
+Excitations and Ports
+-----------------------
+
+At the start of a simulation, electric or magnetic fields are introduced
+into the simulation box, helping establish initial conditions for the
+system. This is done by setting the numerical values of the field at
+specified Yee cells, according to the specified field type, distribution,
+weighting functions, and signal waveform. This is the purpose of the
+:func:`AddExcitation` (Python),
+:meth:`~CSXCAD.ContinuousStructure.AddExcitation` (Matlab/Octave)
+, and :func:`AddPlaneWaveExcite` functions.
+
+Controlling these raw fields is a low-level operation and inconvenient
+for circuit designs. Hence, openEMS implements a high-level concept
+called ports. Since it's the most-commonly used form of excitations,
+this page presents a port-based view. For a description of non-port
+excitations (including Radar Cross Section), see :ref:`excitation_concept`.
+
+Ports
+---------
 
 Ports are best understood as the virtual 3D counterpart of physical ports
 on RF/microwave components, such as the standard 50 Ω input or output ports
@@ -262,7 +285,7 @@ waveguides ports
       under CC BY-SA 4.0 [1]_)
 
 Port Implementation
------------------------
+--------------------
 
 Ports are a high-level concept in openEMS. Internally, they're
 implemented by first calling :meth:`~CSXCAD.ContinuousStructure.AddExcitation`
@@ -270,12 +293,3 @@ to create a source of E&M field. Later, :meth:`~CSXCAD.ContinuousStructure.AddLu
 and :meth:`~CSXCAD.ContinuousStructure.AddProbe` are used to add termination
 resistances and probes. One can create new port types based on these
 low-level primitives.
-
-.. seealso::
-
-   In addition to port-based excitation as described by the *Concept*
-   section of this tutorial, openEMS also supports exciting a structure
-   by a free-space plane wave in the special *Total-Field Scattered-Field*
-   (TFSF) mode. This is used for calculating a structure's Radar Cross
-   Section (RCS). See the *Metal Sphere Radar Cross Section* example
-   in the *Tutorial* section.
