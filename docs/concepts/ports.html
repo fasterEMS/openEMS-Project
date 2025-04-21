@@ -55,9 +55,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#port-selection">Port Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#port-implementation">Port Implementation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debye_lorentz.html">Dispersive Materials</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
@@ -430,12 +432,6 @@ as the waveguide is essentially a DC short circuit. Special waveguide
 ports must be used to excite the unique TE-mode waves. These include
 general waveguide ports, rectangular waveguides ports, and circular
 waveguides ports</p>
-<p>Ports are a high-level concept in openEMS. Internally, they’re
-implemented by first calling <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddExcitation" title="CSXCAD.ContinuousStructure.AddExcitation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>
-to create a source of E&amp;M field. Later, <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>
-and <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddProbe" title="CSXCAD.ContinuousStructure.AddProbe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddProbe()</span></code></a> are used to add termination
-resistances and probes. One can create new port types based on these
-low-level primitives.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Like physical ports on real devices, the virtual ports in openEMS are not
@@ -460,6 +456,24 @@ calibration or de-embedding (image by Ziad Hatab et, al., licensed
 under CC BY-SA 4.0 <a href="#id5"><span class="problematic" id="id2">[1]_</span></a>)</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
+</div>
+</section>
+<section id="port-implementation">
+<h2>Port Implementation<a class="headerlink" href="#port-implementation" title="Permalink to this headline"></a></h2>
+<p>Ports are a high-level concept in openEMS. Internally, they’re
+implemented by first calling <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddExcitation" title="CSXCAD.ContinuousStructure.AddExcitation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>
+to create a source of E&amp;M field. Later, <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>
+and <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddProbe" title="CSXCAD.ContinuousStructure.AddProbe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddProbe()</span></code></a> are used to add termination
+resistances and probes. One can create new port types based on these
+low-level primitives.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>In addition to port-based excitation as described by the <em>Concept</em>
+section of this tutorial, openEMS also supports exciting a structure
+by a free-space plane wave in the special <em>Total-Field Scattered-Field</em>
+(TFSF) mode. This is used for calculating a structure’s Radar Cross
+Section (RCS). See the <em>Metal Sphere Radar Cross Section</em> example
+in the <em>Tutorial</em> section.</p>
 </div>
 </section>
 </section>

@@ -1046,14 +1046,16 @@ PEC or PMC in this example.</p>
 loss, <em>Absorbing Boundary Conditions (ABC)</em> must be used to suppress
 reflections to prevent spurious simulation results. At its boundaries, the
 electromagnetic waves are absorbed and dissipated without reflecting back,
-creating the illusion of an infinitely large free space.</p>
+creating the illusion of an infinitely large free space. If PEC and PMC
+are analogous to a shorted or opened transmission line, the ABC is analogous
+to a termination resistor.</p>
 <p>In general, these simulations should use a simulation box larger than the
 structure to avoid intrusion of strong fringe fields at the boundary.
 However, deliberately running a transmission line into the PML (defined
-below) can be used as a perfect termination resistor. This allows one
+below) can be used as a perfect termination. This allows one
 to terminate a transmission line without knowing its characteristic
 impedance, enabling impedance measurement. In fact, openEMS’s microstrip
-ports doesn’t create a lumped termination resistor by default, expecting
+ports don’t create a lumped termination resistor by default, expecting
 users to place them into the PML at boundaries.</p>
 <figure class="align-default" id="id51">
 <a class="with-border reference internal image-reference" href="../../../_images/anechoic_chamber1.jpg"><img alt="../../../_images/anechoic_chamber1.jpg" class="with-border" src="../../../_images/anechoic_chamber1.jpg" style="width: 60%;" /></a>

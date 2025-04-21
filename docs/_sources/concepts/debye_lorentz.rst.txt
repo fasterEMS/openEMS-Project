@@ -97,7 +97,7 @@ Debye Model
 Usage
 ''''''
 
-:func:`AddDebyeMaterial` creates a material governed by the Debye model dielectric
+:func:`AddDebyeMaterial` creates a material governed by the Debye model of dielectric
 relaxation::
 
     CSX = AddDebyeMaterial(CSX, name, varargin)
@@ -346,7 +346,7 @@ Debye Model
 
 The Debye model of dielectric relaxation (not to be confused with
 Debye model of specific heat) is defined by the following equation
-( [1]_, page 222, equation 37; [2]_, page 354, equation 9.3; [3]_,
+( [1]_, page 222, equation 37; [3]_, page 354, equation 9.3; [4]_,
 page 294, equation 10.27):
 
 .. math::
@@ -503,7 +503,7 @@ For non-conductive material, the first-order Drude model reduces to:
    \epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
    \frac{\omega^{2}_{p\epsilon}}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}}} \right]
 
-This formulation is consistent with [2]_ page 355, equation 9.9;
+This formulation is consistent with [3]_ page 355, equation 9.9;
 [4]_ page 292, equation 10.17.
 
 At high frequencies, a material's relative permittivity decreases, but
@@ -521,7 +521,7 @@ Oscillator Strength Term Definitions
 There's a common parameter :math:`\Delta \epsilon_{r}` that appears
 in all three models.
 It's understood as the different between the electrostatic
-relative permittivity and the infinite-frequency permittivity ( [2]_,
+relative permittivity and the infinite-frequency permittivity ( [3]_,
 page 254, equation 9.2).
 
 .. math::
@@ -546,7 +546,7 @@ Relaxation Time Definitions
 '''''''''''''''''''''''''''
 
 Taflove's formulation of the first-order Lorentz model
-is ( [2]_, page 355, equation 9.6):
+is ( [3]_, page 355, equation 9.6):
 
 .. math::
    \epsilon_r(\omega) = \epsilon_{r,\infty} + \Delta \epsilon_r \frac{\omega_p^2}{\omega^2_p + 2j\omega\delta_p-\omega^2}
@@ -575,7 +575,7 @@ Asymptotic Term Definitions
 The formulation of Drude and Lorentz models are slightly different in
 comparison to the forms in standard textbooks, due to how the asymptotic
 term is defined. In most textbooks, the first-order Lorentz model
-(without the conductivity term) is defined as ( [2]_, page 355, equation 9.6;
+(without the conductivity term) is defined as ( [3]_, page 355, equation 9.6;
 [4]_, page 293, equation 10.25):
 
 .. math::
@@ -622,7 +622,7 @@ Example: Taflove's Drude Model Formulation
 ...........................................
 
 The second edition of Taflove's book defines the Drude model in
-physics convention, as ( [3]_, page 230, equation 9.9a):
+physics convention, as ( [2]_, page 230, equation 9.9a):
 
 .. math::
    \begin{align}
@@ -630,7 +630,7 @@ physics convention, as ( [3]_, page 230, equation 9.9a):
    \end{align}
 
 In the third edition, it's redefined in engineering convention,
-for consistency ( [2]_, page 354, equation 9.1):
+for consistency ( [3]_, page 354, equation 9.1):
 
 .. math::
    \begin{align}
@@ -663,7 +663,7 @@ openEMS equations.
 Example: Fox and Taflove's Lorentz Model Formulation
 ......................................................
 
-The Fox's textbook *Optical Properties of Solids* by Mark Fox defines the
+The textbook *Optical Properties of Solids* by Mark Fox defines the
 Lorentz model as ( [5]_, page 36, equation 2.24):
 
 .. math::
@@ -698,10 +698,10 @@ Bibliography
    <https://www.researchgate.net/publication/227133697_Equivalent_Circuit_EC_FDTD_Method_for_Dispersive_Materials_Derivation_Stability_Criteria_and_Application_Examples>`_, Time Domain Methods in Electrodynamics.
 
 .. [2] Allen Taflove, Susan. C. Hagness,
-   Computational Electrodynamics: The Finite-Difference Time-Domain Method, 3rd ed. Artech House, 2005.
+   Computational Electrodynamics: The Finite-Difference Time-Domain Method, 2nd ed. Artech House, 1995.
 
 .. [3] Allen Taflove, Susan. C. Hagness,
-   Computational Electrodynamics: The Finite-Difference Time-Domain Method, 2nd ed. Artech House, 2005.
+   Computational Electrodynamics: The Finite-Difference Time-Domain Method, 3rd ed. Artech House, 2005.
 
 .. [4] John B. Schneider. `Understanding the FDTD Method. <https://eecs.wsu.edu/~schneidj/ufdtd/index.php>`_
 
