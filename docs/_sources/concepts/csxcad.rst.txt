@@ -617,15 +617,15 @@ with length of each side=:math:`\sqrt{50}`::
 
        # Python
        points = [[0] * 9] * 3
-       points[0, 1] =  0; points[1, 1] = 0; points[2, 1] = 0;
-       points[0, 2] =  5; points[1, 2] = 0; points[2, 2] = 5;
-       points[0, 3] = 10; points[1, 3] = 0; points[2, 3] = 0.5;
-       points[0, 4] = 15; points[1, 4] = 0; points[2, 4] = 5;
-       points[0, 5] = 20; points[1, 5] = 0; points[2, 5] = 0;
-       points[0, 6] = 15; points[1, 6] = 0; points[2, 6] = -5;
-       points[0, 7] = 10; points[1, 7] = 0; points[2, 7] = -0.1;
-       points[0, 8] =  5; points[1, 8] = 0; points[2, 8] = -5;
-       points[0, 9] =  0; points[1, 9] = 0; points[2, 9] = 0;
+       points[0, 0] =  0; points[1, 0] = 0; points[2, 0] = 0;
+       points[0, 1] =  5; points[1, 1] = 0; points[2, 1] = 5;
+       points[0, 2] = 10; points[1, 2] = 0; points[2, 2] = 0.5;
+       points[0, 3] = 15; points[1, 3] = 0; points[2, 3] = 5;
+       points[0, 4] = 20; points[1, 4] = 0; points[2, 4] = 0;
+       points[0, 5] = 15; points[1, 5] = 0; points[2, 5] = -5;
+       points[0, 6] = 10; points[1, 6] = 0; points[2, 6] = -0.1;
+       points[0, 7] =  5; points[1, 7] = 0; points[2, 7] = -5;
+       points[0, 8] =  0; points[1, 8] = 0; points[2, 8] = 0;
 
        metal = csx.AddMetal('metal')
        metal.AddWire(points, 0.1)
