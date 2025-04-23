@@ -4,11 +4,12 @@
 Concepts
 ========
 
-Basic concepts of openEMS simulations.
+Basic concepts of openEMS simulation.
 
 .. toctree::
    :maxdepth: 1
 
+   csxcad
    properties
    primitives
    mesh
@@ -16,4 +17,5 @@ Basic concepts of openEMS simulations.
    ports
    excitations
    signals
+   dump
    dispersive

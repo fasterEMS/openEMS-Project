@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Field Dump &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dispersive Materials" href="dispersive.html" />
+    <link rel="prev" title="Signal Waveforms" href="signals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="csxcad.html">CSXCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Field Dump</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Concepts</a> &raquo;</li>
+      <li>Field Dump</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/concepts/dump.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="field-dump">
+<span id="concept-fielddump"></span><h1>Field Dump<a class="headerlink" href="#field-dump" title="Permalink to this headline"></a></h1>
+<p>In most applications, the input and output signals at the <a class="reference internal" href="ports.html#concept-ports"><span class="std std-ref">Ports</span></a>
+is sufficient for characterizing a structure, such as its frequency response.</p>
+<p>However, some special
+applications make use of the raw electromagnetic fields, not just the
+input and output signals. We can do this by creating a “dump box” (a region
+in space where field values are recorded) to save field samples to disk.
+For troubleshooting malfunctioning setups, this is especially helpful as one can
+identify the problematic region through direct visualization.</p>
+<p>Several kinds of dump boxes exist.</p>
+<ol class="arabic simple">
+<li><p>Time-domain dumps of electric field <span class="math notranslate nohighlight">\(\mathbf{E}\)</span>, auxiliary magnetic
+field <span class="math notranslate nohighlight">\(\mathbf{H}\)</span>, electric conduction current <span class="math notranslate nohighlight">\(\mathbf{J}\)</span>,
+total current density <span class="math notranslate nohighlight">\(\mathrm{\nabla} \times \mathbf{H}\)</span>, electric
+displacement field <span class="math notranslate nohighlight">\(\mathbf{D}\)</span>, and magnetic field (flux density)
+<span class="math notranslate nohighlight">\(\mathbf{B}\)</span>, with their <code class="docutils literal notranslate"><span class="pre">dump_type</span></code> numbered from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p>Frequency-domain dumps of electric field, auxiliary magnetic field,
+electric conduction current, total current density, electric displacement
+field, and magnetic field (flux density), numbered from <code class="docutils literal notranslate"><span class="pre">10</span></code> to <code class="docutils literal notranslate"><span class="pre">15</span></code>.</p></li>
+<li><p>Specific Absorption Rate (SAR) for biological E&amp;M radiation exposure analysis.</p></li>
+<li><p>Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
+(special setup required, via <a class="reference internal" href="../python/openEMS/openEMS.html#openEMS.openEMS.CreateNF2FFBox" title="openEMS.openEMS.CreateNF2FFBox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openEMS.openEMS.CreateNF2FFBox()</span></code></a> and a
+separate post-processing tool).</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>openEMS calculates the total current density via Ampere-Maxwell’s
+law <span class="math notranslate nohighlight">\(\mathrm{\nabla} \times \mathbf{H}\)</span>, which is
+<span class="math notranslate nohighlight">\(\mathbf{J} + \frac{\partial \mathbf{D}}{\partial t}\)</span>
+(i.e. the sum of conduction current and displacement current).</p>
+</div>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<p>It’s added by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddDump.html#AddDump" title="AddDump"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddDump()</span></code></a> method in Matlab/Octave.
+In Python,
+use the <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddDump" title="CSXCAD.ContinuousStructure.AddDump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CSXCAD.ContinuousStructure.AddDump()</span></code></a> method (see
+<a class="reference internal" href="../python/CSXCAD/CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox" title="CSXCAD.CSProperties.CSPropDumpBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPropDumpBox</span></code></a> for a detailed list of
+parameters).</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Like all CSXCAD <a class="reference internal" href="properties.html#concept-properties"><span class="std std-ref">Properties</span></a>, field dumps
+are also “materials” albeit non-physical, so they should be associated
+with one or more <a class="reference internal" href="primitives.html#concept-primitives"><span class="std std-ref">Primitives</span></a> (i.e. geometric shapes) as
+well.</p>
+</div>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
+<p>Dump the total current density (<code class="docutils literal notranslate"><span class="pre">dump_type=3</span></code>) on at 2D surface from
+(-100, -100) to (100, 100) at Z = 8:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Octave</span>
+<span class="o">%</span><span class="n">TODO</span>
+
+<span class="c1"># Python</span>
+<span class="n">dump</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s2">&quot;curl_H_upper&quot;</span><span class="p">,</span> <span class="n">dump_type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">dump</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="signals.html" class="btn btn-neutral float-left" title="Signal Waveforms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dispersive.html" class="btn btn-neutral float-right" title="Dispersive Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

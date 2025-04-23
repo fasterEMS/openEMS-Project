@@ -3,9 +3,6 @@
 Ports
 ===========
 
-Excitations and Ports
------------------------
-
 At the start of a simulation, electric or magnetic fields are introduced
 into the simulation box, helping establish initial conditions for the
 system. This is done by setting the numerical values of the field at
@@ -17,12 +14,13 @@ weighting functions, and signal waveform. This is the purpose of the
 
 Controlling these raw fields is a low-level operation and inconvenient
 for circuit designs. Hence, openEMS implements a high-level concept
-called ports. Since it's the most-commonly used form of excitations,
-this page presents a port-based view. For a description of non-port
-excitations (including Radar Cross Section), see :ref:`excitation_concept`.
+called ports.
 
-Ports
----------
+.. note::
+   Ports are the most-commonly used form of excitations,
+   this page presents a port-based view. For a description of
+   non-port excitations (including Radar Cross Section), see
+   :ref:`concept_excitations`.
 
 Ports are best understood as the virtual 3D counterpart of physical ports
 on RF/microwave components, such as the standard 50 Ω input or output ports
@@ -58,8 +56,8 @@ signal, or to measure the voltage or current at this region.
    (by loading numerical values into Yee cells). Image by Julien Hillairet,
    from the ``scikit-rf`` project, licensed under BSD-3, modified for clarity.
 
-Port Types
--------------
+Types
+-------
 
 +-----------------------------+--------------------------------+----------------------------------------+-----------------------------------+
 |         Port Type           |        Matlab/Octave           |               Python                   |               Notes               |
@@ -86,6 +84,8 @@ Port Types
 
 Usage
 """""""
+
+The following example adds two lumped ports to the simulation.
 
 Matlab/Octave:
 
@@ -117,8 +117,80 @@ Python:
     stop  = [-100 0 50]
     port[1] = fdtd.AddLumpedPort(2, z0, start, stop, 'z', excite=0)
 
-Port Attributes
+.. seealso::
+   This page is incomplete. See the
+   `Legacy Wiki <https://wiki.openems.de/index.php/Ports.html>`_ for more information.
+
+Selection
+-----------
+
+In openEMS, ports are ideal sources of E&M fields, but they are not ideal
+*launchers* of E&M waves into structures due to a discontinuity at the
+boundary between the port and the structure.
+If port placement is not optimized,
+this region of discontinuity may introduce artifacts such
+as reflections or excitation of spurious modes. Optimizing the placement
+and implementation of a port reduces these artifacts. This can be done
+by using smooth transitions or by shaping the electric fields initially
+injected by the port.
+
+In openEMS, the standard port is the lumped port that works with most
+structures. If an optimal transition is needed, openEMS also provides
+optimized implementations of curved, microstrip, stripline, coplanar
+waveguide, and coax cable ports.
+
+Most specialized ports in openEMS are signal integrity optimizations
+rather than strict requirements. However, in enclosed waveguides,
+specialized ports are *required* to excite those structures properly.
+These waveguides only have one conductor, unlike the usual two-conductor
+transmission lines. An ordinary port can't excite them correctly,
+as the waveguide is essentially a DC short circuit. Special waveguide
+ports must be used to excite the unique TE-mode waves. These include
+general waveguide ports, rectangular waveguides ports, and circular
+waveguides ports
+
+.. note::
+   Like physical ports on real devices, the virtual ports in openEMS are not
+   perfect. They're ideal sources of E&M fields, but they are not ideal
+   *launchers* of E&M waves into structures. A port creates a region of
+   discontinuity, so they may introduce artifacts.
+   Optimizing the placement and implementation of a port reduces artifacts.
+   Alternatively, these artifacts
+   can be removed through calibration or de-embedding algorithms, an
+   advanced topic beyond the scope of this tutorial.
+
+   .. figure:: images/error-box.svg
+      :class: with-border
+      :width: 60%
+
+      The artifacts introduced by a two-port measurement can be viewed
+      as two linear circuits (left error box, right error box) cascaded in
+      series with the DUT. All three circuits are represented as three matrices,
+      called their S-parameters. Measurement error can be reduced by making
+      error boxes nearly transparent using optimized port transitions.
+      Alternatively, by mathematically removing the port's contributions from
+      the measured response using linear algebra, a process known as
+      calibration or de-embedding (image by Ziad Hatab et, al., licensed
+      under CC BY-SA 4.0 [1]_)
+
+Implementation
+----------------
+
+Ports are a high-level concept in openEMS. Internally, they're
+implemented by first calling :meth:`~CSXCAD.ContinuousStructure.AddExcitation`
+to create a source of E&M field. Later, :meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`
+and :meth:`~CSXCAD.ContinuousStructure.AddProbe` are used to add termination
+resistances and probes. One can create new port types based on these
+low-level primitives.
+
+Post-Processing
 -----------------
+
+After the simulation is complete, a circuit's frequency response or
+time-domain waveform is extracted to obtain meaningful results.
+
+Attributes
+""""""""""
 
 +-------------------------+--------------------------+-----------------+--------------------------------------------------+
 |      Matlab / Octave    |    Python                |    Domain       |  Definition                                      |
@@ -185,10 +257,6 @@ Port Attributes
 Usage
 """"""""
 
-.. seealso::
-   This page is incomplete. See the
-   `Legacy Wiki <CSXCAD.ContinuousStructure.AddProbe>`_ for more information.
-
 Matlab/Octave::
 
     f_min = 100e6
@@ -232,64 +300,3 @@ Python::
     plt.ylabel('Voltage (V)')
     plt.show()
 
-Port Selection
----------------
-
-In openEMS, ports are ideal sources of E&M fields, but they are not ideal
-*launchers* of E&M waves into structures due to a discontinuity at the
-boundary between the port and the structure.
-If port placement is not optimized,
-this region of discontinuity may introduce artifacts such
-as reflections or excitation of spurious modes. Optimizing the placement
-and implementation of a port reduces these artifacts. This can be done
-by using smooth transitions or by shaping the electric fields initially
-injected by the port.
-
-In openEMS, the standard port is the lumped port that works with most
-structures. If an optimal transition is needed, openEMS also provides
-optimized implementations of curved, microstrip, stripline, coplanar
-waveguide, and coax cable ports.
-
-Most specialized ports in openEMS are signal integrity optimizations
-rather than strict requirements. However, in enclosed waveguides,
-specialized ports are *required* to excite those structures properly.
-These waveguides only have one conductor, unlike the usual two-conductor
-transmission lines. An ordinary port can't excite them correctly,
-as the waveguide is essentially a DC short circuit. Special waveguide
-ports must be used to excite the unique TE-mode waves. These include
-general waveguide ports, rectangular waveguides ports, and circular
-waveguides ports
-
-.. note::
-   Like physical ports on real devices, the virtual ports in openEMS are not
-   perfect. They're ideal sources of E&M fields, but they are not ideal
-   *launchers* of E&M waves into structures. A port creates a region of
-   discontinuity, so they may introduce artifacts.
-   Optimizing the placement and implementation of a port reduces artifacts.
-   Alternatively, these artifacts
-   can be removed through calibration or de-embedding algorithms, an
-   advanced topic beyond the scope of this tutorial.
-
-   .. figure:: images/error-box.svg
-      :class: with-border
-      :width: 60%
-
-      The artifacts introduced by a two-port measurement can be viewed
-      as two linear circuits (left error box, right error box) cascaded in
-      series with the DUT. All three circuits are represented as three matrices,
-      called their S-parameters. Measurement error can be reduced by making
-      error boxes nearly transparent using optimized port transitions.
-      Alternatively, by mathematically removing the port's contributions from
-      the measured response using linear algebra, a process known as
-      calibration or de-embedding (image by Ziad Hatab et, al., licensed
-      under CC BY-SA 4.0 [1]_)
-
-Port Implementation
---------------------
-
-Ports are a high-level concept in openEMS. Internally, they're
-implemented by first calling :meth:`~CSXCAD.ContinuousStructure.AddExcitation`
-to create a source of E&M field. Later, :meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`
-and :meth:`~CSXCAD.ContinuousStructure.AddProbe` are used to add termination
-resistances and probes. One can create new port types based on these
-low-level primitives.

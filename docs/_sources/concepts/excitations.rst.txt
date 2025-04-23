@@ -1,4 +1,4 @@
-.. _excitation_concept:
+.. _concept_excitations:
 
 Excitation Sources
 ====================

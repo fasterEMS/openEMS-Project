@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Primitives" href="primitives.html" />
-    <link rel="prev" title="Concepts" href="index.html" /> 
+    <link rel="prev" title="CSXCAD" href="csxcad.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="csxcad.html">CSXCAD</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#metal">Metal</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
@@ -55,7 +56,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">Example</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#lumped-element">Lumped Element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Example</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#dispersive-materials">Dispersive Materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#probes-and-dumps">Probes and Dumps</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitives</a></li>
@@ -64,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dump.html">Field Dump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
 </ul>
 </li>
@@ -100,30 +107,37 @@
            <div itemprop="articleBody">
              
   <section id="properties">
-<h1>Properties<a class="headerlink" href="#properties" title="Permalink to this headline"></a></h1>
-<p><em>Properties</em> defines the physical property of a material, such as a metal,
-a thin conducting sheet, a dielectric metarial, a magnetic material.
-Technically, excitation sources, probes, and field dump boxes are also
-<em>Properties</em>.</p>
-<p>An openEMS simulation always starts by creating a 3D model of the structure
-using the CSXCAD library. The functions provided by CSXCAD can be classified
-into two types, <em>properties</em> and <em>primitives</em>. They define material properties
-and shapes respectively.</p>
-<p>All created entities for the simulation are stored in the CSXCAD data structure,
-and is usually saved to disk as an <code class="docutils literal notranslate"><span class="pre">.xml</span></code> file.</p>
+<span id="concept-properties"></span><h1>Properties<a class="headerlink" href="#properties" title="Permalink to this headline"></a></h1>
+<p><em>Properties</em> defines the material property or simulation property of a
+geometrical shape, such as a metal, a thin conducting sheet, a dielectric
+metarial, a magnetic material, or a lumped element (resistor, capacitor,
+inductor). <em>Properties</em> are always associated with one or more geometrical
+shapes, known as <em>primitives</em>.</p>
+<p>Technically, excitation sources, probes, and field dump boxes
+are also <em>Properties</em>, which is used to enable a specific function to
+a location or a shape.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Remember to always add at least one <a class="reference internal" href="primitives.html#concept-primitives"><span class="std std-ref">Primitives</span></a> (such
+as a Box) to any property.</p>
+</div>
 <section id="metal">
 <h2>Metal<a class="headerlink" href="#metal" title="Permalink to this headline"></a></h2>
 <p>A metal is a modeled as a Perfect Electric Conductor (PEC) with infinite
-conductivity. Internally, the PEC is implemented by forcing the tangential
+conductivity.</p>
+<p>Internally, the PEC is implemented by forcing the tangential
 electric field in this region to be zero, which is characteristic of an
-ideal conductor that can’t be penetrated by electric field lines.</p>
-<p>If resistive losses are unimportant, one can use PEC rather than a realistic
+ideal conductor that can’t be penetrated by electric field lines.
+If resistive losses are unimportant, one can use PEC rather than a realistic
 material model for simplicity and efficiency.</p>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h3>
+<p>It’s added by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddMetal.html#AddMetal" title="AddMetal"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddMetal()</span></code></a> method in Matlab/Octave, or by the
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddMetal" title="CSXCAD.ContinuousStructure.AddMetal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddMetal()</span></code></a> method in Python.</p>
 <p>Create a Perfect Electric Conductor named <code class="docutils literal notranslate"><span class="pre">plate</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
-<span class="o">%</span> <span class="n">TBD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">InitCSX</span><span class="p">();</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">AddMetal</span><span class="p">(</span><span class="n">csx</span><span class="p">,</span> <span class="s1">&#39;plate&#39;</span><span class="p">);</span>
 
 <span class="c1"># Python</span>
 <span class="kn">import</span> <span class="nn">CSXCAD</span>
@@ -143,22 +157,25 @@ surface current (skin effect) requires an impractically high resolution mesh.
 Thus, Thin Conducting Sheet treats the metal as a zero-thickness 2D plane.
 The resistive loss in metals is simulated using a simplified, behavioral model
 to “fit” the observed loss rather than the full physics.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <ul class="simple">
-<li><p>The geometrical thickness of the created shape (primitive) must be
-zero.</p></li>
+<li><p>A Thin Conducting Sheet can only be used to create a zero-thickness
+geometrical object, the created 3D shape (primitive) mush be a plane.</p></li>
 <li><p>Surface roughness modeling is currently not supported.</p></li>
 </ul>
 </div>
 <section id="id1">
 <h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<p>It’s added by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddConductingSheet.html#AddConductingSheet" title="AddConductingSheet"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddConductingSheet()</span></code></a> method in Matlab/Octave, or by the
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddConductingSheet" title="CSXCAD.ContinuousStructure.AddConductingSheet"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddConductingSheet()</span></code></a> method in Python.</p>
 <p>The following example creates a Thin Conducting Sheet material named
-<code class="docutils literal notranslate"><span class="pre">copper_foil</span></code>, with a conductivity of 59.6e6 S and a virtual thickness
-of 35 micrometer (the shape created from it must be a 2D plane with zero
-thickness). This is typical for a 1-oz circuit board:</p>
+<code class="docutils literal notranslate"><span class="pre">copper_foil</span></code>, with a conductivity of 59.6e6 S/m and a simulated thickness
+of 35 µm (the shape created from it must be a 2D plane with zero thickness).
+This is typical for a 1-oz circuit board:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
-<span class="o">%</span> <span class="n">TBD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">InitCSX</span><span class="p">();</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">AddConductingSheet</span><span class="p">(</span><span class="n">csx</span><span class="p">,</span> <span class="s1">&#39;copper&#39;</span><span class="p">,</span> <span class="mf">59.6e6</span><span class="p">,</span> <span class="mf">35e-6</span><span class="p">);</span>
 
 <span class="c1"># Python</span>
 <span class="kn">import</span> <span class="nn">CSXCAD</span>
@@ -173,6 +190,14 @@ thickness). This is typical for a 1-oz circuit board:</p>
 <p>A general material is defined by a relative permittivity <span class="math notranslate nohighlight">\(\epsilon_r\)</span>,
 a relative permeability <span class="math notranslate nohighlight">\(\mu_r\)</span>, an electric conductivity <span class="math notranslate nohighlight">\(\kappa\)</span>,
 and a hypothetical magnetic conductivity <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">Kappa</span></code> (<span class="math notranslate nohighlight">\(\kappa\)</span>) always stands for electric conductivity in openEMS.
+It’s not to be confused with electric permittivity <span class="math notranslate nohighlight">\(\epsilon\)</span>, which is
+sometimes also denoted as <span class="math notranslate nohighlight">\(\kappa\)</span> in the literature (e.g. high-κ
+dielectric). This convention is never used in openEMS, its use in simulation
+code is strongly discouraged.</p>
+</div>
 <p>All parameters are constants that don’t vary with frequency.
 It can model dielectric materials (such as circuit board substrate), magnetic
 materials (such as magnetic cores), resistive materials, and 3D metals.
@@ -181,21 +206,81 @@ it produces acceptable results in simpler applications, and has no simulation
 overhead.</p>
 <section id="id2">
 <h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<p>It’s added by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddMaterial.html#AddMaterial" title="AddMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddMaterial()</span></code></a> method in Matlab/Octave, or by the
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddMaterial" title="CSXCAD.ContinuousStructure.AddMaterial"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddMaterial()</span></code></a> method in Python.</p>
 <p>Create a plexiglass material:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
-<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddMaterial</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">);</span>
-<span class="n">CSX</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">,</span> <span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span> <span class="mf">2.22</span><span class="p">);</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">InitCSX</span><span class="p">();</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">AddMaterial</span><span class="p">(</span><span class="n">csx</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">);</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">SetMaterialProperty</span><span class="p">(</span><span class="n">csx</span><span class="p">,</span> <span class="s1">&#39;plexiglass&#39;</span><span class="p">,</span> <span class="s1">&#39;Epsilon&#39;</span><span class="p">,</span> <span class="mf">2.22</span><span class="p">);</span>
 
 <span class="c1"># Python</span>
+<span class="kn">import</span> <span class="nn">CSXCAD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
 <span class="n">plexiglass</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddMaterial</span><span class="p">(</span><span class="s1">&#39;plexiglass&#39;</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">2.22</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 </section>
+<section id="lumped-element">
+<h2>Lumped Element<a class="headerlink" href="#lumped-element" title="Permalink to this headline"></a></h2>
+<p>Lumped elements are ideal resistors, capacitors and inductors with sizes
+assumed to be negligible. They’re especially useful for modeling surface-mount
+circuit components.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Axis Alignment.</strong> Lumped elements must have an orientation aligned to
+the X, Y, or Z axis. If a misaligned resistor or capacitor must be used,
+defining a distributed element based on a hypothetical material (via
+<a class="reference internal" href="../octave/autogenerated/CSXCAD/AddMaterial.html#AddMaterial" title="AddMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddMaterial()</span></code></a> with an artificial conductivity or permittivity)
+may be a workaround.</p>
+<p><strong>Parasitics</strong>: Even though lumped elements are “ideal”, their connections
+to the circuit still introduce parasitic effects (e.g., inductance from the
+overall loop area, partial inductance of terminal leads or mounting height).
+For example, an SMD capacitor’s inductance primarily comes from its mounting
+height, not internal to the capacitor itself. Full-wave simulations inherently
+capture these parasitics through the electric and magnetic fields in space.
+Thus, non-internal
+parasitics don’t need to be added, such as the series inductance of an
+SMD capacitor. However, datasheets often combine internal and external-loop
+effects, making it hard to isolate the “pure” lumped element values for
+simulation - some may argue it isn’t a well-defined concept to begin with.</p>
+</div>
+<section id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<p>It’s added by the <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddLumpedElement.html#AddLumpedElement" title="AddLumpedElement"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a> method in Matlab/Octave, or by the
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a> method in Python.
+If argument <code class="docutils literal notranslate"><span class="pre">caps</span></code> is enabled, a small PEC plate is added to each end of the
+lumped element to ensure electrical contact to the connected lines.</p>
+<p>Create a lumped 1 pF capacitor in <code class="docutils literal notranslate"><span class="pre">y</span></code> direction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">Matlab</span><span class="o">/</span><span class="n">Octave</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">InitCSX</span><span class="p">();</span>
+<span class="n">CSX</span> <span class="o">=</span> <span class="n">AddLumpedElement</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="s1">&#39;capacitor&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;Caps&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">);</span>
+
+<span class="c1"># Python</span>
+<span class="kn">import</span> <span class="nn">CSXCAD</span>
+<span class="n">csx</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">capacitor</span> <span class="o">=</span> <span class="n">csx</span><span class="o">.</span><span class="n">AddLumpedElement</span><span class="p">(</span><span class="s1">&#39;capacitor&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">caps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For most of the project history, a lumped element can only be an isolated
+resistor or capacitor (even inductors are not implemented). In the latest
+development version of openEMS (v0.0.37, unreleased), a contributed
+new extension has been submitted to openEMS, allowing the lumped element
+to be an entire RLC circuit, with resistance, capacitor, inductance values
+simultaneously.
+It’s controlled by the parameter <code class="docutils literal notranslate"><span class="pre">LEtype</span></code> in Python’s
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>. A value of <code class="docutils literal notranslate"><span class="pre">0</span></code>
+denotes a parallel RLC circuit, when a value of <code class="docutils literal notranslate"><span class="pre">1</span></code> denotes a series
+RLC circuit. It’s not implemented by the Matlab/Octave binding as of
+now.</p>
+</section>
+</section>
 <section id="dispersive-materials">
 <h2>Dispersive Materials<a class="headerlink" href="#dispersive-materials" title="Permalink to this headline"></a></h2>
 <p>Debye, Drude, Lorentz materials are advanced models to model dispersive
-materials.</p>
+materials. They’re added by the functions <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddDebyeMaterial.html#AddDebyeMaterial" title="AddDebyeMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddDebyeMaterial()</span></code></a> and
+<a class="reference internal" href="../octave/autogenerated/CSXCAD/AddLorentzMaterial.html#AddLorentzMaterial" title="AddLorentzMaterial"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddLorentzMaterial()</span></code></a>.</p>
 <p>Nearly all real-world materials exhibit a phenomenon known as dispersion. That
 is, the speed of light in the medium depends on the EM wave’s frequency. In
 optics, it manifests as a frequency-dependent refractive index. In RF/microwave
@@ -206,7 +291,19 @@ control electromagnetic wave propagation in unusual ways.</p>
 permeability is sufficient if dispersion is negligible, more demanding
 simulations call for dispersion models for accurately calculating a material’s
 wideband response.</p>
-<p>See <a class="reference internal" href="dispersive.html#dispersive-materials"><span class="std std-ref">Dispersive Materials</span></a> for detailed description.</p>
+<p>See <a class="reference internal" href="dispersive.html#dispersive-materials"><span class="std std-ref">Dispersive Materials</span></a> for detailed descriptions.</p>
+</section>
+<section id="probes-and-dumps">
+<h2>Probes and Dumps<a class="headerlink" href="#probes-and-dumps" title="Permalink to this headline"></a></h2>
+<p>Technically, excitation sources, probes, and field dump boxes are also
+<em>Properties</em>. The associated geometrical shape determines the locations
+of these excitations, probes and dumps.</p>
+<p>They’re added by Matlab/Octave functions <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddExcitation.html#AddExcitation" title="AddExcitation"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>,
+<a class="reference internal" href="../octave/autogenerated/CSXCAD/AddPlaneWaveExcite.html#AddPlaneWaveExcite" title="AddPlaneWaveExcite"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddPlaneWaveExcite()</span></code></a>, <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddProbe.html#AddProbe" title="AddProbe"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddProbe()</span></code></a>, and <a class="reference internal" href="../octave/autogenerated/CSXCAD/AddDump.html#AddDump" title="AddDump"><code class="xref py py-func docutils literal notranslate"><span class="pre">AddDump()</span></code></a>. In Python,
+they’re added by <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddExcitation" title="CSXCAD.ContinuousStructure.AddExcitation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>,
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddProbe" title="CSXCAD.ContinuousStructure.AddProbe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddProbe()</span></code></a> and
+<a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddDump" title="CSXCAD.ContinuousStructure.AddDump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddDump()</span></code></a>.</p>
+<p>To learn more, see <a class="reference internal" href="excitations.html#concept-excitations"><span class="std std-ref">Excitation Sources</span></a> and <a class="reference internal" href="dump.html#concept-fielddump"><span class="std std-ref">Field Dump</span></a>.</p>
 </section>
 </section>
 
@@ -214,7 +311,7 @@ wideband response.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csxcad.html" class="btn btn-neutral float-left" title="CSXCAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="primitives.html" class="btn btn-neutral float-right" title="Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

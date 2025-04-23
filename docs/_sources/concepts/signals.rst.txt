@@ -252,7 +252,7 @@ Custom Signal
 The custom signal is implemented in the simulation by accepting a user-defined
 symbolic expression.
 
-The first argument ``f_str`` is a string that contains the expression with
+The argument ``f_str`` is a string that contains the expression with
 an independent variable ``t``, representing time. It's parsed by the ``fparser``
 library, so the string should be a legal ``fparser`` expression with proper syntax.
 A complete set of built-in functions (including trigonometry functions such as
@@ -266,15 +266,22 @@ by openEMS, even though they don't appear in the ``fparser`` documentation.
 
    See the fparser project documentation [2]_ for syntax.
 
-The second argument ``f0`` is the base frequency of the excitation signal, which
+In Python, the signal's frequency and bandwidth is specified by two parameters:
+``f0`` and ``f_max``. ``f0`` is the base frequency of the excitation signal, which
 is set to the excitation signal's center (or carrier) frequency. It's meant to
-define the "frequency of interest" of the simulation. The third argument ``f_max``
-is the maximum frequency content of the signal.
+define the "frequency of interest" of the simulation. The argument ``f_max``
+is the maximum frequency content of the signal, such as the signal's 20 dB
+cutoff frequency like the Gaussian pulse. In principle,
+the openEMS simulator uses both parameters to calculate the sampling rate of
+field values.
 
-The openEMS simulator uses ``f0`` and ``f_max`` to calculate the Nyquist frequency
-for sampling field values. It's recommended to set ``f_max`` to the signal's 20 dB
-cutoff frequency. For signals without a well-defined frequency, set ``f0`` and
-``f_max`` to the same value.
+However, as of now, the handling of this calculation is inconsistent.
+In Matlab/Octave, only one argument ``f0`` is exposed,
+``f_max`` always takes the same value as ``f0``. Furthermore, many broadband
+signals don't have a well-defined center frequency. As a simplified rule,
+in both Matlab/Octave and Python, it's
+recommended to set both ``f0`` and ``f_max`` to the same value, which is
+twice of a signal's bandwidth (i.e. its Nyquist rate).
 
 .. hint::
 
@@ -282,7 +289,7 @@ cutoff frequency. For signals without a well-defined frequency, set ``f0`` and
    enabled, openEMS's sampling frequency is set to the Nyquist rate based on the
    signal's highest frequency component. Conceptually, sampling is performed as
    infrequently as possible, just sufficient to reconstruct the signal's spectrum
-   up to ``f_max``.
+   up to ``f_0``.
    
    **Impulse and step visualization**. However, if field dumps are enabled to
    visualize the propagation of wavefronts of an impulse or step signal, this
@@ -298,7 +305,15 @@ Matlab/Octave::
     % Limit the maximum simulation to 10000 timesteps,
     % otherwise the excitation waveform would exhaust system memory.
     fdtd = InitFDTD('NrTS', 10000);
-    fdtd = SetCustomExcite(fdtd, f0, f_max, f_str);
+
+    % Define signal waveform as a ramped sinusoid.
+    f0 = 500e6;
+    T = 1 / f0;
+    f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)';
+    f_str = strrep(f_str, "T", num2str(T));
+    f_str = strrep(f_str, "f0", num2str(f0));
+
+    fdtd = SetCustomExcite(fdtd, f0 * 2, f_str);
 
     % If visualization of field dumps is needed, use a much higher
     % cutoff frequency to force openEMS to dump the fields more often.
@@ -310,10 +325,17 @@ Python::
     # otherwise the excitation waveform would exhaust system memory.
     fdtd = openEMS.openEMS(NrTS=10000)
 
+    # Define signal waveform as a ramped sinusoid.
+    f0 = 500e6;
+    T = 1 / f0;
+    f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)'
+    f_str = f_str.replace("T", str(T))
+    f_str = f_str.replace("f0", str(f0))
+
     # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
     f_bytes = f_str.encode("UTF-8")
 
-    fdtd.SetCustomExcite(f_bytes, f0, f_max)
+    fdtd.SetCustomExcite(f_bytes, f0 * 2, f0 * 2)
 
     # If visualization of field dumps is needed, use a much higher
     # cutoff frequency to force openEMS to dump the fields more often.
@@ -377,12 +399,13 @@ Matlab/Octave::
     % Code reimplemented here for clarity. Copying and distribution of this file,
     % with or without modification, are permitted in any medium without royalty.
     % This file is offered as-is, without any warranty.
-    function [excitation_str, f_max] = CalcGaussianStep(tr_10_90, tolerance, cutoff_db)
+    function [excitation_str, f_nyquist] = CalcGaussianStep(tr_10_90, tolerance, cutoff_db)
         % Calculate parameter sigma to get a Gaussian step with wanted rise time.
         sigma = tr_10_90 / (2 * erfinv(0.8));
     
         % calculate the maximum frequency content at cutoff
         f_max = sqrt((cutoff_db / 20 * log(10)) / (pi ** 2 * sigma ** 2));
+        f_nyquist = f_max * 2;
     
         % The raw Gaussian step function has y = 0.5 at the origin,
         % we need to time-shift it based on the wanted tolerance
@@ -437,9 +460,9 @@ Matlab/Octave::
     % Step excitation with 1 nanosecond 10%-90% risetime.
     % at t = 0, e[t] is at 1% of the final value,
     % calculate the maximum frequency content (20 dB down)
-    [f_str, f_max] = CalcGaussianStep(1e-9, 0.01, 20);
+    [f_str, f_nyquist] = CalcGaussianStep(1e-9, 0.01, 20);
 
-    fdtd = SetCustomExcite(fdtd, f0, f_max, f_str);
+    fdtd = SetCustomExcite(fdtd, f_nyquist, f_str);
 
     % If visualization of field dumps is needed, use a much higher
     % cutoff frequency to force openEMS to dump the fields more often.
@@ -465,6 +488,7 @@ Python::
     
         # calculate the maximum frequency content at cutoff
         f_max = math.sqrt((cutoff_db / 20 * math.log(10)) / (math.pi ** 2 * sigma ** 2))
+        f_nyquist = f_max * 2
     
         # The raw Gaussian step function has y = 0.5 at the origin,
         # we need to time-shift it based on the wanted tolerance
@@ -510,7 +534,7 @@ Python::
         # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
         excitation_str = excitation_str.encode("UTF-8")
 
-        return excitation_str, f_max
+        return excitation_str, f_nyquist
 
 
     # Limit the maximum simulation to 10000 timesteps,
@@ -520,7 +544,9 @@ Python::
     # Step excitation with 1 nanosecond 10%-90% risetime.
     # By default, at t = 0, e[t] is at 1% of the final value.
     # By default, calculate the maximum frequency content (20 dB down)
-    f_str, f_max = CalcGaussianStep(1e-9)
+    f_str, f_nyquist = CalcGaussianStep(1e-9)
+
+    fdtd.SetCustomExcite(f_bytes, f_nyquist, f_nyquist)
 
     # If visualization of field dumps is needed, use a much higher
     # cutoff frequency to force openEMS to dump the fields more often.

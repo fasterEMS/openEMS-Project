@@ -1,37 +1,45 @@
+.. _concept_properties:
+
 Properties
 ============
 
-*Properties* defines the physical property of a material, such as a metal,
-a thin conducting sheet, a dielectric metarial, a magnetic material.
-Technically, excitation sources, probes, and field dump boxes are also
-*Properties*.
+*Properties* defines the material property or simulation property of a
+geometrical shape, such as a metal, a thin conducting sheet, a dielectric
+metarial, a magnetic material, or a lumped element (resistor, capacitor,
+inductor). *Properties* are always associated with one or more geometrical
+shapes, known as *primitives*.
 
-An openEMS simulation always starts by creating a 3D model of the structure
-using the CSXCAD library. The functions provided by CSXCAD can be classified
-into two types, *properties* and *primitives*. They define material properties
-and shapes respectively.
+Technically, excitation sources, probes, and field dump boxes
+are also *Properties*, which is used to enable a specific function to
+a location or a shape.
 
-All created entities for the simulation are stored in the CSXCAD data structure,
-and is usually saved to disk as an ``.xml`` file.
+.. important::
+   Remember to always add at least one :ref:`concept_primitives` (such
+   as a Box) to any property.
 
 Metal
 ------
 
 A metal is a modeled as a Perfect Electric Conductor (PEC) with infinite
-conductivity. Internally, the PEC is implemented by forcing the tangential
+conductivity.
+
+Internally, the PEC is implemented by forcing the tangential
 electric field in this region to be zero, which is characteristic of an
 ideal conductor that can’t be penetrated by electric field lines.
-
 If resistive losses are unimportant, one can use PEC rather than a realistic
 material model for simplicity and efficiency.
 
 Example
 """""""
 
+It's added by the :func:`AddMetal` method in Matlab/Octave, or by the
+:meth:`~CSXCAD.ContinuousStructure.AddMetal` method in Python.
+
 Create a Perfect Electric Conductor named ``plate``::
 
     % Matlab/Octave
-    % TBD
+    csx = InitCSX();
+    csx = AddMetal(csx, 'plate');
 
     # Python
     import CSXCAD
@@ -51,21 +59,25 @@ Thus, Thin Conducting Sheet treats the metal as a zero-thickness 2D plane.
 The resistive loss in metals is simulated using a simplified, behavioral model
 to "fit" the observed loss rather than the full physics.
 
-.. note::
-   * The geometrical thickness of the created shape (primitive) must be
-     zero.
+.. important::
+   * A Thin Conducting Sheet can only be used to create a zero-thickness
+     geometrical object, the created 3D shape (primitive) mush be a plane.
    * Surface roughness modeling is currently not supported.
 
 Example
 """""""
 
+It's added by the :func:`AddConductingSheet` method in Matlab/Octave, or by the
+:meth:`~CSXCAD.ContinuousStructure.AddConductingSheet` method in Python.
+
 The following example creates a Thin Conducting Sheet material named
-``copper_foil``, with a conductivity of 59.6e6 S and a virtual thickness
-of 35 micrometer (the shape created from it must be a 2D plane with zero
-thickness). This is typical for a 1-oz circuit board::
+``copper_foil``, with a conductivity of 59.6e6 S/m and a simulated thickness
+of 35 µm (the shape created from it must be a 2D plane with zero thickness).
+This is typical for a 1-oz circuit board::
 
     % Matlab/Octave
-    % TBD
+    csx = InitCSX();
+    csx = AddConductingSheet(csx, 'copper', 59.6e6, 35e-6);
 
     # Python
     import CSXCAD
@@ -79,6 +91,13 @@ A general material is defined by a relative permittivity :math:`\epsilon_r`,
 a relative permeability :math:`\mu_r`, an electric conductivity :math:`\kappa`,
 and a hypothetical magnetic conductivity :math:`\sigma`.
 
+.. warning::
+   ``Kappa`` (:math:`\kappa`) always stands for electric conductivity in openEMS.
+   It's not to be confused with electric permittivity :math:`\epsilon`, which is
+   sometimes also denoted as :math:`\kappa` in the literature (e.g. high-κ
+   dielectric). This convention is never used in openEMS, its use in simulation
+   code is strongly discouraged.
+
 All parameters are constants that don't vary with frequency.
 It can model dielectric materials (such as circuit board substrate), magnetic
 materials (such as magnetic cores), resistive materials, and 3D metals.
@@ -89,20 +108,84 @@ overhead.
 Example
 """"""""
 
+It's added by the :func:`AddMaterial` method in Matlab/Octave, or by the
+:meth:`~CSXCAD.ContinuousStructure.AddMaterial` method in Python.
+
 Create a plexiglass material::
 
     % Matlab/Octave
-    CSX = AddMaterial(CSX, 'plexiglass');
-    CSX = SetMaterialProperty(CSX, 'plexiglass', 'Epsilon', 2.22);
+    csx = InitCSX();
+    csx = AddMaterial(csx, 'plexiglass');
+    csx = SetMaterialProperty(csx, 'plexiglass', 'Epsilon', 2.22);
     
     # Python
+    import CSXCAD
+    csx = CSXCAD.ContinuousStructure()
     plexiglass = csx.AddMaterial('plexiglass', epsilon=2.22)
+
+Lumped Element
+---------------
+
+Lumped elements are ideal resistors, capacitors and inductors with sizes
+assumed to be negligible. They're especially useful for modeling surface-mount
+circuit components.
+
+.. important::
+   **Axis Alignment.** Lumped elements must have an orientation aligned to
+   the X, Y, or Z axis. If a misaligned resistor or capacitor must be used,
+   defining a distributed element based on a hypothetical material (via
+   :func:`AddMaterial` with an artificial conductivity or permittivity)
+   may be a workaround.
+
+   **Parasitics**: Even though lumped elements are "ideal", their connections
+   to the circuit still introduce parasitic effects (e.g., inductance from the
+   overall loop area, partial inductance of terminal leads or mounting height).
+   For example, an SMD capacitor’s inductance primarily comes from its mounting
+   height, not internal to the capacitor itself. Full-wave simulations inherently
+   capture these parasitics through the electric and magnetic fields in space.
+   Thus, non-internal
+   parasitics don't need to be added, such as the series inductance of an
+   SMD capacitor. However, datasheets often combine internal and external-loop
+   effects, making it hard to isolate the "pure" lumped element values for
+   simulation - some may argue it isn't a well-defined concept to begin with.
+
+Example
+""""""""
+
+It's added by the :func:`AddLumpedElement` method in Matlab/Octave, or by the
+:meth:`~CSXCAD.ContinuousStructure.AddLumpedElement` method in Python.
+If argument ``caps`` is enabled, a small PEC plate is added to each end of the
+lumped element to ensure electrical contact to the connected lines.
+
+Create a lumped 1 pF capacitor in ``y`` direction::
+
+    % Matlab/Octave
+    csx = InitCSX();
+    CSX = AddLumpedElement(CSX, 'capacitor', 'y', 'Caps', 1, 'C', 1e-12);
+
+    # Python
+    import CSXCAD
+    csx = CSXCAD.ContinuousStructure()
+    capacitor = csx.AddLumpedElement('capacitor', 'y', C=1e-12, caps=True)
+
+For most of the project history, a lumped element can only be an isolated
+resistor or capacitor (even inductors are not implemented). In the latest
+development version of openEMS (v0.0.37, unreleased), a contributed
+new extension has been submitted to openEMS, allowing the lumped element
+to be an entire RLC circuit, with resistance, capacitor, inductance values
+simultaneously.
+It's controlled by the parameter ``LEtype`` in Python's
+:meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`. A value of ``0``
+denotes a parallel RLC circuit, when a value of ``1`` denotes a series
+RLC circuit. It's not implemented by the Matlab/Octave binding as of
+now.
 
 Dispersive Materials
 ----------------------
 
 Debye, Drude, Lorentz materials are advanced models to model dispersive
-materials.
+materials. They're added by the functions :func:`AddDebyeMaterial` and
+:func:`AddLorentzMaterial`.
 
 Nearly all real-world materials exhibit a phenomenon known as dispersion. That
 is, the speed of light in the medium depends on the EM wave's frequency. In
@@ -116,4 +199,22 @@ permeability is sufficient if dispersion is negligible, more demanding
 simulations call for dispersion models for accurately calculating a material's
 wideband response.
 
-See :ref:`dispersive_materials` for detailed description.
+See :ref:`dispersive_materials` for detailed descriptions.
+
+Probes and Dumps
+-------------------
+
+Technically, excitation sources, probes, and field dump boxes are also
+*Properties*. The associated geometrical shape determines the locations
+of these excitations, probes and dumps.
+
+They're added by Matlab/Octave functions :func:`AddExcitation`,
+:func:`AddPlaneWaveExcite`, :func:`AddProbe`, and :func:`AddDump`. In Python,
+they're added by :meth:`~CSXCAD.ContinuousStructure.AddExcitation`,
+:meth:`~CSXCAD.ContinuousStructure.AddProbe` and
+:meth:`~CSXCAD.ContinuousStructure.AddDump`.
+
+To learn more, see :ref:`concept_excitations` and :ref:`concept_fielddump`.
+
+
+
