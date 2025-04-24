@@ -52,7 +52,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#freebsd">FreeBSD</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="check.html">Check Installation</a></li>
@@ -218,7 +221,9 @@ or <cite>~/.zshrc</cite> to make this change persistent.</p>
 </section>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h2>
+<span id="manual-troubleshooting-src"></span><h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h2>
+<section id="freebsd">
+<h3>FreeBSD<a class="headerlink" href="#freebsd" title="Permalink to this headline"></a></h3>
 <p>On FreeBSD, the default CMake has a bug, causing it unable to find
 HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CMake Error at /usr/local/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:230 (message):</span>
@@ -238,6 +243,7 @@ HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">find_package(HDF5 COMPONENTS C HL REQUIRED)</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 

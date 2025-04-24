@@ -66,7 +66,7 @@ The workflow of any openEMS simulation boils down to the following.
    are then evolved over time.
 
 4. **Boundary Conditions**: Furthermore, since the simulation box has a finite size,
-   we must decide what to do once the E&M field reaches the edge of the box by
+   we must decide what to do once the EM field reaches the edge of the box by
    selecting the appropriate boundary conditions.
 
 5. **Simulation Run**: Electromagnetic energy is injected by an excitation port

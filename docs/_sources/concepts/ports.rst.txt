@@ -124,8 +124,8 @@ Python:
 Selection
 -----------
 
-In openEMS, ports are ideal sources of E&M fields, but they are not ideal
-*launchers* of E&M waves into structures due to a discontinuity at the
+In openEMS, ports are ideal sources of EM fields, but they are not ideal
+*launchers* of EM waves into structures due to a discontinuity at the
 boundary between the port and the structure.
 If port placement is not optimized,
 this region of discontinuity may introduce artifacts such
@@ -151,8 +151,8 @@ waveguides ports
 
 .. note::
    Like physical ports on real devices, the virtual ports in openEMS are not
-   perfect. They're ideal sources of E&M fields, but they are not ideal
-   *launchers* of E&M waves into structures. A port creates a region of
+   perfect. They're ideal sources of EM fields, but they are not ideal
+   *launchers* of EM waves into structures. A port creates a region of
    discontinuity, so they may introduce artifacts.
    Optimizing the placement and implementation of a port reduces artifacts.
    Alternatively, these artifacts
@@ -178,7 +178,7 @@ Implementation
 
 Ports are a high-level concept in openEMS. Internally, they're
 implemented by first calling :meth:`~CSXCAD.ContinuousStructure.AddExcitation`
-to create a source of E&M field. Later, :meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`
+to create a source of EM field. Later, :meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`
 and :meth:`~CSXCAD.ContinuousStructure.AddProbe` are used to add termination
 resistances and probes. One can create new port types based on these
 low-level primitives.

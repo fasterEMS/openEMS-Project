@@ -16,7 +16,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Dispersive Materials" href="dispersive.html" />
+    <link rel="next" title="Field Dump" href="dump.html" />
     <link rel="prev" title="Excitation Sources" href="excitations.html" /> 
 </head>
 
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#bibliography">Bibliography</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="dump.html">Field Dump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
 </ul>
 </li>
@@ -111,7 +112,7 @@
              
   <section id="signal-waveforms">
 <span id="signal-concept"></span><h1>Signal Waveforms<a class="headerlink" href="#signal-waveforms" title="Permalink to this headline"></a></h1>
-<p>Both raw <span class="xref std std-ref">concept_excitations</span> or high-level <a class="reference internal" href="ports.html#concept-ports"><span class="std std-ref">Ports</span></a>
+<p>Both raw <a class="reference internal" href="excitations.html#concept-excitations"><span class="std std-ref">Excitation Sources</span></a> or high-level <a class="reference internal" href="ports.html#concept-ports"><span class="std std-ref">Ports</span></a>
 require associated signal waveforms. openEMS provides approximations to
 a sinusoid signal, a Dirac impulse, a Heaviside step, a Gaussian pulse,
 and custom excitation signals (defined by a user-supplied mathematical
@@ -180,7 +181,7 @@ bandwidth.</p>
 <p><strong>Bandwidth</strong>. This signal doesn’t have a well-defined bandwidth. The specified
 frequency <code class="docutils literal notranslate"><span class="pre">f_max</span></code> is ignored; bandwidth limitation is currently unimplemented.
 Using these signals may cause unrealistic excitation of rarely-encountered
-high-order E&amp;M wave modes in structures, creating unexpected behavior.
+high-order EM wave modes in structures, creating unexpected behavior.
 The rising edge of the waveform may show overshoot and ringing due to
 numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
 pulse or a custom excitation is preferred in most applications.</p>
@@ -242,7 +243,7 @@ number of timesteps (in iterations) or wall-clock time
 frequency
 <code class="docutils literal notranslate"><span class="pre">f_max</span></code> is ignored; bandwidth limitation is currently unimplemented.
 Using these signals may cause unrealistic excitation of rarely-encountered
-high-order E&amp;M wave modes in structures, creating unexpected behavior.
+high-order EM wave modes in structures, creating unexpected behavior.
 The rising edge of the waveform may show overshoot and ringing due to
 numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
 pulse or a custom excitation is preferred in most applications.</p>
@@ -444,7 +445,7 @@ amplitude.</p>
 circuits, such as digital logic circuits, pulse generators, or Time-Domain
 Reflectometry (TDR). It avoids the potential simulation artifacts of the
 2-timestep Heaviside step function, such as the unrealistic excitation of
-high-order E&amp;M wave modes.</p>
+high-order EM wave modes.</p>
 <p>It’s originally proposed and implemented by Ted Yapo. The code has been rewritten
 for clarity. For technical details, see <a class="footnote-reference brackets" href="#id7" id="id6">1</a>.</p>
 <div class="admonition hint">
@@ -643,7 +644,7 @@ early reflections without completing a full simulation.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="excitations.html" class="btn btn-neutral float-left" title="Excitation Sources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="dispersive.html" class="btn btn-neutral float-right" title="Dispersive Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dump.html" class="btn btn-neutral float-right" title="Field Dump" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

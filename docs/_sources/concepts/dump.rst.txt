@@ -23,7 +23,7 @@ Several kinds of dump boxes exist.
 #. Frequency-domain dumps of electric field, auxiliary magnetic field,
    electric conduction current, total current density, electric displacement
    field, and magnetic field (flux density), numbered from ``10`` to ``15``.
-#. Specific Absorption Rate (SAR) for biological E&M radiation exposure analysis.
+#. Specific Absorption Rate (SAR) for biological EM radiation exposure analysis.
 #. Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
    (special setup required, via :meth:`openEMS.openEMS.CreateNF2FFBox` and a
    separate post-processing tool).

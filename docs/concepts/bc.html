@@ -55,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dump.html">Field Dump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
 </ul>
 </li>
@@ -169,7 +170,7 @@ discouraged due to poor readability, but one may encounter them in older example
 </section>
 <section id="reflecting-dirichlet-boundary-conditions">
 <h2>Reflecting (Dirichlet) Boundary Conditions<a class="headerlink" href="#reflecting-dirichlet-boundary-conditions" title="Permalink to this headline"></a></h2>
-<p>If the finite nature of the simulation box and the reflection of E&amp;M waves at
+<p>If the finite nature of the simulation box and the reflection of EM waves at
 the boundaries are acceptable, reflecting boundary conditions offer a simple
 zero-overhead solution. They efficiently model structures inside metal
 enclosures, above a ground plane, or with an electric or magnetic field
@@ -246,14 +247,14 @@ Adamantios (at English Wikipedia), licensed under CC BY-SA 3.0.</span><a class="
 <li><p><strong>Mur’s Boundary Condition (MUR)</strong>. This is a
 first-generation boundary condition purely defined by differential
 equations, originally invented by Gerrit Mur in the 1980s. It has
-a moderate computational overhead, but it works only if the E&amp;M wave
+a moderate computational overhead, but it works only if the EM wave
 is traveling at a direction orthogonal to the boundary, with a
 well-defined phase velocity (e.g. the speed of light). Thus,
 reflections may cause errors if strong radiation exists due to
 imperfect absorption.</p></li>
 <li><p><strong>Perfectly Matched Layer (PML)</strong>. This is the
 second-generation boundary condition proposed in the 1990s, modeling
-the behavior of a hypothetical E&amp;M wave-absorbing material. Unlike
+the behavior of a hypothetical EM wave-absorbing material. Unlike
 Mur’s ABC, PML occupies some physical cells in the simulation box
 (the actual boundary at the true edge remains PEC).
 This mimics the wave-absorbing foam on the wall of an anechoic chamber

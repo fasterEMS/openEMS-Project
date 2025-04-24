@@ -252,8 +252,8 @@ from the <code class="docutils literal notranslate"><span class="pre">scikit-rf<
 </section>
 <section id="selection">
 <h2>Selection<a class="headerlink" href="#selection" title="Permalink to this headline"></a></h2>
-<p>In openEMS, ports are ideal sources of E&amp;M fields, but they are not ideal
-<em>launchers</em> of E&amp;M waves into structures due to a discontinuity at the
+<p>In openEMS, ports are ideal sources of EM fields, but they are not ideal
+<em>launchers</em> of EM waves into structures due to a discontinuity at the
 boundary between the port and the structure.
 If port placement is not optimized,
 this region of discontinuity may introduce artifacts such
@@ -277,8 +277,8 @@ waveguides ports</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Like physical ports on real devices, the virtual ports in openEMS are not
-perfect. They’re ideal sources of E&amp;M fields, but they are not ideal
-<em>launchers</em> of E&amp;M waves into structures. A port creates a region of
+perfect. They’re ideal sources of EM fields, but they are not ideal
+<em>launchers</em> of EM waves into structures. A port creates a region of
 discontinuity, so they may introduce artifacts.
 Optimizing the placement and implementation of a port reduces artifacts.
 Alternatively, these artifacts
@@ -304,7 +304,7 @@ under CC BY-SA 4.0 <a href="#id5"><span class="problematic" id="id1">[1]_</span>
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline"></a></h2>
 <p>Ports are a high-level concept in openEMS. Internally, they’re
 implemented by first calling <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddExcitation" title="CSXCAD.ContinuousStructure.AddExcitation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddExcitation()</span></code></a>
-to create a source of E&amp;M field. Later, <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>
+to create a source of EM field. Later, <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddLumpedElement" title="CSXCAD.ContinuousStructure.AddLumpedElement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddLumpedElement()</span></code></a>
 and <a class="reference internal" href="../python/CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure.AddProbe" title="CSXCAD.ContinuousStructure.AddProbe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AddProbe()</span></code></a> are used to add termination
 resistances and probes. One can create new port types based on these
 low-level primitives.</p>

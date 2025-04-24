@@ -565,7 +565,7 @@ Several kinds of dump boxes exist.
 #. Frequency-domain dumps of electric field, auxiliary magnetic field,
    electric conduction current, total current density, electric displacement
    field, and magnetic field (flux density), numbered from ``10`` to ``15``.
-#. Specific Absorption Rate (SAR) for biological E&M radiation exposure analysis.
+#. Specific Absorption Rate (SAR) for biological EM radiation exposure analysis.
 #. Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
    (special setup required, via :meth:`openEMS.openEMS.CreateNF2FFBox` and a
    separate post-processing tool).
@@ -639,8 +639,8 @@ at this region.
 Select the Right Port Type
 """"""""""""""""""""""""""""
 
-In openEMS, ports are ideal sources of E&M fields, but they are not ideal
-*launchers* of E&M waves into structures due to a discontinuity at the
+In openEMS, ports are ideal sources of EM fields, but they are not ideal
+*launchers* of EM waves into structures due to a discontinuity at the
 boundary between the port and the structure.
 If port placement is not optimized,
 this region of discontinuity may introduce artifacts such
@@ -673,8 +673,8 @@ waveguides (``AddCircWaveGuidePort.m``) ports.
 
 .. note::
    Like physical ports on real devices, the virtual ports in openEMS are not
-   perfect. They're ideal sources of E&M fields, but they are not ideal
-   *launchers* of E&M waves into structures. A port creates a region of
+   perfect. They're ideal sources of EM fields, but they are not ideal
+   *launchers* of EM waves into structures. A port creates a region of
    discontinuity, so they may introduce artifacts.
    Optimizing the placement and implementation of a port reduces artifacts.
    Alternatively, these artifacts
@@ -872,7 +872,7 @@ the six faces of the box: ``x_min``, ``x_max``, ``y_min``, ``y_max``,
 Reflecting (Dirichlet) Boundary Conditions
 """""""""""""""""""""""""""""""""""""""""""
 
-If the finite nature of the simulation box and the reflection of E&M waves at
+If the finite nature of the simulation box and the reflection of EM waves at
 the boundaries are acceptable, reflecting boundary conditions offer a simple
 zero-overhead solution. They efficiently model structures inside metal
 enclosures, above a ground plane, or with an electric or magnetic field
@@ -954,7 +954,7 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
 #. **Mur's Boundary Condition (MUR)**. This is a
    first-generation boundary condition purely defined by differential
    equations, originally invented by Gerrit Mur in the 1980s. It has
-   a moderate computational overhead, but it works only if the E&M wave
+   a moderate computational overhead, but it works only if the EM wave
    is traveling at a direction orthogonal to the boundary, with a
    well-defined phase velocity (e.g. the speed of light). Thus,
    reflections may cause errors if strong radiation exists due to
@@ -962,7 +962,7 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
 
 #. **Perfectly Matched Layer (PML)**. This is the
    second-generation boundary condition proposed in the 1990s, modeling
-   the behavior of a hypothetical E&M wave-absorbing material. Unlike
+   the behavior of a hypothetical EM wave-absorbing material. Unlike
    Mur's ABC, PML occupies some physical cells in the simulation box
    (the actual boundary at the true edge remains PEC).
    This mimics the wave-absorbing foam on the wall of an anechoic chamber
@@ -1390,7 +1390,7 @@ simulation terminates.
 
 Conversely, incorrect or unphysical
 modeling or meshing may destabilize the simulation, causing
-*blow-ups*. The simulation box's E&M field strength diverges over
+*blow-ups*. The simulation box's EM field strength diverges over
 time due to the accumulation of small numerical errors. The
 total energy may gradually increase unbounded, eventually
 reaching the floating-point infinity.
@@ -1401,7 +1401,7 @@ Note that the displayed energy value is only a rough, indicative estimate.
 Factors such as material properties are ignored for simulation speed.
 For resonating structures (such as cavity resonators and antennas),
 the energy indicator may fluctuate up and down repeatedly
-due to the oscillating E&M field strengths. The convergence time
+due to the oscillating EM field strengths. The convergence time
 required for low-loss (high Q) resonators which have minimal energy
 dissipation, is notoriously long in FDTD simulations. The absence
 of termination resistances or Absorbing Boundary Conditions
@@ -2459,16 +2459,20 @@ devices using them.
 
 The Python package :program:`SignalIntegrity`, designed for signal
 integrity and eye diagram simulations from the ground up, is a rare
-exception.  It's developed by Pete Pupalaikis, a former signal
+exception. It's developed by Pete Pupalaikis, a former signal
 integrity expert at LeCroy.
 
 .. seealso::
-   The software's internal theory of operation is also published almost
+   **Book.** The software's internal theory of operation is also published almost
    in full in the textbook *S-Parameters for Signal Integrity* [6]_. Each
    concept is accomplished by both formulas and executable code, making
    it an invaluable reference in this field. The author of this tutorial
    recommends everyone who simulates or measures RF/microwave devices to
    get a copy.
+
+   **PyBERT.** It's another circuit simulator designed with time-domain
+   S-parameter simulation and signal integrity in mind, developed by David
+   Banas. See [23]_.
 
 Install
 ''''''''
@@ -3340,7 +3344,7 @@ educated guesses:
    when the excitation frequency is high enough. For example,
    the book [10]_ lists four possible high-order microstrip modes.
    In fact, unrealistic excitation of high-order modes is fairly common
-   in E&M field solvers as unphysical excitation signals or
+   in EM field solvers as unphysical excitation signals or
    port placements are easily created. Be sure to watch for it,
    if the simulation results don't seem to make sense.
 
@@ -3761,3 +3765,6 @@ Bibliography
 
 .. [22] Brian Walker. `Make Accurate Impedance Measurements Using a VNA
    <https://www.mwrf.com/technologies/test-measurement/article/21849791/copper-mountain-technologies-make-accurate-impedance-measurements-using-a-vna>`_, in Microwave & RF website.
+
+.. [23] PyBERT. `Project Repository.
+   <https://github.com/capn-freako/PyBERT>`_

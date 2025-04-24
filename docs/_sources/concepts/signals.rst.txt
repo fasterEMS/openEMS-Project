@@ -82,7 +82,7 @@ bandwidth.
    **Bandwidth**. This signal doesn't have a well-defined bandwidth. The specified
    frequency ``f_max`` is ignored; bandwidth limitation is currently unimplemented.
    Using these signals may cause unrealistic excitation of rarely-encountered
-   high-order E&M wave modes in structures, creating unexpected behavior.
+   high-order EM wave modes in structures, creating unexpected behavior.
    The rising edge of the waveform may show overshoot and ringing due to
    numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
    pulse or a custom excitation is preferred in most applications.
@@ -150,7 +150,7 @@ bandwidth.
    frequency
    ``f_max`` is ignored; bandwidth limitation is currently unimplemented.
    Using these signals may cause unrealistic excitation of rarely-encountered
-   high-order E&M wave modes in structures, creating unexpected behavior.
+   high-order EM wave modes in structures, creating unexpected behavior.
    The rising edge of the waveform may show overshoot and ringing due to
    numerical dispersion. Using a bandwidth-limited signal, such as the Gaussian
    pulse or a custom excitation is preferred in most applications.
@@ -371,7 +371,7 @@ This waveform is useful for modeling transient switching signals in practical
 circuits, such as digital logic circuits, pulse generators, or Time-Domain
 Reflectometry (TDR). It avoids the potential simulation artifacts of the
 2-timestep Heaviside step function, such as the unrealistic excitation of
-high-order E&M wave modes.
+high-order EM wave modes.
 
 It's originally proposed and implemented by Ted Yapo. The code has been rewritten
 for clarity. For technical details, see [1]_.

@@ -100,7 +100,7 @@ for more information.
 
 Also, note that On FreeBSD, the default CMake has a bug, causing it unable
 to find HDF5 for CSXCAD and openEMS (the ready-made package in FreeBSD Ports
-is fine). If you want to build openEMS manually, see :ref:`_manual_freebsd_workaround_src`
+is fine). If you want to build openEMS manually, see :ref:`manual_troubleshooting_src`
 for its workaround.
 
 .. code-block:: console

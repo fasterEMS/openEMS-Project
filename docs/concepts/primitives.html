@@ -141,6 +141,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ports.html">Ports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="excitations.html">Excitation Sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="signals.html">Signal Waveforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dump.html">Field Dump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dispersive.html">Dispersive Materials</a></li>
 </ul>
 </li>
@@ -617,23 +618,23 @@ drawing unit, made of plexiglass:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddCurve</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: Name of the assigned property.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: Priority of the primitive, see <a class="reference internal" href="#concept-priority"><span class="std std-ref">Priority</span></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.
-Array column refers to point number, array row refers to its
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.</dt><dd><p>Array column refers to point number, array row refers to its
 <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> positions.</p>
-<blockquote>
-<div><ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(1,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">x</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(2,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">y</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(3,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">z</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: A key/value list of primitives variable arguments.</p>
-<ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">CoordSystem</span></code>: See <a class="reference internal" href="#concept-coordinate-systems"><span class="std std-ref">Coordinate Systems</span></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Transform,</span> <span class="pre">{array}</span></code>: See <a class="reference internal" href="#concept-transformation"><span class="std std-ref">Transformation</span></a>.</p></li>
 </ul>
@@ -647,22 +648,22 @@ definition:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curve</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">AddCurve</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">curve</span></code>: An instance of <a class="reference internal" href="../python/CSXCAD/CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve" title="CSXCAD.CSPrimitives.CSPrimCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPrimCurve</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">material</span></code>: An instance of <a class="reference internal" href="../python/CSXCAD/CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial" title="CSXCAD.CSProperties.CSPropMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPropMaterial</span></code></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.
-Array column refers to point number, array row refers to its
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.</dt><dd><p>Array column refers to point number, array row refers to its
 <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> positions.</p>
-<blockquote>
-<div><ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">points[0,</span> <span class="pre">point_number]</span></code>: position <code class="docutils literal notranslate"><span class="pre">x</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points[1,</span> <span class="pre">point_number]</span></code>: position <code class="docutils literal notranslate"><span class="pre">y</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points[2,</span> <span class="pre">point_number]</span></code>: position <code class="docutils literal notranslate"><span class="pre">z</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">**kw</span></code>: Optional keyword arguments:</p>
-<ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">priority</span></code>: priority of the primitive, see <a class="reference internal" href="#concept-priority"><span class="std std-ref">Priority</span></a>.</p></li>
 </ul>
 </li>
@@ -731,24 +732,24 @@ Array column refers to point number, array row refers to its
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">AddWire</span><span class="p">(</span><span class="n">CSX</span><span class="p">,</span> <span class="n">propName</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">wire_rad</span><span class="p">,</span> <span class="n">varargin</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">CSX</span></code>: The original CSX structure</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">propName</span></code>: Name of the assigned property.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">prio</span></code>: Priority of the primitive, see <a class="reference internal" href="#concept-priority"><span class="std std-ref">Priority</span></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.
-Array column refers to point number, array row refers to its
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.</dt><dd><p>Array column refers to point number, array row refers to its
 <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> positions.</p>
-<blockquote>
-<div><ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(1,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">x</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(2,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">y</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(3,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">z</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">wire_rad</span></code>: Wire radius.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">varargin</span></code>: A key/value list of primitives variable arguments.</p>
-<ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">CoordSystem</span></code>: See <a class="reference internal" href="#concept-coordinate-systems"><span class="std std-ref">Coordinate Systems</span></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Transform,</span> <span class="pre">{array}</span></code>: See <a class="reference internal" href="#concept-transformation"><span class="std std-ref">Transformation</span></a>.</p></li>
 </ul>
@@ -762,23 +763,23 @@ definition:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wire</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">AddWire</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">wire</span></code>: An instance of <a class="reference internal" href="../python/CSXCAD/CSPrimitives/CSPrimWire.html#CSXCAD.CSPrimitives.CSPrimWire" title="CSXCAD.CSPrimitives.CSPrimWire"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPrimWire</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">material</span></code>: An instance of <a class="reference internal" href="../python/CSXCAD/CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial" title="CSXCAD.CSProperties.CSPropMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPropMaterial</span></code></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.
-Array column refers to point number, array row refers to its
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">points</span></code>: Two-dimensional coordinates of the base polygon.</dt><dd><p>Array column refers to point number, array row refers to its
 <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> positions.</p>
-<blockquote>
-<div><ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(1,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">x</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(2,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">y</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">points(3,</span> <span class="pre">point_number)</span></code>: position <code class="docutils literal notranslate"><span class="pre">z</span></code> of <code class="docutils literal notranslate"><span class="pre">point_number</span></code>.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">radius</span></code>: Wire radius.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">**kw</span></code>: Optional keyword arguments:</p>
-<ul class="simple">
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">priority</span></code>: priority of the primitive, see <a class="reference internal" href="#concept-priority"><span class="std std-ref">Priority</span></a>.</p></li>
 </ul>
 </li>

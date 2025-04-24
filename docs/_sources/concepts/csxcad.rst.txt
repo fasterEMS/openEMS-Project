@@ -283,9 +283,9 @@ at a them, rather than one polygon at a time.
    with the CSXCAD/openEMS workflow first via basic simulations,
    as described in :ref:`first_lessons`.
    Trying to import a circuit board without understanding the
-   concept of boundary conditions or meshing rules leads to failures,
-   especially when most of these tools are highly experimental
-   and incomplete.
+   concept of ports, boundary conditions or meshing rules leads
+   to failures, especially when most of these tools are highly
+   experimental and incomplete.
 
    **Don't work in isolation.** By far there are already 7 different
    tools that attempt to automate modeling of circuit boards and
@@ -356,45 +356,48 @@ Examples of these tools include:
 
   * https://github.com/koendv/hyp2mat
 
-* The old project wiki also described this following idea to
-  convert circuit board layouts from Gerber, PDF, DXF, or
-  SVG into CSXCAD models. Based on this idea, a standalone tool
-  can be created.
 
-  * PCB layers in Gerber files can be converted to PDF by means of
-    gerber2pdf which can be found on Sourceforge (editor's note:
-    native PDF, SVG and DXF exports are available in many EDA packages).
-    The PDF can be imported into Inkscape just as it is the case
-    for DXF files. Within Inkscape, the usually closed paths can be
-    modified (either manually or with filters) such that they result
-    in a suitable list of polygon nodes for openEMS.
+.. note::
 
-    Sometimes these polygons or curves have too many nodes. The number
-    of nodes can be reduced with the Inkscape function "Path" > "Simplify".
-    The amount of reduction is controlled by the parameter "Simplification
-    Threshold" which can be found under "Preferences" > "Behavior". These
-    paths are still Bézier curves which must be converted into polygons.
-    This is achieved with "Extensions" > "Modify Path" > "Flatten Béziers".
-    The parameter in this dialog also controls the number of resulting
-    points.
-
-    When all nodes are as required, the paths can be exported as a HTML5
-    Canvas. The resulting file can then be processed with an ASCII Editor.
-    The numbers after the moveTo and lineTo statements are the polygon nodes
-    X- and Y- coordinates respectively. However, they still must be
-    transformed ba a liner transform given in the transform statement. The
-    first four numbers a matrix by which the node coordinates have to be
-    multiplied and the remaining two numbers are a vector which has to
-    be added.
-
-    The result will be the node coordinates in HTML pixels with X counting
-    from left to right and Y counting from top to bottom, which does not
-    conform to the coordinate system of the Inkscape canvas.
-
-    In order to have the same axes as in inkscape (X left to right and Y
-    bottom to top), the fourth an sixth number have to be multiplied by -1
-    and the image height has to be added to the sixth number. Now the
-    coordinates are in the usual coordinate system but still in HTML5 pixels.
-    The ratio of pixels to mm or other units of length can finally be found
-    under the document properties in inkscape. This factor can be applied in
-    Octave/Matlab. This finally gives polygons which can be processed by openEMS.
+   The old project wiki also described this following idea to
+   convert circuit board layouts from Gerber, PDF, DXF, or
+   G into CSXCAD models. This idea may be of interest to
+   developers working on automated CSXCAD model generation.
+   
+   PCB layers in Gerber files can be converted to PDF by means of
+   gerber2pdf which can be found on Sourceforge (editor's note:
+   native PDF, SVG and DXF exports are available in many EDA packages).
+   The PDF can be imported into Inkscape just as it is the case
+   for DXF files. Within Inkscape, the usually closed paths can be
+   modified (either manually or with filters) such that they result
+   in a suitable list of polygon nodes for openEMS.
+   
+   Sometimes these polygons or curves have too many nodes. The number
+   of nodes can be reduced with the Inkscape function "Path" > "Simplify".
+   The amount of reduction is controlled by the parameter "Simplification
+   Threshold" which can be found under "Preferences" > "Behavior". These
+   paths are still Bézier curves which must be converted into polygons.
+   This is achieved with "Extensions" > "Modify Path" > "Flatten Béziers".
+   The parameter in this dialog also controls the number of resulting
+   points.
+   
+   When all nodes are as required, the paths can be exported as a HTML5
+   Canvas. The resulting file can then be processed with an ASCII Editor.
+   The numbers after the moveTo and lineTo statements are the polygon nodes
+   X- and Y- coordinates respectively. However, they still must be
+   transformed ba a liner transform given in the transform statement. The
+   first four numbers a matrix by which the node coordinates have to be
+   multiplied and the remaining two numbers are a vector which has to
+   be added.
+   
+   The result will be the node coordinates in HTML pixels with X counting
+   from left to right and Y counting from top to bottom, which does not
+   conform to the coordinate system of the Inkscape canvas.
+   
+   In order to have the same axes as in Inkscape (X left to right and Y
+   bottom to top), the fourth an sixth number have to be multiplied by -1
+   and the image height has to be added to the sixth number. Now the
+   coordinates are in the usual coordinate system but still in HTML5 pixels.
+   The ratio of pixels to mm or other units of length can finally be found
+   under the document properties in Inkscape. This factor can be applied in
+   Octave/Matlab. This finally gives polygons which can be processed by openEMS.
