@@ -133,13 +133,13 @@ Setup the Octave/Matlab or Python Interfaces
 - **Optional:** Setup the Octave/Matlab environment, see :ref:`Octave Interface Install <Octave Windows Install>`
 - **Optional:** Install the Python modules, see :ref:`Python Interface Install <Python Windows Install>`
 
+.. _manual_troubleshooting_src:
+
 Troubleshooting
 ----------------
 
-.. _manual_freebsd_workaround_src:
-
 FreeBSD
-^^^^^^^^^
+~~~~~~~~
 
 On FreeBSD, the default CMake has a bug, causing it unable to find
 HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).
