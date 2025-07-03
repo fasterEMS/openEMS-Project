@@ -104,7 +104,7 @@ relaxation::
 
 The model is defined by the following parameters:
 
-* ``eps_r``: Relative permittivity when frequency approaches infinity
+* ``Epsilon``: Relative permittivity when frequency approaches infinity
   (:math:`\epsilon_{r,\infty}`).
 
 * ``EpsilonDelta_n``: n-th delta dielectric permittivity, a fitted phenomenological
