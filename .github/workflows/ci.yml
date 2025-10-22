@@ -370,7 +370,6 @@ jobs:
 
           # needed by Python modules
           source $HOME/opt/bin/activate  # activate venv
-          export PATH="$HOME/opt/bin:${PATH}"
 
           if ./update_openEMS.sh ~/opt --python; then
             cat build_*.log
