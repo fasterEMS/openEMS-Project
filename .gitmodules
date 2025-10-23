@@ -9,7 +9,7 @@
 	url = ../AppCSXCAD.git
 [submodule "openEMS"]
 	path = openEMS
-	url = ../openEMS.git
+	url = https://github.com/fasterEMS/wipEMS.git
 [submodule "fparser"]
 	path = fparser
 	url = ../fparser.git
