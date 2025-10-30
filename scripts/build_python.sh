@@ -54,7 +54,14 @@ do
 
     export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
     export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
-    pip3 install . $PY_INST_USER
+
+    if [ $PY_INST_IS_VENV ]; then
+        pip3 install . $PY_INST_USER
+    else
+        # This is safe because openEMS currently doesn't auto-install
+	# dependencies.
+        pip3 install . $PY_INST_USER --break-system-package
+    fi
 
     EC=$?
     if [ $EC -ne 0 ]; then
