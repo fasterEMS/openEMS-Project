@@ -33,13 +33,27 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     SYSLOCAL="$(brew --prefix)"
 fi
 
+# "+x" checks whether the variable is unset (not just empty), needed
+# in strict "set -u" mode as it forbids the use of unbounded variables.
+if [ -z ${CXXFLAGS+x} ]; then
+  EXTERNAL_CXXFLAGS=""
+else
+  EXTERNAL_CXXFLAGS="$CXXFLAGS"
+fi
+
+if [ -z ${LDFLAGS+x} ]; then
+  EXTERNAL_LDFLAGS=""
+else
+  EXTERNAL_LDFLAGS="$LDFLAGS"
+fi
+
 for PY_EXT in 'CSXCAD' 'openEMS'
 do
     echo "build $PY_EXT python module ... please wait"
     cd $PY_EXT/python
 
-    export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $CXXFLAGS"
-    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $LDFLAGS"
+    export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
+    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
     pip install . $PY_INST_USER
 
     EC=$?
