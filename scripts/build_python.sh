@@ -56,7 +56,11 @@ do
     export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
 
     if [ $PY_INST_IS_VENV == 1 ]; then
-        pip3 install . $PY_INST_USER
+        # In pip, build-time package dependencies MUST be defined in pyproject.toml,
+	# because pip uses an internal isolated venv (even different from the user's
+	# own venv) to build the package. But we currently do not, thus we use
+	# --no-build-isolation
+        pip3 install . $PY_INST_USER --no-build-isolation
     else
         # --break-system-packages means we install directly to a user's
 	# home directory, this is safe because openEMS currently doesn't
@@ -64,7 +68,7 @@ do
 	#
 	# TODO: add a "--python-venv" option in update_openEMS.sh, allowing
 	# users to switch between both behaviors using a single command.
-        pip3 install . $PY_INST_USER --break-system-packages
+        pip3 install . $PY_INST_USER --no-build-isolation --break-system-packages
     fi
 
     EC=$?
