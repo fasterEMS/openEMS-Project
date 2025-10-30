@@ -55,10 +55,10 @@ do
     export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
     export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
 
-    if [ $PY_INST_IS_VENV ]; then
+    if [ $PY_INST_IS_VENV == 1 ]; then
         pip3 install . $PY_INST_USER
     else
-        # --break-system-package means we install directly to a user's
+        # --break-system-packages means we install directly to a user's
 	# home directory, this is safe because openEMS currently doesn't
 	# auto-install dependencies - the old setup.py does the same.
 	#
