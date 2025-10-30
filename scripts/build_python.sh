@@ -53,7 +53,7 @@ do
     cd $PY_EXT/python
 
     export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
-    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
+    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-Wl,-rpath,$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
 
     if [ $PY_INST_IS_VENV == 1 ]; then
         # In pip, build-time package dependencies MUST be defined in pyproject.toml,
