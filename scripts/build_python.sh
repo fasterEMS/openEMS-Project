@@ -58,9 +58,13 @@ do
     if [ $PY_INST_IS_VENV ]; then
         pip3 install . $PY_INST_USER
     else
-        # This is safe because openEMS currently doesn't auto-install
-	# dependencies.
-        pip3 install . $PY_INST_USER --break-system-package
+        # --break-system-package means we install directly to a user's
+	# home directory, this is safe because openEMS currently doesn't
+	# auto-install dependencies - the old setup.py does the same.
+	#
+	# TODO: add a "--python-venv" option in update_openEMS.sh, allowing
+	# users to switch between both behaviors using a single command.
+        pip3 install . $PY_INST_USER --break-system-packages
     fi
 
     EC=$?
