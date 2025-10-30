@@ -54,7 +54,7 @@ do
 
     export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
     export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
-    pip install . $PY_INST_USER
+    pip3 install . $PY_INST_USER
 
     EC=$?
     if [ $EC -ne 0 ]; then
