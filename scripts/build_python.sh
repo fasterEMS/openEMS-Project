@@ -37,11 +37,11 @@ for PY_EXT in 'CSXCAD' 'openEMS'
 do
     echo "build $PY_EXT python module ... please wait"
     cd $PY_EXT/python
-    python3 setup.py build_ext \
-        -I "$INSTALL_PATH/include:$SYSLOCAL/include" \
-        -L "$INSTALL_PATH/lib:$SYSLOCAL/lib" \
-        -R $INSTALL_PATH/lib
-    python3 setup.py install $PY_INST_USER
+
+    export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $CXXFLAGS"
+    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-R$INSTALL_PATH/lib\" $LDFLAGS"
+    pip install . $PY_INST_USER
+
     EC=$?
     if [ $EC -ne 0 ]; then
         echo "Python module build failed!"
