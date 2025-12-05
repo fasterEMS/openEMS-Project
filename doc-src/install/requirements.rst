@@ -667,7 +667,7 @@ macOS
 
   .. code-block:: bash
 
-      brew install cmake boost hdf5 cgal vtk
+      brew install cmake boost hdf5 cgal vtk qt5compat
 
 - To use AppCSXCAD to visualize 3D models (recommended):
 
