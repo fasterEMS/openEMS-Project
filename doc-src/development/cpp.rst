@@ -39,87 +39,262 @@ Before proceeding...
 2. Check :ref:`special_requirements` for special setups that are potentially
    needed on your system.
 
+3. For Windows, follow :ref:`development_windows`.
+
 Install Basic Programs
 ------------------------
 
+.. important::
+
+   When targetting Unix-like systems (or Windows in MSYS2), use
+   *Bash* code. When targetting *Windows* with Visual Studio,
+   use *PowerShell* code, which includes Windows-specific options.
+
 1. Build fparser:
 
-   .. code-block:: console
+   .. tabs::
 
-       cd fparser
-       mkdir build
-       cd build
-       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-       make
-       make install
+      .. code-tab:: bash
 
-       cd ..
+          cd fparser
+          mkdir build
+          cd build
+
+          cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+
+          # make && make install is deprecated
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+      .. code-tab:: powershell
+
+          cd fparser
+          mkdir build
+          cd build
+
+          # used only if dependencies are installed via
+          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+          $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+          cmake ../ -GNinja -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+   .. important::
+
+      - ``make && make install`` also works on BSD/Linux, but this
+        is :ref:`deprecated <make_deprecation>`, because it's not portable
+        (MSBuild and Ninja backends not supported). Use ``make && make install``
+        only on CMake 3.30 and lower versions.
+
+      - When targetting Windows using Visual Studio, ``-GNinja`` is required,
+        because ``-DCMAKE_BUILD_TYPE=Release`` is unsupported by the MSbuild
+        backend, see :ref:`ninja_backend`. ``-GNinja`` is optional on other
+        systems. Remove ``-GNinja`` on CMake 3.30 and lower versions, or
+        if Ninja is not installed.
+
+      - When targetting Windows using Visual Studio, use
+        ``-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON`` for fparser and TinyXML (but
+        not CSXCAD or openEMS), because the ``.lib`` files are not generated
+        by default.
 
 2. Build CSXCAD. The CMake variales ``-DFPARSER_ROOT_DIR``
    should be pointed to the install root paths of fparser,
    which are usually the same as ``-DCMAKE_INSTALL_PREFIX``.
 
-   .. code-block:: console
+   .. tabs::
 
-       cd CSXCAD
-       mkdir build
-       cd build
-       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DFPARSER_ROOT_DIR=$HOME/opt/openEMS
-       make
-       make install
+      .. code-tab:: bash
 
-       cd ..
+          cd CSXCAD
+          mkdir build
+          cd build
+
+          cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                    -DFPARSER_ROOT_DIR=$HOME/opt/openEMS \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+      .. code-tab:: powershell
+
+          cd CSXCAD
+          mkdir build
+          cd build
+
+          # used only if dependencies are installed via
+          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+          $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DFPARSER_ROOT_DIR="$HOME/opt/openEMS" `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
 
 3. Build openEMS. The CMake variales ``-DFPARSER_ROOT_DIR`` and
    ``-DCSXCAD_ROOT_DIR`` should be pointed to the install root paths
    of fparser and CSXCAD, which are usually the same as
    ``-DCMAKE_INSTALL_PREFIX``.
 
-   .. code-block:: console
+   .. tabs::
 
-       cd openEMS
-       mkdir build
-       cd build
-       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DFPARSER_ROOT_DIR=$HOME/opt/openEMS -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS
-       make
-       make install
+      .. code-tab:: bash
 
-       cd ..
+          cd openEMS
+          mkdir build
+          cd build
 
-.. important::
+          cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                    -DFPARSER_ROOT_DIR=$HOME/opt/openEMS \
+                    -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
 
-   Don't forget to set ``-DFPARSER_ROOT_DIR`` and ``-DCSXCAD_ROOT_DIR``. They are
-   NOT optional.
 
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+      .. code-tab:: powershell
+
+          cd openEMS
+          mkdir build
+          cd build
+
+          # used only if dependencies are installed via
+          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+          $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DFPARSER_ROOT_DIR="$HOME/opt/openEMS" `
+                    -DCSXCAD_ROOT_DIR="$HOME/opt/openEMS" `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+   .. important::
+
+      - Don't forget to set ``-DFPARSER_ROOT_DIR``, it's NOT optional.
+
+      - ``-DCSXCAD_ROOT_DIR`` is optional if it's installed to
+        the same ``DCMAKE_INSTALL_PREFIX`
 
 Install AppCSXCAD GUI (optional)
 ------------------------------------
 
 1. Build QCSXCAD:
 
-.. code-block:: console
+   .. tabs::
 
-    cd QCSXCAD
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
+      .. code-tab:: bash
 
-    cd ..
+          cd QCSXCAD
+          mkdir build
+          cd build
+
+          cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
+
+      .. code-tab:: powershell
+
+          cd QCSXCAD
+          mkdir build
+          cd build
+
+          # used only if dependencies are installed via
+          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+          $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+          cd ../../
 
 2. Build AppCSXCAD:
 
-.. code-block:: console
+   .. tabs::
 
-    cd AppCSXCAD
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
+      .. code-tab:: bash
 
-    cd ..
+           cd AppCSXCAD
+           mkdir build
+           cd build
+
+           cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                     -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+
+           cmake --build ./ --parallel
+           cmake --install ./ --parallel 8
+
+           cd ../../
+
+      .. code-tab:: powershell
+
+           cd AppCSXCAD
+           mkdir build
+           cd build
+
+           # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+           $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+           $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+           cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                     -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                     -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                     -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+           cmake --build ./ --parallel
+           cmake --install ./ --parallel 8
+
+           cd ../../
 
 openEMS search path
 --------------------
@@ -142,6 +317,55 @@ Setup the Octave/Matlab or Python Interfaces
 
 Special Requirements
 ---------------------
+
+.. _make_deprecation:
+
+``make && make install`` is deprecated
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CMake supports multiple build systems, such as ``make``, MSBuild and Ninja.
+using ``make && make install`` is discouraged since CMake 3.31 and newer.
+``make`` may not even work if the system uses an alternative backend. For
+example, on MSYS2 UCRT64, ``ninja`` is the default CMake target, ``make`` is
+not available.
+
+  .. code-block:: bash
+
+     # deprecated
+     make -j8
+     make install -j8
+
+     # recommended
+     cmake --build ./ -j
+     cmake --install ./ -j 8
+
+.. important::
+
+   - The number of jobs is optional in ``cmake --build``, but it's required
+     in ``cmake --install``.
+
+   - If you use CMake 3.30 and earlier, you still need to use ``make``
+     and ``make install``.
+
+.. _ninja_backend:
+
+``-GNinja`` is required on MSVC
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When targeting Visual Studio, ``-GNinja`` is required. The Ninja build system
+provides a more consistent workflow, allowing one to use ``-DCMAKE_BUILD_TYPE=Release``
+at configuration time just like POSIX systems. In comparison, the MSBuild backend
+requires specifying the Release mode as a build-time flag via
+``cmake --build build --config Release``, which is inconsistent and prone to mistakes.
+Ninja is also officially required for building Qt 6 on Windows, which is a dependency
+of openEMS.
+
+.. important::
+
+   - Ninja is optional on modern BSD/Linux systems, you're free to leave it on or off.
+
+   - ``-GNinja`` should be removed on legacy systems with CMake 3.30 and lower, or if
+     Ninja is not installed.
 
 .. _remove_cxx11:
 
@@ -178,73 +402,145 @@ should remove all ``-std=`` options from ``CXXFLAGS``.
 Download and Build TinyXML from Source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+TinyXML is a dependency of CSXCAD, building it from source is needed on Windows
+(Visual Studio only) and macOS.
+
 For macOS users, unfortunately, openEMS depends on TinyXML, which is unmaintained
 since 2011 and has been removed from Homebrew (TinyXML2 is not API-compatible).
 As a workaround, on macOS, ``update_openEMS.sh`` will automatically download
 TinyXML and patches online, building it from source.
 
 .. tip::
-   Only macOS Homebrew has removed TinyXML. As of writing, it's still available
+   Only macOS Homebrew removed TinyXML. As of writing, it's still available
    in the package manager of most operating systems.
 
-Although no manual intervention is needed anymore, it's sometimes necessary to
-understand the inner working of this process. Thus, this section describes the
+Although no manual intervention is needed on macOS, it's sometimes necessary to
+understand the inner working of this process. When targetting Windows using
+Visual Studio, it must also be built manually. Thus, this section describes the
 manual build process without using any script.
 
 - First, we obtain the last available version of TinyXML.
 
-  .. code-block:: console
+  .. tabs::
 
-      # -L: follow redirect, REQUIRED!
-      curl -L https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz -o tinyxml-2.6.2.tar.gz
-      tar -xf tinyxml-2.6.2.tar.gz
-      cd tinyxml
+     .. code-tab:: bash
+
+          # -L: follow redirect, REQUIRED!
+          curl -L https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz -o tinyxml-2.6.2.tar.gz
+          tar -xf tinyxml-2.6.2.tar.gz
+          cd tinyxml
+
+     .. code-tab:: powershell
+
+          # -L: follow redirect, REQUIRED!
+          curl.exe -L https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz -o tinyxml-2.6.2.tar.gz
+          tar -xf tinyxml-2.6.2.tar.gz
+          cd tinyxml
 
 - Next, we patch TinyXML to fix several known compatibility and security
   vulnerability. These patches came from various sources, and are applied
   by Homebrew, Debian, Alpine by their respective package maintainers.
   Here, we choose patches as maintained by AlpineLinux.
 
-  .. code-block:: console
+  .. tabs::
 
-      # The first patch enforces use of stl strings, rather than a custom string type.
-      # The second patch is a fix for incorrect encoding of elements with special characters
-      # The third and fourth patches are security fixes.
-      #
-      # -L: follow redirect, REQUIRED!
-      # -O: save to disk with an automatic file name.
-      curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch"
-      curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch"
-      curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch"
-      curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch"
+     .. code-tab:: bash
 
-      patch -p1 < tinyxml-2.6.2-defineSTL.patch
-      patch -p1 < tinyxml-2.6.1-entity.patch
-      patch -p1 < CVE-2021-42260.patch
-      patch -p1 < CVE-2023-34194.patch
+          # The first patch enforces use of stl strings, rather than a custom string type.
+          # The second patch is a fix for incorrect encoding of elements with special characters
+          # The third and fourth patches are security fixes.
+          #
+          # -L: follow redirect, REQUIRED!
+          # -O: save to disk with an automatic file name.
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch"
+
+          patch -p1 < tinyxml-2.6.2-defineSTL.patch
+          patch -p1 < tinyxml-2.6.1-entity.patch
+          patch -p1 < CVE-2021-42260.patch
+          patch -p1 < CVE-2023-34194.patch
+
+     .. code-tab:: powershell
+
+          # The first patch enforces use of stl strings, rather than a custom string type.
+          # The second patch is a fix for incorrect encoding of elements with special characters
+          # The third and fourth patches are security fixes.
+          #
+          # -L: follow redirect, REQUIRED!
+          # -O: save to disk with an automatic file name.
+          curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch"
+          curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch"
+          curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch"
+          curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch"
+
+          cat tinyxml-2.6.2-defineSTL.patch | patch - p1
+          cat tinyxml-2.6.1-entity.patch | patch -p1
+          cat CVE-2021-42260.patch | patch -p1
+          cat CVE-2023-34194.patch | patch -p1
 
 - Then, we introduce CMake support to TinyXML:
 
-  .. code-block:: console
+  .. tabs::
 
-      # The final patch adds a CMakeLists.txt file to build a shared library and provide an install target
-      # submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
-      curl -L -O "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+     .. code-tab:: bash
 
-      # You know something is truly deprecated when the patch itself needs
-      # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
-      # Replace "cmake_minimum_required(VERSION 2.4.6)" in the patch with
-      # "cmake_minimum_required(VERSION 3.0...3.10)".
-      sed -i -e "s/cmake_minimum_required(VERSION 2.4.6)/cmake_minimum_required(VERSION 3.0...3.10)/" \
-                tinyxml_CMakeLists.patch  # -e is not optional in BSD sed
-      patch -p1 < tinyxml_CMakeLists.patch
+          # The final patch adds a CMakeLists.txt file to build a shared library and provide an install target
+          # submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
+          curl -L -O "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+
+          # You know something is truly deprecated when the patch itself needs
+          # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
+          # Replace "cmake_minimum_required(VERSION 2.4.6)" in the patch with
+          # "cmake_minimum_required(VERSION 3.0...3.10)".
+          sed -i -e "s/cmake_minimum_required(VERSION 2.4.6)/cmake_minimum_required(VERSION 3.0...3.10)/" `
+                    tinyxml_CMakeLists.patch  # -e is not optional in BSD sed
+          patch -p1 < tinyxml_CMakeLists.patch
+
+     .. code-tab:: powershell
+
+          # The final patch adds a CMakeLists.txt file to build a shared library and provide an install target
+          # submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
+          curl.exe -L -O "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+
+          # You know something is truly deprecated when the patch itself needs
+          # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
+          # Replace "cmake_minimum_required(VERSION 2.4.6)" in the patch with
+          # "cmake_minimum_required(VERSION 3.0...3.10)".
+          sed -i -e "s/cmake_minimum_required(VERSION 2.4.6)/cmake_minimum_required(VERSION 3.0...3.10)/" `
+                    tinyxml_CMakeLists.patch
+          cat tinyxml_CMakeLists.patch | patch -p1
 
 - Finally, TinyXML can be installed to a custom user directory. Here, we use
   ``$HOME/opt/openEMS`` as an example. This directory must match the directory later
   used for installing openEMS.
 
-  .. code-block:: console
+  .. tabs::
 
-      mkdir build && cd build
-      cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-      make && make install
+     .. code-tab:: bash
+
+          mkdir build && cd build
+
+          cmake ../ -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+
+          # "make" and "make install" also works on BSD/Linux, use it if you
+          # have an old CMake version. But this is deprecated because it's not
+          # portable (MSBuild and Ninja backends not supported).
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+     .. code-tab:: powershell
+
+          mkdir build; cd build
+
+          $env:CFLAGS="/D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
+
+          cmake ../ -GNinja -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8

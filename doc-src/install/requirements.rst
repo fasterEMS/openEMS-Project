@@ -722,7 +722,7 @@ macOS
 - Skip to :ref:`clone_build_install_src` and continue installation.
 
 Windows
-~~~~~~~~~
+~~~~~~~~
 
 openEMS can be installed directly as a pre-built binary package, there is
 no need to install dependencies (or build openEMS from source) manually.
@@ -733,11 +733,98 @@ for more information.
 The follow instructions are given for developers only, one should follow
 these instructions only if a manual install is needed during development.
 
-One can build openEMS on Windows using two different methods. The first
-method is using MSVC, this is how the official pre-built package is prepared,
-but it has a long and complicated procedure, and is currently undocumented.
+Visual Studio
+^^^^^^^^^^^^^
 
-Alternatively, MinGW-w64 and MSYS2 can be used.
+- Install Unix tools required for development (required):
+
+  .. code-block:: powershell
+
+     winget install cURL.cURL GnuWin32.Patch sed python3
+
+MSYS2
+^^^^^^
+
+- Install MSYS2 (required):
+
+  .. code-block:: powershell
+
+     winget install MSYS2.MSYS2
+
+- Launch MSYS2 in UCRT64 mode (required):
+
+  - From the Windows desktop: Click the ``MSYS2-UCRT64`` icon.
+
+    .. important::
+
+       Only the modern ``MSYS2 UCRT64`` environment is tested. Make sure
+       MSYS2 is started in ``UCRT64`` mode (not ``MINGW64`` or ``MSYS`` mode).
+
+  - From the command line:
+
+    .. tabs::
+
+       .. code-tab:: powershell
+
+          $env:MSYSTEM="UCRT64"
+          C:/msys64/usr/bin/bash
+
+       .. code-tab:: batch
+
+          set MSYSTEM=UCRT64
+          C:\msys64\usr\bin\bash
+
+- openEMS depends on the following packages for minimum functionality:
+
+  .. code-block:: bash
+
+      pacman -S git \
+                mingw-w64-ucrt-x86_64-cmake \
+                mingw-w64-ucrt-x86_64-gmp mingw-w64-ucrt-x86_64-mpfr \
+                mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-tinyxml \
+                mingw-w64-ucrt-x86_64-vtk mingw-w64-ucrt-x86_64-nlohmann_json \
+                mingw-w64-ucrt-x86_64-hdf5 mingw-w64-ucrt-x86_64-cgal
+
+- To use AppCSXCAD to visualize 3D models (recommended):
+
+  .. code-block:: bash
+
+      pacman -S mingw-w64-ucrt-x86_64-qt6
+
+- For Octave scripting (recommended):
+
+  .. code-block:: bash
+
+      pacman -S mingw-w64-ucrt-x86_64-octave
+
+- For Python scripting (recommended):
+
+  .. code-block:: bash
+
+      pacman -S mingw-w64-ucrt-x86_64-python \
+                mingw-w64-ucrt-x86_64-python-pip
+
+- By default, one doesn't need to install other Python packages here.
+  They're usually installed into an isolated virtual environment via ``pip``.
+  (``venv``). However, if one wants to manage Python dependencies externally
+  outside ``pip``, use the system's package manager (optional):
+
+  .. code-block:: bash
+
+      pacman -S mingw-w64-ucrt-x86_64-python-wheel \
+                mingw-w64-ucrt-x86_64-python-setuptools-cm \
+                mingw-w64-ucrt-x86_64-cython \
+                mingw-w64-ucrt-x86_64-python-numpy \
+                mingw-w64-ucrt-x86_64-python-h5py \
+                mingw-w64-ucrt-x86_64-python-matplotlib
+
+- To use ParaView to visualize simulation results (recommended):
+
+  .. code-block:: bash
+
+      pacman -S mingw-w64-ucrt-x86_64-paraview
+
+- Skip to :ref:`clone_build_install_src` and continue installation.
 
 .. _build_deps_from_source:
 
