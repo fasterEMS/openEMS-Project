@@ -594,3 +594,271 @@ jobs:
             cd openEMS/.github/smoketests/python
             . ~/opt/venv/bin/activate
             python3 MSL_NotchFilter.py
+
+  Windows:
+    runs-on: windows-latest
+
+    strategy:
+      # Use "false" means a single failed build won't terminate other combinations
+      # in the matrix. This wastes CPU time, but is an important debugging tool to
+      # prevent a single broken platform from stopping the whole matrix.
+      fail-fast: false
+
+      matrix:
+        toolchain:
+          # name: toonchain name (only a name for humans to read).
+          # CC, CXX: C/C++ compiler, environment variables
+          - name: "MSVC"
+            CC: "cl"
+            CXX: "cl"
+
+          - name: "clang-cl"
+            CC: "clang-cl"
+            CXX: "clang-cl"
+
+    env:
+      VS_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/"
+      CC: "${{ matrix.toolchain.CC }}"
+      CXX: "${{ matrix.toolchain.CXX }}"
+      CFLAGS: "/D_WIN32_WINNT=0x0601"
+      CXXFLAGS: "/D_WIN32_WINNT=0x0601"
+
+      VCPKG_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/"
+      VCPKG_BINARY_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/binary"
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg-cache/binary,readwrite"
+      VCPKG_ASSET_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/asset"
+      X_VCPKG_ASSET_SOURCES: "x-azurl,file://${{ github.workspace }}/vcpkg-cache/asset,readwrite"
+
+    name: "Windows (${{ matrix.toolchain.name }}, latest)"
+
+    steps:
+      - name: Show checkout sources
+        run: |
+          echo "$env:FPARSER_CHECKOUT_TITLE"
+          echo "$env:CSXCAD_CHECKOUT_TITLE"
+        env:
+          # convert template variables to shell variables to avoid arbitrary code injection
+          FPARSER_CHECKOUT_TITLE: ${{ needs.Dependencies.outputs.fparser_checkout_title }}
+          CSXCAD_CHECKOUT_TITLE: ${{ needs.Dependencies.outputs.csxcad_checkout_title }}
+
+      # When checking out repos, I recommend running actions/checkout
+      # as soon as possible before anything else, and in the reverse
+      # order, from the project repo to its dependencies. This reduces
+      # race conditions due to force pushes (they are harmless but
+      # annoying).
+      - name: Checkout openEMS-Project.git
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          path: openEMS-Project
+
+          # checkout must be deep, not shallow.
+          # We need tags for "git describe", otherwise build fails.
+          fetch-depth: 0
+
+      # It doesn't really work, because MSVC itself doesn't support long path.
+      # But for future-proofing (it does work for clang).
+      - name: Enable long paths
+        run: |
+          New-ItemProperty -Path "HKLM:/SYSTEM/CurrentControlSet/Control/FileSystem" `
+                           -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+
+      - name: Download dependencies
+        run: |
+          mkdir -p $HOME/code/downloads && cd $HOME/code/downloads
+          mkdir -p $HOME/code/opt
+          mkdir -p $HOME/code/build
+
+          # TODO: sha256sum to prevent malware
+          $args = (
+            "--remote-name-all",
+
+            # Qt 6
+            "https://download.qt.io/official_releases/qt/6.10/6.10.1/single/qt-everywhere-src-6.10.1.tar.xz",
+
+            # VTK
+            "$env:GITHUB_SERVER_URL/Kitware/VTK/archive/refs/tags/v9.6.0.rc2.tar.gz",
+
+            # HDF 5
+            "$env:GITHUB_SERVER_URL/HDFGroup/hdf5/releases/download/2.0.0/hdf5-2.0.0.tar.gz",
+
+            # CGAL
+            "$env:GITHUB_SERVER_URL/CGAL/cgal/releases/download/v6.1/CGAL-6.1.tar.xz",
+
+            # Boost has two release tarballs, the traditional b2 build release
+            # and the optional CMake release. For consistency, we use the CMake
+            # version.
+            "$env:GITHUB_SERVER_URL/boostorg/boost/releases/download/boost-1.90.0/boost-1.90.0-cmake.tar.xz",
+
+            # Mesa (OpenGL software rendering)
+            "$env:GITHUB_SERVER_URL/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z",
+
+            # TinyXML
+            "https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz",
+            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch",
+            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch",
+            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch",
+            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch",
+            "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+          )
+          echo $args
+          curl.exe -L $args
+
+      - name: Build and install Qt 6
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/qt-everywhere-src-6.10.1.tar.xz
+
+          # rename Qt 6 directory to avoid path long problem.
+          mv ./qt-everywhere-src-6.10.1/ ./qt6/
+          cd qt6
+          mkdir build && cd build
+
+          # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
+          # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
+          ../configure.bat -skip qtdeclarative -submodules qtbase,qt5compat `
+                           -prefix "$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+        env:
+          # Qt 6 uses Win8.1+ features, set to 0x0602 to avoid build failures.
+          CFLAGS: "/D_WIN32_WINNT=0x0602"
+          CXXFLAGS: "/D_WIN32_WINNT=0x0602"
+
+      - name: Build and install VTK
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/v9.6.0.rc2.tar.gz
+          cd VTK-9.6.0.rc2
+
+          mkdir build && cd build
+
+          # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
+          # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release  `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQt=WANT `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=DONT_WANT `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=DONT_WANT `
+                  -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+        env:
+          # only works with MSVC
+          CC: cl
+          CXX: cl
+
+      - name: Build and install HDF5
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/hdf5-2.0.0.tar.gz
+          cd hdf5-2.0.0
+
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+        env:
+          # only works with MSVC
+          CC: cl
+          CXX: cl
+
+      - name: Build and install CGAL
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/CGAL-6.1.tar.xz
+          cd CGAL-6.1
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+      - name: Build and install Boost
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/boost-1.90.0-cmake.tar.xz
+          cd boost-1.90.0
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DBOOST_USE_WINAPI_VERSION="0x0601"  `
+                    -DBOOST_EXCLUDE_LIBRARIES="log" `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+      - name: Build and install TinyXML
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf $HOME/code/downloads/tinyxml_2_6_2.tar.gz
+          cd tinyxml
+
+          # The first patch enforces use of stl strings, rather than a custom string type.
+          # The second patch is a fix for incorrect encoding of elements with special characters
+          # The third and fourth patches are security fixes.
+          cat $HOME/code/downloads/tinyxml-2.6.2-defineSTL.patch | patch -p1
+          cat $HOME/code/downloads/tinyxml-2.6.1-entity.patch | patch -p1
+          cat $HOME/code/downloads/CVE-2021-42260.patch | patch -p1
+          cat $HOME/code/downloads/CVE-2023-34194.patch | patch -p1
+
+          # The final patch adds a CMakeLists.txt file to build a shared library and
+          # provide an install target
+          cat $HOME/code/downloads/tinyxml_CMakeLists.patch | patch -p1
+
+          # You know something is truly deprecated when the patch itself needs
+          # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
+          # Replace "cmake_minimum_required(VERSION 2.4.6)" in the patch with
+          # "cmake_minimum_required(VERSION 3.0...3.10)". The newline must also
+          # appear before PROJECT(), so run a insert-delete instead of a replace.
+          sed -i -e "1i cmake_minimum_required(VERSION 3.0...3.10)" `
+                 -e "1i project(tinyxml CXX)" `
+                 -e "/cmake_minimum_required(VERSION 2.4.6)/d" `
+                 CMakeLists.txt
+
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+      - name: Build and install openEMS
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $env:GITHUB_WORKSPACE/openEMS-Project
+
+          # hack, to be committed into fparser codebase
+          sed -i -e "1i set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)" `
+                    fparser/CMakeLists.txt
+
+          mkdir build && cd build
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build ./ --parallel --verbose
+          cmake --install ./ --parallel 8
