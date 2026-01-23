@@ -210,7 +210,7 @@ Install Basic Programs
       - Don't forget to set ``-DFPARSER_ROOT_DIR``, it's NOT optional.
 
       - ``-DCSXCAD_ROOT_DIR`` is optional if it's installed to
-        the same ``DCMAKE_INSTALL_PREFIX`
+        the same ``DCMAKE_INSTALL_PREFIX``
 
 Install AppCSXCAD GUI (optional)
 ------------------------------------
@@ -475,7 +475,7 @@ manual build process without using any script.
           curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch"
           curl.exe -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch"
 
-          cat tinyxml-2.6.2-defineSTL.patch | patch - p1
+          cat tinyxml-2.6.2-defineSTL.patch | patch -p1
           cat tinyxml-2.6.1-entity.patch | patch -p1
           cat CVE-2021-42260.patch | patch -p1
           cat CVE-2023-34194.patch | patch -p1

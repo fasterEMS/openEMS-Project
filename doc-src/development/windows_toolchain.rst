@@ -529,6 +529,37 @@ which can be installed via ``winget``.
 
    winget install GnuWin32.Patch sed python3
 
+.. _development_windows_toolchain_perl:
+
+Install Strawberry Perl
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   When targetting Windows 7 only.
+
+To target Windows 7, one must use an older version of Qt (version 6.1).
+The build system of older Qt versions depends on Perl.
+
+.. code-block:: powershell
+
+   winget install StrawberryPerl.StrawberryPerl
+
+   # remove unwanted compilers, cmake and libraries from system PATH
+   $orig_path = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
+   $new_path = $orig_path.Replace(";C:\Strawberry\c\bin", "")
+   [System.Environment]::SetEnvironmentVariable("PATH", $new_path, "Machine")
+
+.. warning::
+
+   Strawberry Perl modifies the system ``PATH`` at ``Machine``
+   level, adding numerous unwanted compilers, libraries and tools.
+   This disrupts our build process by replacing cmake with an older
+   version with missing options, and causing several bundled
+   libraries (such as ``libpng16`` and ``zlib``) become unexpected DLL
+   dependencies. The path ``C:\Strawberry\c\bin`` must be removed
+   *immediately* after installation.
+
 Enable Long File Path
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -584,8 +615,8 @@ Restart the Login Session
 Many changes have been made throughout the system, such as changing registry
 to enable long path, or adding new commands in the shell search paths using
 ``winget``. It's necessary to restart the system's login session for some
-changes to take effects. One can do this by logging out from OpenSSH or GUI,
-and logging in.
+changes to take effects. One can do this by closing all GUI terminal windows,
+or logging out and logging in via OpenSSH.
 
 .. important::
 

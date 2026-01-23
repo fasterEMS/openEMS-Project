@@ -32,7 +32,7 @@ Install From Package Manager
       - Create a temporary "app" directory to hold ``vcpkg`` dependencies.
 
         .. code-block:: powershell
-        
+
            mkdir -p ~/code/app
            cd ~/code/app
 
@@ -146,134 +146,202 @@ Install From Package Manager
    .. tab:: MSYS2 UCRT64
 
       - openEMS depends on the following packages for minimum functionality:
-      
+
         .. code-block:: bash
-      
+
             pacman -S git \
                       mingw-w64-ucrt-x86_64-cmake \
                       mingw-w64-ucrt-x86_64-gmp mingw-w64-ucrt-x86_64-mpfr \
                       mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-tinyxml \
                       mingw-w64-ucrt-x86_64-vtk mingw-w64-ucrt-x86_64-nlohmann_json \
-                      mingw-w64-ucrt-x86_64-hdf5 mingw-w64-ucrt-x86_64-cgal 
-      
+                      mingw-w64-ucrt-x86_64-hdf5 mingw-w64-ucrt-x86_64-cgal
+
       - To use AppCSXCAD to visualize 3D models (recommended):
-      
+
         .. code-block:: bash
-      
+
             pacman -S mingw-w64-ucrt-x86_64-qt6
-      
+
       - For Octave scripting (recommended):
-      
+
         .. code-block:: bash
-      
+
             pacman -S mingw-w64-ucrt-x86_64-octave
-      
+
       - For Python scripting (recommended):
-      
+
         .. code-block:: bash
-      
+
             pacman -S mingw-w64-ucrt-x86_64-python \
                       mingw-w64-ucrt-x86_64-python-pip
-      
+
       - By default, one doesn't need to install other Python packages here.
         They're usually installed into an isolated virtual environment via ``pip``.
         (``venv``). However, if one wants to manage Python dependencies externally
         outside ``pip``, use the system's package manager (optional):
-      
+
         .. code-block:: bash
-      
+
             pacman -S mingw-w64-ucrt-x86_64-python-wheel \
                       mingw-w64-ucrt-x86_64-python-setuptools-cm \
                       mingw-w64-ucrt-x86_64-cython \
                       mingw-w64-ucrt-x86_64-python-numpy \
                       mingw-w64-ucrt-x86_64-python-h5py \
                       mingw-w64-ucrt-x86_64-python-matplotlib
-      
+
       - To use ParaView to visualize simulation results (recommended):
-      
+
         .. code-block:: bash
-      
+
             pacman -S mingw-w64-ucrt-x86_64-paraview
 
 Install From Source
 ---------------------
 
-- Build Qt 6.10.1
+- Build Qt 6
 
-  .. code-block:: powershell
-  
-     cd ~/code
-  
-     curl.exe -L -O "https://download.qt.io/official_releases/qt/6.10/6.10.1/single/qt-everywhere-src-6.10.1.tar.xz"
-     tar -xf qt-everywhere-src-6.10.1.tar.xz
+  .. tabs::
 
-     # rename Qt 6 directory to avoid path long problem.
-     mv ./qt-everywhere-src-6.10.1/ ./qt6/
-  
-     mkdir build
-     cd build
-     
-     # Qt 6 uses some Win8.1+ features, set to 0x0602 to avoid build failures.
-     # Testing showed we're lucky enough to not relying on those features, so
-     # it still runs on Windows 7.
-     $env:CFLAGS="/D_WIN32_WINNT=0x0602"
-     $env:CXXFLAGS="/D_WIN32_WINNT=0x0602"
+     .. tab :: Modern
 
-     # only build qtbase,qtsvg,qtdeclarative,qt5compat
-     ../configure.bat -submodules qtbase,qtsvg,qtdeclarative,qt5compat `
-                      -prefix "$HOME/opt/openEMS"
-    
-     cmake --build . --parallel
-     cmake --install . --parallel 8
+        .. code-block:: powershell
+
+           cd ~/code
+
+           curl.exe -L -O "https://download.qt.io/official_releases/qt/6.10/6.10.1/single/qt-everywhere-src-6.10.1.tar.xz"
+           tar -xf qt-everywhere-src-6.10.1.tar.xz
+
+           # rename Qt 6 directory to avoid path long problem.
+           mv ./qt-everywhere-src-6.10.1/ ./qt6/
+           cd qt6
+
+           mkdir build
+           cd build
+
+           # Qt 6 uses Win8.1+ features, set to 0x0602 to avoid build failures.
+           $env:CFLAGS="/D_WIN32_WINNT=0x0602"
+           $env:CXXFLAGS="/D_WIN32_WINNT=0x0602"
+
+           # only build qtbase,qtsvg,qtdeclarative,qt5compat
+           ../configure.bat -submodules qtbase,qtsvg,qtdeclarative,qt5compat `
+                            -prefix "$HOME/opt/openEMS"
+
+           cmake --build . --parallel
+           cmake --install . --parallel 8
+
+     .. tab :: Legacy (Windows 7)
+
+        .. code-block:: powershell
+
+           cd ~/code
+
+           curl.exe -L -O "https://download.qt.io/archive/qt/6.1/6.1.3/single/qt-everywhere-src-6.1.3.tar.xz"
+           tar -xf qt-everywhere-src-6.1.3.tar.xz
+
+           # rename Qt 6 directory to avoid path long problem.
+           mv ./qt-everywhere-src-6.1.3/ ./qt6.1
+           cd qt6.1
+
+           mkdir build
+           cd build
+
+           # Make sure we have a Visual Studio cmake, not a Strawberry Perl cmake,
+           # otherwise it causes several problems.
+           #
+           # GOOD: C:/Program Files (x86)/Microsoft Visual Studio/...
+           #       C:/Program Files/Microsoft Visual Studio/...
+           #
+           # BAD:  C:/Strawberry/c/bin
+           echo (Get-Command cmake).Source
+
+           # Qt 6 uses some Win8.1+ features, set to 0x0602 to avoid build failures.
+           # Testing showed Qt 6.1 is the last version in which we're lucky enough
+           # to not relying on those features, so it still runs on Windows 7.
+           $env:CFLAGS="/D_WIN32_WINNT=0x0602"
+           $env:CXXFLAGS="/D_WIN32_WINNT=0x0602"
+
+           # only build qtbase,qtsvg,qtdeclarative,qt5compat
+           $opt = (
+               "-cmake-generator", "Ninja",
+               "-release",
+               "-skip", "qtshadertools",     "-skip", "qt3d",
+               "-skip", "qtactiveqt",        "-skip", "qtcharts",
+               "-skip", "qttools",           "-skip", "qtcoap",
+               "-skip", "qtdatavis3d",       "-skip", "qtimageformats",
+               "-skip", "qtquickcontrols2",  "-skip", "qtdoc",
+               "-skip", "qtlottie",          "-skip", "qtmqtt",
+               "-skip", "qtnetworkauth",     "-skip", "qtopcua",
+               "-skip", "qtquick3d",         "-skip", "qtquicktimeline",
+               "-skip", "qtscxml",           "-skip", "qttranslations",
+               "-skip", "qtvirtualkeyboard", "-skip", "qtwayland"
+           )
+
+           ../configure.bat $opt -prefix "$HOME/opt/openEMS"
+
+           cmake --build . --parallel
+           cmake --install . --parallel 8
 
   .. warning::
-  
-     The MSVC compiler is currently still incompatible with long file path, even
-     if it's enabled at the system level (see
-     `Visual Studio Developer Community Feedback 10221576
-     <https://developercommunity.visualstudio.com/t/compiler-cant-find-source-file-in-path/10221576>`_).
-     It's essential to build Qt 6 from a short path, such as ``C:/Users/user/code/qt6``.
-     The Qt 6 directory ``qt-everywhere-src-6.10.1`` must be renamed to ``qt6``.
+
+     - The MSVC compiler is currently still incompatible with long file path, even
+       if it's enabled at the system level (see
+       `Visual Studio Developer Community Feedback 10221576
+       <https://developercommunity.visualstudio.com/t/compiler-cant-find-source-file-in-path/10221576>`_).
+       It's essential to build Qt 6 from a short path, such as ``C:/Users/user/code/qt6``.
+       The Qt 6 directory ``qt-everywhere-src-6.10.1`` must be renamed to ``qt6``.
+
+     - Strawberry Perl should be present on the system according
+       to :ref:`development_windows_toolchain_perl`. Ensure
+       unwanted ``PATH`` changes by Strawberry Perl has been
+       undone. As a check, ``cmake`` should be provided by Visual
+       Studio under ``Program Files`` or ``Program Files (x86)``,
+       *not* under ``C:/Strawberry/c/bin``.
+
+       .. code-block:: powershell
+
+          > (Get-Command cmake).Source
+          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+
 
 - Build VTK
 
   .. code-block:: powershell
-  
+
      cd ~/code
-  
+
      git clone https://github.com/Kitware/VTK --depth=1
      cd VTK
-  
+
      mkdir build
      cd build
-     
+
      $env:CFLAGS="/D_WIN32_WINNT=0x0601"
      $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
-     
+
      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release  `
                        -DVTK_GROUP_ENABLE_Qt=YES -DVTK_QT_VERSION=6 `
                        -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
-     
+
      cmake --build . --parallel
      cmake --install . --parallel 8
 
 - Build HDF5 2.0.0
 
   .. code-block:: powershell
-  
+
      cd ~/code
-  
+
      curl.exe -O -L "https://github.com/HDFGroup/hdf5/releases/download/2.0.0/hdf5-2.0.0.tar.gz"
      tar -xf ./hdf5-2.0.0.tar.gz
      cd ./hdf5-2.0.0/
-  
+
      mkdir build
      cd build
 
      $env:CFLAGS="/D_WIN32_WINNT=0x0601"
      $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
-     
-     cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+
+     cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
 
      cmake --build . --parallel
      cmake --install . --parallel 8
@@ -281,19 +349,19 @@ Install From Source
 - Build CGAL 6.1
 
   .. code-block:: powershell
-  
+
      cd ~/code
-  
+
      curl.exe -L -O "https://github.com/CGAL/cgal/releases/download/v6.1/CGAL-6.1.tar.xz"
      tar -xf ./CGAL-6.1.tar.xz
      cd ./CGAL-6.1/
      ls
      mkdir build
      cd ./build/
-  
+
      $env:CFLAGS="/D_WIN32_WINNT=0x0601"
      $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
-     
+
      # CGAL is header-only now, "CFLAGS", "CXXFLAGS", or "cmake --build"
      # are not really necessary, but just in case...
      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
@@ -304,25 +372,25 @@ Install From Source
 - Build Boost 1.90
 
   .. code-block:: powershell
-  
+
      cd ~/code
-  
+
      # Boost has two release tarballs, the traditional b2 build release
      # and the optional CMake release. For consistency, we use the CMake
      # version.
      curl.exe -L -O "https://github.com/boostorg/boost/releases/download/boost-1.90.0/boost-1.90.0-cmake.tar.xz"
-     tar -xf .\boost-1.90.0-cmake.tar.xz
+     tar -xf ./boost-1.90.0-cmake.tar.xz
      cd boost-1.90.0
      mkdir build
      cd build
-  
+
      $env:CFLAGS="/D_WIN32_WINNT=0x0601"
      $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
-  
+
      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release -DBOOST_USE_WINAPI_VERSION="0x0601"  `
                        -DBOOST_EXCLUDE_LIBRARIES="log" -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
-  
-  
+
+
      cmake --build . --parallel
      cmake --install . --parallel 8
 
@@ -333,7 +401,7 @@ Install From Source
 - Download Mesa
 
   .. code-block:: powershell
-  
+
      cd ~/code
 
      curl.exe -L -O "https://github.com/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z"
@@ -400,7 +468,7 @@ Improper CFLAGS and CXXFLAGS
 
 To pass additional C/C++ compiler flags to CMake, one
 should always set the environment variables ``CFLAGS`` and
-``CXXFLAGS``. 
+``CXXFLAGS``.
 For CMake, these environment variables is the standard method on
 both Windows and Unix-like systems.
 
@@ -439,7 +507,7 @@ examples include:
 - C preprecessor tries to use Unix headers because ``WIN32`` is undefined.
 
   .. code-block:: console
-  
+
      atomic_writer.c(40):
      fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory
 
@@ -453,7 +521,7 @@ examples include:
 - C++ exception is not working:
 
   .. code-block:: console
-  
+
      warning C4530: C++ exception handler used, but unwind semantics are not enabled.
      Specify /EHsc
 
@@ -479,24 +547,24 @@ Otherwise, one may encounter the following build failures.
 .. code-block:: console
 
    > cmake --build . --parallel
-   [4763/6175] Automatic MOC for target qtquickcontrols2fluentwinui3styleimplplugin                                                                              
+   [4763/6175] Automatic MOC for target qtquickcontrols2fluentwinui3styleimplplugin
    FAILED: qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/timestamp qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/mocs_compilation.cpp C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/timestamp C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/mocs_compilation.cpp
    C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\user\code\build\build\qt-everywhere-src-6.10.1\build\qtdeclarative\src\quickcontrols\fluentwinui3\impl && "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/CMakeFiles/qtquickcontrols2fluentwinui3styleimplplugin_autogen.dir/AutogenInfo.json Release && "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/timestamp && "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_transform_depfile Ninja gccdepfile C:/Users/user/code/build/build/qt-everywhere-src-6.10.1 C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/qtdeclarative/src/quickcontrols/fluentwinui3/impl C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/deps C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/CMakeFiles/d/8bcbe5f462757de910de6572f55a8d93c0e77a70b5b83e71746f1875cc09c7da.d"
-   
+
    AutoMoc subprocess error
    ------------------------
    The moc process failed to compile
-     "SRC:/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.cpp"  
+     "SRC:/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.cpp"
    into
      "SRC:/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/include/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.moc"
    included by
-     "SRC:/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.cpp"  
+     "SRC:/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.cpp"
    Process failed with return value 1
-   
+
    Command
    -------
    C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/bin/moc.exe -DCMAKE_CXX_FLAGS=/D_WIN32_WINNT=0x0601 -DCMAKE_C_FLAGS=/D_WIN32_WINNT=0x0601 -DCMAKE_SYSTEM_VERSION=7 -DNOMINMAX -DQT_CORE_LIB -DQT_DEPRECATED_WARNINGS -DQT_EXPLICIT_QFILE_CONSTRUCTION_FROM_PATH -DQT_LEAN_HEADERS=1 -DQT_NETWORK_LIB -DQT_NO_AS_CONST=1 -DQT_NO_DEBUG -DQT_NO_EXCEPTIONS -DQT_NO_FOREACH -DQT_NO_FOREACH=1 -DQT_NO_JAVA_STYLE_ITERATORS -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT -DQT_NO_QASCONST -DQT_NO_QEXCHANGE -DQT_NO_QSNPRINTF -DQT_NO_QSNPRINTF=1 -DQT_NO_STD_FORMAT_SUPPORT -DQT_PLUGIN -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICKCONTROLS2FLUENTWINUI3STYLEIMPL_LIB -DQT_USE_QSTRINGBUILDER -DUNICODE -DWIN32 -DWIN64 -D_CRT_SECURE_NO_WARNINGS -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -Dqtquickcontrols2fluentwinui3styleimplplugin_EXPORTS -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/qtdeclarative/src/quickcontrols/fluentwinui3/impl -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/qtbase/mkspecs/win32-msvc -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include/QtQml -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include/QtCore -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include/QtQmlIntegration -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/qtdeclarative/src/qmlintegration -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/qmlintegration -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include/QtNetwork -IC:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtbase/include/QtQuickControls2FluentWinUI3StyleImpl -DWIN32 --compiler-flavor=msvc -Muri=QtQuick.Controls.FluentWinUI3.impl -DWIN32 --compiler-flavor=msvc --output-dep-file -o C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/include/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.moc C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.cpp
-   
+
    Output
    ------
    moc: Cannot create C:/Users/user/code/build/build/qt-everywhere-src-6.10.1/build/qtdeclarative/src/quickcontrols/fluentwinui3/impl/qtquickcontrols2fluentwinui3styleimplplugin_autogen/include/qtquickcontrols2fluentwinui3styleimplplugin_QtQuickControls2FluentWinUI3StyleImplPlugin.moc. Error: No such file or directory
@@ -526,7 +594,7 @@ environment. The MSVC compiler should be the ``x64`` version:
    > cl
    Microsoft (R) C/C++ Optimizing Compiler Version 19.50.35721 for x64
    Copyright (C) Microsoft Corporation.  All rights reserved.
-   
+
    usage: cl [ option... ] filename... [ /link linkoption... ]
 
 By default, a 32-bit environment is launched if ``./Launch-VsDevShell.ps1``
@@ -617,7 +685,7 @@ manually building Qt 6 via MSVC in a test:
 
    PS C:\Users\user\code\qt-everywhere-src-6.10.1\build\qtbase\config.tests\arch> ninja -d explain
    ninja explain: output build.ninja older than most recent input C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/Platform/WindowsPaths.cmake (7884016156132623 vs 7884138951469734)
-   
+
 In this case, the invalid file timestamp comes from an internal CMake file
 ``WindowsPaths.cmake`` in the *Visual Studio Build Tools 2022* installation
 itself, under ``C:/Program Files (x86)/Microsoft Visual Studio/2022/``!
@@ -627,7 +695,7 @@ Studio Build Tools 2022 installation.
 
 .. code-block:: powershell
 
-   Get-ChildItem -Recurse -Path 'C:/Program Files (x86)/Microsoft Visual Studio/' | ForEach-Object { $_.LastWriteTime = (Get-Date) } 
+   Get-ChildItem -Recurse -Path 'C:/Program Files (x86)/Microsoft Visual Studio/' | ForEach-Object { $_.LastWriteTime = (Get-Date) }
    Get-ChildItem -Recurse -Path 'C:/Program Files (x86)/Microsoft Visual Studio/' | ForEach-Object { $_.CreationTime = (Get-Date) }
 
 .. hint::
@@ -685,5 +753,5 @@ The problem was fixed by resetting all timestamps under ``C:/Users/user/code/vcp
 
 .. code-block:: powershell
 
-   Get-ChildItem -Recurse -Path 'C:/Users/user/code/vcpkg/scripts/' | ForEach-Object { $_.LastWriteTime = (Get-Date) } 
+   Get-ChildItem -Recurse -Path 'C:/Users/user/code/vcpkg/scripts/' | ForEach-Object { $_.LastWriteTime = (Get-Date) }
    Get-ChildItem -Recurse -Path 'C:/Users/user/code/vcpkg/scripts/' | ForEach-Object { $_.CreationTime = (Get-Date) }
