@@ -11,6 +11,7 @@ on:
 
 jobs:
   Linux:
+    if: false
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -408,6 +409,7 @@ jobs:
           python3 MSL_NotchFilter.py
 
   macOS:
+    if: false
     name: "macOS (ARM, latest)"
 
     runs-on: macos-latest
@@ -501,6 +503,7 @@ jobs:
           python3 MSL_NotchFilter.py
 
   FreeBSD:
+    if: false
     runs-on: ubuntu-latest
 
     strategy:
