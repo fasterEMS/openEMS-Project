@@ -241,18 +241,20 @@ Install From Source
 
            cd ~/code
 
-           curl.exe -L -O "https://download.qt.io/archive/qt/6.2/6.2.1/single/qt-everywhere-src-6.2.1.tar.xz"
-           tar -xf qt-everywhere-src-6.2.1.tar.xz
+           curl.exe -L -O "https://download.qt.io/archive/qt/6.1/6.1.3/single/qt-everywhere-src-6.1.3.tar.xz"
+           tar -xf qt-everywhere-src-6.1.3.tar.xz
 
            # rename Qt 6 directory to avoid path long problem.
-           mv ./qt-everywhere-src-6.2.1/ ./qt6.2
-           cd qt6.2
+           mv ./qt-everywhere-src-6.1.3/ ./qt6.1
+           cd qt6.1
 
            # allow building qt5compat without optional dependencies
+           curl.exe -O -L "https://github.com/qt/qt5/commit/81096b44bb183772c979debca2ffd1f8b364bbc8.patch"
            curl.exe -O -L "https://github.com/qt/qt5compat/commit/307d82ee13b68a4ffd488709fb948d37f04b096b.patch"
 
            # Use fuzz match for second patch, because the file content in git and
            # stable version slightly differs.
+           cat 81096b44bb183772c979debca2ffd1f8b364bbc8.patch | patch -p1
            cat 307d82ee13b68a4ffd488709fb948d37f04b096b.patch | patch -p1 --fuzz 5 -d qt5compat
 
            mkdir build
@@ -267,6 +269,9 @@ Install From Source
            # BAD:  C:/Strawberry/c/bin
            echo (Get-Command cmake).Source
 
+           # needed for legacy codebase using newer CMake 4.1.1 (bundled with VS2026)
+           $env:CMAKE_POLICY_VERSION_MINIMUM="3.10"
+
            # Qt 6 uses some Win8.1+ features, set to 0x0602 to avoid build failures.
            # Testing showed Qt 6.1 is the last version in which we're lucky enough
            # to not relying on those features, so it still runs on Windows 7.
@@ -278,23 +283,17 @@ Install From Source
                "-cmake-generator", "Ninja",
                "-release",
                "-nomake", "examples",
-               "-skip", "qtshadertools",     "-skip", "qt3d",
-               "-skip", "qtactiveqt",        "-skip", "qtconnectivity",
-               "-skip", "qtcharts",          "-skip", "qttools",
-               "-skip", "qtcoap",            "-skip", "qtdatavis3d",
-               "-skip", "qtdeclarative",     "-skip", "qtimageformats",
-               "-skip", "qtquickcontrols2",  "-skip", "qtdoc",
-               "-skip", "qtlocation",        "-skip", "qtlottie",
-               "-skip", "qtmultimedia",      "-skip", "qtmqtt",
+               "-skip", "qt3d",              "-skip", "qtactiveqt",
+               "-skip", "qtcharts",          "-skip", "qtcoap",
+               "-skip", "qtdatavis3d",       "-skip", "qtdeclarative",
+               "-skip", "qtdoc",             "-skip", "qtimageformats",
+               "-skip", "qtlottie",          "-skip", "qtmqtt",
                "-skip", "qtnetworkauth",     "-skip", "qtopcua",
-               "-skip", "qtquick3d",         "-skip", "qtquicktimeline",
-               "-skip", "qtremoteobjects",   "-skip", "qtscxml",
-               "-skip", "qtsensors",         "-skip", "qtserialbus",
-               "-skip", "qtserialport",      "-skip", "qtsvg",
-               "-skip", "qttranslations",    "-skip", "qtvirtualkeyboard",
-               "-skip", "qtwayland",         "-skip", "qtwebchannel",
-               "-skip", "qtwebengine",       "-skip", "qtwebsockets",
-               "-skip", "qtwebview"
+               "-skip", "qtquick3d",         "-skip", "qtquickcontrols2",
+               "-skip", "qtquicktimeline",   "-skip", "qtscxml",
+               "-skip", "qtshadertools",     "-skip", "qtsvg",
+               "-skip", "qttools",           "-skip", "qttranslations",
+               "-skip", "qtvirtualkeyboard", "-skip", "qtwayland"
            )
 
            ../configure.bat $opt -prefix "$HOME/opt/openEMS"
@@ -329,7 +328,7 @@ Install From Source
 
      cd ~/code
 
-     git clone https://github.com/Kitware/VTK --depth=1
+     git clone https://github.com/Kitware/VTK --branch v9.6.0.rc2 --depth=1
      cd VTK
 
      mkdir build
