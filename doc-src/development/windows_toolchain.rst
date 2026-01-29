@@ -8,7 +8,7 @@ Requirements
 
 - An account that is a member of the Administrators group.
 
-- At least 30 GiB of free ``C:\`` disk space.
+- At least 30 GiB of free ``C:`` disk space.
 
 - Finish reading: :ref:`development_powershell`.
 
@@ -23,25 +23,68 @@ Requirements
 Select a Toolchain
 -------------------
 
-One can build openEMS for Windows using several different toolchains.
+One can build openEMS for Windows using several different toolchains:
+Visual Studio 2026, Visual Studio 2022, or MSYS2 UCRT64. Each Visual
+Studio version has two editions, *Build Tools* (CLI), and *Community*
+(CLI + IDE).  Within all Visual Studio editions, three toolsets are
+available: VCTools v143 (also known as ``cl v19.44.35221``,
+``vcvars_ver 14.44``), VCTools v145 (also known as ``cl v19.50.35723``,
+``vcvars_ver 14.50``), and clang-cl.
 
-- Visual Studio 2026 Build Tools
-- Visual Studio 2026 IDE
-- Visual Studio 2022 Build Tools
-- Visual Studio 2022 IDE
-- MSYS2 UCRT64
+A comparison is provided below:
+
++----------------------+----------------------+--------------+-----------+-------------+---------------------+
+|          Name        |  Editions            |    Toolset   | Selection |  Target     | Production Build    |
++======================+======================+==============+===========+=============+=====================+
+| VS 2026              | Build Tools (CLI)    | VCTools v145 |  Default  | Win10+      | Planned             |
+|                      |                      |              |           |             |                     |
+|                      | Community (CLI, IDE) |              |           |             | (Modern Build)      |
++                      +                      +--------------+-----------+             +---------------------+
+|                      |                      |  clang-cl    |  Optional |             | Planned             |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | (Modern Build)      |
++                      +                      +--------------+-----------+-------------+---------------------+
+|                      |                      | VCTools v143 |  Optional | Win7 SP1+   | Planned             |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | (Legacy Build)      |
++----------------------+----------------------+--------------+-----------+-------------+---------------------+
+| VS 2022              | Build Tools (CLI)    | VCTools v143 |  Default  | Win7 SP1+   | Current             |
+|                      |                      |              |           |             |                     |
+|                      | Community (CLI, IDE) |              |           |             |                     |
++                      +                      +--------------+-----------+             +---------------------+
+|                      |                      |  clang-cl    |  Optional |             | Planned             |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | (Legacy Build)      |
++----------------------+----------------------+--------------+-----------+-------------+---------------------+
+|     MSYS2            | UCRT64               |    GCC       |   N/A     | Win10+      | Personal Only       |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | Occasional Testing  |
++----------------------+----------------------+--------------+-----------+             +---------------------+
+|     MSYS2            | Clang64              |   clang      |   N/A     |             | Personal Only       |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | Untested            |
+|                      |                      |              |           |             |                     |
+|                      |                      |              |           |             | Patches Welcome     |
++                      +----------------------+--------------+-----------+             +---------------------+
+|                      | MinGW                |  Various     |   N/A     |             | Unsupported         |
+|                      |                      |              |           |             |                     |
+|                      | MSYS                 |              |           |             |                     |
++----------------------+----------------------+--------------+-----------+-------------+---------------------+
 
 .. tip::
 
    If unsure, install *Visual Studio 2026 Build Tools*, and skip
-   instructions for other toolchains.
+   instructions for other toolchains. This allows you to target
+   *Legacy MSVC*, *Current MSVC*, and *Current Clang* builds.
 
 .. warning::
 
-   All developers should install only *one* toolchain. Installing multiple
-   toolchains at the same time is strongly discouraged, since it
-   leads to a redundant, confusing, and potentially conflicting development
-   environment.
+   All developers should install only *one toolchain, one edition*.
+   Installing multiple toolchains or variants at the same time is strongly
+   discouraged, since it leads to a redundant, confusing, and potentially
+   conflicting development environment. The only exception is when
+   producing *Legacy Clang* builds for targeting Windows 7, since the older
+   ``clang-cl`` version is only provided in *Visual Studio 2022*.
 
 Visual Studio
 ~~~~~~~~~~~~~~
@@ -85,8 +128,9 @@ optional clang components.
 Licensing
 """"""""""
 
-The use of Visual Studio is governed by Microsoft's licensing terms.
-A *Visual Studio Community* license is granted without a fee:
+The use of Visual Studio Build Tools and IDE is governed by Microsoft's
+licensing terms.  A *Visual Studio Community* license is granted without
+a fee:
 
 #. For individuals, "working on your own applications, either to sell or for
    any other purpose."
@@ -138,33 +182,36 @@ Install Visual Studio Build Tools
 #. Install Visual Studio Build Tools
 
    .. tabs::
-   
+
       .. tab:: 2026 (PowerShell)
 
          .. code-block:: powershell
-         
+
             $opt = (
                 "--wait",
                 "--quiet",
                 "--add Microsoft.VisualStudio.Workload.VCTools",
+                "--add Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64",
                 "--add Microsoft.VisualStudio.Component.VC.Llvm.Clang",
                 "--add Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset",
                 "--includeRecommended"
             )
-         
+
             winget install vs18-buildtools --override "$opt"
 
          .. hint::
 
-            This is the recommended toolchain.
-   
+            - This is the recommended toolchain.
+            - ``--add Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64`` can be
+              omitted to reduce download size by 3 GiB when legacy builds are not needed,
+
          .. warning::
-   
+
             ``--wait`` and ``--quiet`` must always be specified. Without ``--wait``,
             the installer exits immediately without waiting for the background installation
             to complete. Without ``--quiet``, the installer waits for GUI inputs, and
             hangs indefinitely.
-   
+
       .. tab:: 2026 (GUI)
 
          - **Download**: download *Visual Studio Build Tools 2026* installer from
@@ -176,19 +223,19 @@ Install Visual Studio Build Tools
 
          - **Open the**  ``vs_buildtools.exe`` installer: if the :program:`User
            Account Control` (UAC) security prompt appears, press :guilabel:`Yes`.
-   
+
          - **Start installer self-installation**: before *Visual Studio Build
            Tools* can be installed, the installer needs to perform self-installation
            first. On the :guilabel:`Visual Studio Installer` window, click the
            :guilabel:`Continue` button.
-   
+
            .. image:: ./imgs/vs_installer.png
               :width: 40%
               :alt: Screenshot of the "Visual Studio Installer" window.
-   
+
          - **Wait for the installer**: wait for the installer window to open after
            its self-installation is complete.
-   
+
          - **Select** :guilabel:`Desktop development with C++`: on the installer window,
            click the :guilabel:`Workload` tab (already selected by default), and check the
            :guilabel:`Desktop development with C++` workload. Several default components
@@ -197,21 +244,25 @@ Install Visual Studio Build Tools
            .. image:: ./imgs/vs2026_buildtools_cpp.png
               :width: 40%
               :alt: Screenshot of the "Workload" tab.
-   
+
            .. image:: ./imgs/vs2026_buildtools_clang.png
               :width: 40%
               :alt: Screenshot of the "C++ Clang tools for Windows" option.
-   
+
          - **Select** :guilabel:`C++ Clang tools for Windows`: in additional to the
            default components under the :guilabel:`Installation details` panel, check
            the option :guilabel:`C++ Clang tools for Windows`.
 
          - **Install**: press the :guilabel:`Install` button.
 
+         .. todo::
+
+            VCTools v143 screenshot is missing.
+
       .. tab:: 2022 (PowerShell)
 
          .. code-block:: powershell
-         
+
             $opt = (
                 "--wait",
                 "--quiet",
@@ -220,21 +271,21 @@ Install Visual Studio Build Tools
                 "--add Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset",
                 "--includeRecommended"
             )
-         
+
             winget install vs2022-buildtools --override "$opt"
 
          .. hint::
 
-            This toolchain is not recommended, unless for testing. Use *Visual Studio
-            Build Tools 2026* instead.
-   
+            This toolchain is not recommended, unless for testing or producing *Legacy
+            Clang* builds. Use *Visual Studio Build Tools 2026* instead.
+
          .. warning::
-   
+
             ``--wait`` and ``--quiet`` must always be specified. Without ``--wait``,
             the installer exits immediately without waiting for the background installation
             to complete. Without ``--quiet``, the installer waits for GUI inputs, and
             hangs indefinitely.
-   
+
       .. tab:: 2022 (GUI)
 
          - **Download**: download *Visual Studio Build Tools 2022* installer from
@@ -242,24 +293,24 @@ Install Visual Studio Build Tools
 
            .. hint::
 
-              This toolchain is not recommended, unless for testing. Use *Visual Studio
-              Build Tools 2026* instead.
-   
+              This toolchain is not recommended, unless for testing or producing *Legacy
+              Clang* builds. Use *Visual Studio Build Tools 2026* instead.
+
          - **Open the**  ``vs_buildtools.exe`` installer: if the :program:`User
            Account Control` (UAC) security prompt appears, press :guilabel:`Yes`.
-   
+
          - **Start installer self-installation**: before *Visual Studio Build
            Tools* can be installed, the installer needs to perform self-installation
            first. On the :guilabel:`Visual Studio Installer` window, click the
            :guilabel:`Continue` button.
-   
+
            .. image:: ./imgs/vs_installer.png
               :width: 40%
               :alt: Screenshot of the "Visual Studio Installer" window.
-   
+
          - **Wait for the installer**: wait for the installer window to open after
            its self-installation is complete.
-   
+
          - **Select** :guilabel:`Desktop development with C++`: on the installer window,
            click the :guilabel:`Workload` tab (already selected by default), and check the
            :guilabel:`Desktop development with C++` workload. Several default components
@@ -268,7 +319,7 @@ Install Visual Studio Build Tools
            .. image:: ./imgs/vs2022_buildtools_cpp.png
               :width: 40%
               :alt: Screenshot of the "Workload" tab.
-   
+
            .. image:: ./imgs/vs2022_buildtools_clang.png
               :width: 40%
               :alt: Screenshot of the "C++ Clang tools for Windows" option.
@@ -281,8 +332,8 @@ Install Visual Studio Build Tools
 
 #. Wait for installation
 
-   *Visual Studio Build Tools* downloads ~5 GiB of data. On a machine with
-   300 Mbps broadband and a mid-range SSD, it takes approximately 10 minutes
+   *Visual Studio Build Tools* downloads ~8 GiB of data. On a machine with
+   300 Mbps broadband and a mid-range SSD, it takes approximately 15 minutes
    to install, and more with less ideal conditions. Sit back and relax.
 
 #. Install Git
@@ -305,35 +356,39 @@ Install Visual Studio IDE
 #. Install Visual Studio Community
 
    .. tabs::
-   
+
       .. tab:: 2026 (PowerShell)
-   
+
          .. code-block:: powershell
-   
+
             $opt = (
                 "--wait",
                 "--quiet",
                 "--add Microsoft.VisualStudio.Workload.NativeDesktop",
+                "--add Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64",
                 "--add Microsoft.VisualStudio.Component.VC.Llvm.Clang",
                 "--add Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset",
                 "--add Microsoft.VisualStudio.Component.Git",
                 "--includeRecommended"
             )
-   
+
             winget install vs18-community --override "$opt"
 
          .. hint::
 
-            This toolchain is not recommended, unless for developing Windows desktop
-            applications. Use *Visual Studio Build Tools 2026* instead.
-   
+            - This toolchain is not recommended, unless for developing Windows desktop
+              applications. Use *Visual Studio Build Tools 2026* instead.
+
+            - ``--add Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64`` can be
+              omitted to reduce download size by 3 GiB when legacy builds are not needed,
+
          .. warning::
-   
+
             ``--wait`` and ``--quiet`` must always be specified. Without ``--wait``,
             the installer exits immediately without waiting for the background installation
             to complete. Without ``--quiet``, the installer waits for GUI inputs, and
             hangs indefinitely.
-   
+
       .. tab:: 2026 (GUI)
 
          - **Download**: download *Visual Studio Community 2026* installer from
@@ -346,58 +401,62 @@ Install Visual Studio IDE
 
          - **Open the**  ``vs_community.exe`` installer: if the :program:`User
            Account Control` (UAC) security prompt appears, press :guilabel:`Yes`.
-     
+
          - **Start installer self-installation**: before *Visual Studio Community*
            can be installed, the installer needs to perform self-installation
            first. On the :guilabel:`Visual Studio Installer` window, click the
            :guilabel:`Continue` button.
-     
+
            .. image:: ./imgs/vs_installer.png
               :width: 40%
               :alt: Screenshot of the "Visual Studio Installer" window.
-     
+
          - **Wait for the installer**: wait for the installer window to open after
            its self-installation is complete.
-     
+
          - **Select** :guilabel:`Desktop development with C++`: on the installer window,
            click the :guilabel:`Workload` tab (already selected by default), and check the
            :guilabel:`Desktop development with C++` workload. Several default components
            would be automatically selected.
-   
+
            .. image:: ./imgs/vs2026_community_cpp.png
               :width: 40%
               :alt: Screenshot of the "Workload" tab.
-     
+
            .. image:: ./imgs/vs2026_community_clang.png
               :width: 40%
               :alt: Screenshot of the "C++ Clang tools for Windows" option.
-   
+
          - **Select** :guilabel:`C++ Clang tools for Windows`: in additional to the
            default components under the :guilabel:`Installation details` panel, check
            the option :guilabel:`C++ Clang tools for Windows`.
-   
+
          - **Select** Git: click the :guilabel:`Individual components` tab. In the
            search bar (with the :guilabel:`Search components` tooltip), type :kbd:`git`.
            Check the option :guilabel:`Git for Windows`.
-   
+
            .. image:: ./imgs/vs2026_community_git.png
               :width: 40%
               :alt: Screenshot of the "Git for Windows" option under the
                     :guilabel:`Individual components` tab.
-   
+
              .. warning::
-   
+
                 If you've already installed Microsoft's *Git for Windows* previously (e.g.
                 using ``winget install Microsoft.Git``), the component :guilabel:`Git for
                 Windows` would be unavailable and hidden, which is confusing. It's one
                 reason that installing multiple development environments is not recommended.
-   
+
          - **Install**: press the :guilabel:`Install` button.
-   
+
+         .. todo::
+
+            VCTools v143 screenshot is missing.
+
       .. tab:: 2022 (PowerShell)
-   
+
          .. code-block:: powershell
-   
+
             $opt = (
                 "--wait",
                 "--quiet",
@@ -407,21 +466,22 @@ Install Visual Studio IDE
                 "--add Microsoft.VisualStudio.Component.Git",
                 "--includeRecommended"
             )
-   
+
             winget install vs2022-community --override "$opt"
 
          .. hint::
 
-            This toolchain is not recommended, unless for testing. Use *Visual Studio
-            Community 2026* or *Visual Studio Build Tools 2026* instead.
-   
+            This toolchain is not recommended, unless for testing or producing *Legacy
+            Clang* builds. Use *Visual Studio Community 2026* or *Visual Studio Build
+            Tools 2026* instead.
+
          .. warning::
-   
+
             ``--wait`` and ``--quiet`` must always be specified. Without ``--wait``,
             the installer exits immediately without waiting for the background installation
             to complete. Without ``--quiet``, the installer waits for GUI inputs, and
             hangs indefinitely.
-   
+
       .. tab:: 2022 (GUI)
 
          - **Download**: download *Visual Studio Community 2022* installer from
@@ -429,57 +489,58 @@ Install Visual Studio IDE
 
            .. hint::
 
-              This toolchain is not recommended, unless for testing. Use *Visual Studio
-              Community 2026* or *Visual Studio Build Tools 2026* instead.
-   
+              This toolchain is not recommended, unless for testing or producing *Legacy
+              Clang* builds. Use *Visual Studio Community 2026* or *Visual Studio Build
+              Tools 2026* instead.
+
          - **Open the**  ``vs_community.exe`` installer: if the :program:`User
            Account Control` (UAC) security prompt appears, press :guilabel:`Yes`.
-     
+
          - **Start installer self-installation**: before *Visual Studio Community*
            can be installed, the installer needs to perform self-installation
            first. On the :guilabel:`Visual Studio Installer` window, click the
            :guilabel:`Continue` button.
-     
+
            .. image:: ./imgs/vs_installer.png
               :width: 40%
               :alt: Screenshot of the "Visual Studio Installer" window.
-     
+
          - **Wait for the installer**: wait for the installer window to open after
            its self-installation is complete.
-     
+
          - **Select** :guilabel:`Desktop development with C++`: on the installer window,
            click the :guilabel:`Workload` tab (already selected by default), and check the
            :guilabel:`Desktop development with C++` workload. Several default components
            would be automatically selected.
-   
+
            .. image:: ./imgs/vs2022_community_cpp.png
               :width: 40%
               :alt: Screenshot of the "Workload" tab.
-     
+
            .. image:: ./imgs/vs2022_community_clang.png
               :width: 40%
               :alt: Screenshot of the "C++ Clang tools for Windows" option.
-   
+
          - **Select** :guilabel:`C++ Clang tools for Windows`: in additional to the
            default components under the :guilabel:`Installation details` panel, check
            the option :guilabel:`C++ Clang tools for Windows`.
-   
+
          - **Select** Git: click the :guilabel:`Individual components` tab. In the
            search bar (with the :guilabel:`Search components` tooltip), type :kbd:`git`.
            Check the option :guilabel:`Git for Windows`.
-   
+
            .. image:: ./imgs/vs2022_community_git.png
               :width: 40%
               :alt: Screenshot of the "Git for Windows" option under the
                     :guilabel:`Individual components` tab.
-   
+
            .. warning::
-   
+
               If you've already installed Microsoft's *Git for Windows* previously (e.g.
               using ``winget install Microsoft.Git``), the component :guilabel:`Git for
               Windows` would be unavailable and hidden, which is confusing. It's one
               reason that installing multiple development environments is not recommended.
-   
+
          - **Install**: press the :guilabel:`Install` button.
 
 #. Wait for installation
@@ -536,10 +597,10 @@ Install Strawberry Perl
 
 .. note::
 
-   When targetting Windows 7 only.
+   When targeting *Legacy Builds* (Windows 7 SP1+) only.
 
-To target Windows 7, one must use an older version of Qt (version 6.1).
-The build system of older Qt versions depends on Perl.
+To produce a legacy build, one must use an older version of Qt (version
+6.1). The build system of older Qt versions depends on Perl.
 
 .. code-block:: powershell
 
@@ -582,7 +643,6 @@ upper limit, causing build failures.
    Therefore, it's essential to build Qt 6 from a short path, such as ``C:/Users/code/qt6``.
    When using ``vcpkg install``, an alternative short build tree path such as
    ``--x-buildtrees-root C:/vctree`` must be specified.
-
 
 Enable PowerShell Script Execution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -634,8 +694,9 @@ Install ``vcpkg`` from GitHub
    - The newly-installed ``git`` is needed, restart the login session first.
 
 Unfortunately, as of January 2026, Visual Studio 2026 (18.1.1) bundles a
-broken ``vcpkg``, incompatible with Visual Studio 2026 itself, trying to
-install any packages raises the following error:
+broken ``vcpkg``, incompatible with Visual Studio 2026 itself. If only
+``Microsoft.VisualStudio.Workload.VCTools`` (v145) is installed, trying
+to install any packages raises the following error:
 
 .. code-block:: console
 
@@ -645,6 +706,10 @@ install any packages raises the following error:
    Could not locate a complete Visual Studio instance
    The following paths were examined for Visual Studio instances:
      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Auxiliary/Build\vcvarsall.bat
+
+If the optional ``Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64``
+is installed, only the legacy VCTools v143 compiler will be used to build
+C/C++ projects.
 
 This affects
 all Visual Studio 2026 editions, such as Community, Professional, Build Tools
@@ -682,17 +747,17 @@ Visual Studio
 - Switch to the toolchain directory.
 
   .. tabs::
-  
+
      .. tab:: Build Tools (2026)
-  
+
         .. code-block:: powershell
-  
+
            cd "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/Tools"
 
      .. tab:: Build Tools (2022)
-  
+
         .. code-block:: powershell
-  
+
            cd "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/Tools"
 
      .. tab:: IDE (2026)
@@ -708,7 +773,7 @@ Visual Studio
            cd "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools"
 
   .. warning::
-  
+
      Different Visual Studio versions and variants have subtle differences in their
      paths. Some use ``Program Files (x86)``, some use ``Program Files``. Some use
      ``Microsoft Visual Studio/2022``, some use ``Microsoft Visual Studio/18``.
@@ -739,6 +804,25 @@ Visual Studio
           Only run scripts from trusted publishers.
           [V] Never run  [D] Do not run  [R] Run once  [A] Always run  [?] Help (default is "D"):
 
+- When producing a legacy build, one can manually select VCTools v143 via:
+
+  .. code-block:: powershell
+
+     Enter-VsDevShell -VsInstallPath $env:VSINSTALLDIR `
+                      -Arch amd64 -HostArch amd64 `
+                      -DevCmdArguments "-vcvars_ver=14.44"
+
+  .. warning::
+
+     - *Legacy Build* only. Skip this step for *Modern Build*.
+
+     - ``Enter-VsDevShell`` is only available after launching
+       ``./Launch-VsDevShell.ps1``. It's not possible to specify
+       ``-DevCmdArguments`` directly to ``./Launch-VsDevShell.ps1``
+       (see
+       `Visual Studio Developer Community Feedback 10751172
+       <https://developercommunity.visualstudio.com/t/Set-the-toolset-version-with-Launch-VsDe/10751172>`_).
+
 - Override the default vcpkg with the manually-installed version (Visual Studio 2026 only).
 
   .. code-block:: powershell
@@ -762,14 +846,14 @@ MSYS2 UCRT64
       .. code-block:: powershell
 
          $env:MSYSTEM="UCRT64"
-         C:/msys64/usr/bin/bash 
+         C:/msys64/usr/bin/bash
 
    .. tab:: cmd.exe
 
       .. code-block:: batch
 
          set MSYSTEM=UCRT64
-         C:\msys64\usr\bin\bash 
+         C:\msys64\usr\bin\bash
 
    .. tab:: GUI
 

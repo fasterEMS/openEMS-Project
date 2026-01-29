@@ -503,14 +503,17 @@ manual build process without using any script.
           # The final patch adds a CMakeLists.txt file to build a shared library and provide an install target
           # submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
           curl.exe -L -O "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+          cat tinyxml_CMakeLists.patch | patch -p1
 
           # You know something is truly deprecated when the patch itself needs
           # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
           # Replace "cmake_minimum_required(VERSION 2.4.6)" in the patch with
-          # "cmake_minimum_required(VERSION 3.0...3.10)".
-          sed -i -e "s/cmake_minimum_required(VERSION 2.4.6)/cmake_minimum_required(VERSION 3.0...3.10)/" `
-                    tinyxml_CMakeLists.patch
-          cat tinyxml_CMakeLists.patch | patch -p1
+          # "cmake_minimum_required(VERSION 3.0...3.10)". The newline must also
+          # appear before PROJECT(), so run a insert-delete instead of a replace.
+          sed -i -e "1i cmake_minimum_required(VERSION 3.0...3.10)" `
+                 -e "1i project(tinyxml CXX)" `
+                 -e "/cmake_minimum_required(VERSION 2.4.6)/d" `
+                 CMakeLists.txt
 
 - Finally, TinyXML can be installed to a custom user directory. Here, we use
   ``$HOME/opt/openEMS`` as an example. This directory must match the directory later

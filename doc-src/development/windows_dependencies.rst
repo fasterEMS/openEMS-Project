@@ -136,6 +136,12 @@ Install From Package Manager
            New-Item -ItemType SymbolicLink -Target ~/code/app/vcpkg_installed `
                                            -Path AppCSXCAD/build/vcpkg_installed
 
+        .. todo::
+
+           Some vcpkg files have already been upstreamed. This section was written
+           prior to that. This section needs a rewrite, workaround needs to take
+           those changes into considerations.
+
         .. important::
 
            For a new CMake change to take effects, it's often necessary to remove
@@ -235,12 +241,19 @@ Install From Source
 
            cd ~/code
 
-           curl.exe -L -O "https://download.qt.io/archive/qt/6.1/6.1.3/single/qt-everywhere-src-6.1.3.tar.xz"
-           tar -xf qt-everywhere-src-6.1.3.tar.xz
+           curl.exe -L -O "https://download.qt.io/archive/qt/6.2/6.2.1/single/qt-everywhere-src-6.2.1.tar.xz"
+           tar -xf qt-everywhere-src-6.2.1.tar.xz
 
            # rename Qt 6 directory to avoid path long problem.
-           mv ./qt-everywhere-src-6.1.3/ ./qt6.1
-           cd qt6.1
+           mv ./qt-everywhere-src-6.2.1/ ./qt6.2
+           cd qt6.2
+
+           # allow building qt5compat without optional dependencies
+           curl.exe -O -L "https://github.com/qt/qt5compat/commit/307d82ee13b68a4ffd488709fb948d37f04b096b.patch"
+
+           # Use fuzz match for second patch, because the file content in git and
+           # stable version slightly differs.
+           cat 307d82ee13b68a4ffd488709fb948d37f04b096b.patch | patch -p1 --fuzz 5 -d qt5compat
 
            mkdir build
            cd build
@@ -260,20 +273,28 @@ Install From Source
            $env:CFLAGS="/D_WIN32_WINNT=0x0602"
            $env:CXXFLAGS="/D_WIN32_WINNT=0x0602"
 
-           # only build qtbase,qtsvg,qtdeclarative,qt5compat
+           # only build qtbase,qt5compat
            $opt = (
                "-cmake-generator", "Ninja",
                "-release",
+               "-nomake", "examples",
                "-skip", "qtshadertools",     "-skip", "qt3d",
-               "-skip", "qtactiveqt",        "-skip", "qtcharts",
-               "-skip", "qttools",           "-skip", "qtcoap",
-               "-skip", "qtdatavis3d",       "-skip", "qtimageformats",
+               "-skip", "qtactiveqt",        "-skip", "qtconnectivity",
+               "-skip", "qtcharts",          "-skip", "qttools",
+               "-skip", "qtcoap",            "-skip", "qtdatavis3d",
+               "-skip", "qtdeclarative",     "-skip", "qtimageformats",
                "-skip", "qtquickcontrols2",  "-skip", "qtdoc",
-               "-skip", "qtlottie",          "-skip", "qtmqtt",
+               "-skip", "qtlocation",        "-skip", "qtlottie",
+               "-skip", "qtmultimedia",      "-skip", "qtmqtt",
                "-skip", "qtnetworkauth",     "-skip", "qtopcua",
                "-skip", "qtquick3d",         "-skip", "qtquicktimeline",
-               "-skip", "qtscxml",           "-skip", "qttranslations",
-               "-skip", "qtvirtualkeyboard", "-skip", "qtwayland"
+               "-skip", "qtremoteobjects",   "-skip", "qtscxml",
+               "-skip", "qtsensors",         "-skip", "qtserialbus",
+               "-skip", "qtserialport",      "-skip", "qtsvg",
+               "-skip", "qttranslations",    "-skip", "qtvirtualkeyboard",
+               "-skip", "qtwayland",         "-skip", "qtwebchannel",
+               "-skip", "qtwebengine",       "-skip", "qtwebsockets",
+               "-skip", "qtwebview"
            )
 
            ../configure.bat $opt -prefix "$HOME/opt/openEMS"
@@ -302,7 +323,6 @@ Install From Source
           > (Get-Command cmake).Source
           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
 
-
 - Build VTK
 
   .. code-block:: powershell
@@ -318,9 +338,13 @@ Install From Source
      $env:CFLAGS="/D_WIN32_WINNT=0x0601"
      $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+     # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
+     # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release  `
-                       -DVTK_GROUP_ENABLE_Qt=YES -DVTK_QT_VERSION=6 `
-                       -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
+               -DVTK_MODULE_ENABLE_VTK_GUISupportQt=WANT `
+               -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=DONT_WANT `
+               -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=DONT_WANT `
+               -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
 
      cmake --build . --parallel
      cmake --install . --parallel 8

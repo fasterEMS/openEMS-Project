@@ -28,7 +28,7 @@ By default, Windows 11 is shipped with a command-line package manager known
 as ``winget``, which significantly simplifies software installations.
 
 Unfortunately, the default ``winget v1.9.25200`` in a fresh Windows 11 25H2
-system is broken, because it uses an outdated pinned TLS certificates
+system is broken, because it uses outdated pinned TLS certificates
 (see microsoft/winget-cli
 `#2879 <https://github.com/microsoft/winget-cli/issues/2879>`_,
 `#3652 <https://github.com/microsoft/winget-cli/issues/3652>`_).
