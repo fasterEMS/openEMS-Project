@@ -695,8 +695,8 @@ Install ``vcpkg`` from GitHub
 
 Unfortunately, as of January 2026, Visual Studio 2026 (18.1.1) bundles a
 broken ``vcpkg``, incompatible with Visual Studio 2026 itself. If only
-``Microsoft.VisualStudio.Workload.VCTools`` (v145) is installed, trying
-to install any packages raises the following error:
+``Microsoft.VisualStudio.Workload.VCTools`` (VCTools v145) is installed,
+trying to install any packages raises the following error:
 
 .. code-block:: console
 
@@ -709,7 +709,21 @@ to install any packages raises the following error:
 
 If the optional ``Microsoft.VisualStudio.ComponentGroup.VC.Tools.143.x86.x64``
 is installed, only the legacy VCTools v143 compiler will be used to build
-C/C++ projects.
+C/C++ projects. Most projects can successfully proceed, but some may unable to
+find VCTools v143:
+
+.. code-block:: console
+
+   29>C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\
+   MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(473,5):
+   error MSB8020: The build tools for Visual Studio 2022 (Platform
+   Toolset = 'v143') cannot be found. To build using the v143 build tools,
+   please install Visual Studio 2022 build tools.  Alternatively, you may
+   upgrade to the current Visual Studio tools by selecting the Project menu
+   or right-click the solution, and then selecting "Retarget solution".
+   [C:\Users\user\code\openEMS-Project\build\CSXCAD-prefix\src\CSXCAD-build\
+   vcpkg_installed\vcpkg\blds\python3\x64-windows-release-rel\PCbuild\
+   _freeze_module.vcxproj]
 
 This affects
 all Visual Studio 2026 editions, such as Community, Professional, Build Tools
