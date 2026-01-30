@@ -423,20 +423,45 @@ Install From Source
 
 - Download Mesa
 
-  .. code-block:: powershell
+  .. tabs::
 
-     cd ~/code
+     .. tab :: Modern
 
-     curl.exe -L -O "https://github.com/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z"
+        .. code-block:: powershell
 
-     mkdir mesa3d-25.3.3-release-msv
-     cd mesa3d-25.3.3-release-msv
-     tar -xf ../mesa3d-25.3.3-release-msvc.7z
+           cd ~/code
 
-     cd ./x64/
-     cp libgallium_wgl.dll ~/opt/openEMS/bin/
-     cp opengl32.dll ~/opt/openEMS/bin/
-     cp dxil.dll ~/opt/openEMS/bin/
+           # mesa-dist-win 25.3.3 requires Win10+, see:
+           # https://github.com/pal1000/mesa-dist-win/issues/233
+           curl.exe -L -O "https://github.com/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z"
+
+           mkdir mesa3d-25.3.3-release-msv
+           cd mesa3d-25.3.3-release-msv
+           tar -xf ../mesa3d-25.3.3-release-msvc.7z
+
+           cd ./x64/
+           cp libgallium_wgl.dll ~/opt/openEMS/bin/
+           cp opengl32.dll ~/opt/openEMS/bin/
+           cp dxil.dll ~/opt/openEMS/bin/
+
+     .. tab :: Legacy (Windows 7)
+
+        .. code-block:: powershell
+
+           cd ~/code
+
+           # mesa-dist-win 25.2.6 is the last Win7 SP1+ version, see:
+           # https://github.com/pal1000/mesa-dist-win/issues/233
+           curl.exe -L -O "https://github.com/pal1000/mesa-dist-win/releases/download/25.2.6/mesa3d-25.2.6-release-msvc.7z"
+
+           mkdir mesa3d-25.2.6-release-msv
+           cd mesa3d-25.2.6-release-msv
+           tar -xf ../mesa3d-25.2.6-release-msvc.7z
+
+           cd ./x64/
+           cp libgallium_wgl.dll ~/opt/openEMS/bin/
+           cp opengl32.dll ~/opt/openEMS/bin/
+           cp dxil.dll ~/opt/openEMS/bin/
 
   .. important::
 

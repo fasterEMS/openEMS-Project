@@ -41,8 +41,11 @@ Before proceeding...
 
 3. For Windows, follow :ref:`development_windows`.
 
+Install Components Separately
+------------------------------
+
 Install Basic Programs
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. important::
 
@@ -75,12 +78,11 @@ Install Basic Programs
           mkdir build
           cd build
 
-          # used only if dependencies are installed via
-          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
-
           $env:CFLAGS="/D_WIN32_WINNT=0x0601"
           $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+          # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+          # if not using vcpkg.
           cmake ../ -GNinja -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON `
                     -DCMAKE_BUILD_TYPE=Release `
                     -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
@@ -107,9 +109,14 @@ Install Basic Programs
         if Ninja is not installed.
 
       - When targetting Windows using Visual Studio, use
-        ``-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON`` for fparser and TinyXML (but
+        ``CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS`` for fparser and TinyXML (but
         not CSXCAD or openEMS), because the ``.lib`` files are not generated
         by default.
+
+      - When building dependencies manually (currently used to create official
+        releases), remove ``CMAKE_TOOLCHAIN_FILE``, ``VCPKG_HOST_TRIPLET``,
+        ``VCPKG_HOST_TRIPLET``, ``VCPKG_TARGET_TRIPLET`` to prevent automatic
+        dependency installations.
 
 2. Build CSXCAD. The CMake variales ``-DFPARSER_ROOT_DIR``
    should be pointed to the install root paths of fparser,
@@ -138,12 +145,11 @@ Install Basic Programs
           mkdir build
           cd build
 
-          # used only if dependencies are installed via
-          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
-
           $env:CFLAGS="/D_WIN32_WINNT=0x0601"
           $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+          # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+          # if not using vcpkg.
           cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
                     -DFPARSER_ROOT_DIR="$HOME/opt/openEMS" `
                     -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
@@ -174,7 +180,6 @@ Install Basic Programs
                     -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS \
                     -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
 
-
           cmake --build ./ --parallel
           cmake --install ./ --parallel 8
 
@@ -186,12 +191,11 @@ Install Basic Programs
           mkdir build
           cd build
 
-          # used only if dependencies are installed via
-          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
-
           $env:CFLAGS="/D_WIN32_WINNT=0x0601"
           $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+          # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+          # if not using vcpkg.
           cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
                     -DFPARSER_ROOT_DIR="$HOME/opt/openEMS" `
                     -DCSXCAD_ROOT_DIR="$HOME/opt/openEMS" `
@@ -213,7 +217,7 @@ Install Basic Programs
         the same ``DCMAKE_INSTALL_PREFIX``
 
 Install AppCSXCAD GUI (optional)
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Build QCSXCAD:
 
@@ -239,12 +243,11 @@ Install AppCSXCAD GUI (optional)
           mkdir build
           cd build
 
-          # used only if dependencies are installed via
-          # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
-
           $env:CFLAGS="/D_WIN32_WINNT=0x0601"
           $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+          # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+          # if not using vcpkg.
           cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
                     -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
@@ -280,11 +283,11 @@ Install AppCSXCAD GUI (optional)
            mkdir build
            cd build
 
-           # $env:CMAKE_TOOLCHAIN_FILE = Resolve-Path ~/code/vcpkg/scripts/buildsystems/vcpkg.cmake
-
            $env:CFLAGS="/D_WIN32_WINNT=0x0601"
            $env:CXXFLAGS="/D_WIN32_WINNT=0x0601"
 
+           # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+           # if not using vcpkg.
            cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
                      -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
                      -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
@@ -295,6 +298,55 @@ Install AppCSXCAD GUI (optional)
            cmake --install ./ --parallel 8
 
            cd ../../
+
+Install Everything At Once
+---------------------------
+
+The following commands automatically build and install all C++ components
+of the openEMS project to ``CMAKE_INSTALL_PREFIX`` at the same time.
+Internally, all components are added as CMake subprojects in ``CMakeLists.txt``
+via ``ExternalProject_Add``.
+
+This is how ``openEMS_update.sh`` installs the C++ libraries and binaries
+to a user-specified directory.
+
+.. tabs::
+
+   .. code-tab:: bash
+
+      cd openEMS-Project
+      mkdir build && cd build
+      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS"
+
+      # make && make install is deprecated
+      cmake --build ./ --parallel
+
+   .. code-tab:: powershell
+
+      cd openEMS-Project
+      mkdir build; cd build
+
+      # Remove DCMAKE_TOOLCHAIN_FILE, DVCPKG_HOST_TRIPLET, DVCPKG_TARGET_TRIPLET
+      # if not using vcpkg.
+      cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                -DCMAKE_INSTALL_PREFIX="$HOME/opt/openEMS" `
+                -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+      # make && make install is deprecated
+      cmake --build ./ --parallel
+
+.. important::
+
+   - All components will be immediately installed to ``CMAKE_INSTALL_PREFIX``
+     after running ``cmake --build ./ --parallel`` without running
+     ``make install`` or ``cmake --install ./``.
+
+   - This is only recommended when preparing a binary release of the project.
+     For other purposes such as debugging or packaging, it's recommended to
+     install components separately.
 
 openEMS search path
 --------------------
@@ -402,8 +454,8 @@ should remove all ``-std=`` options from ``CXXFLAGS``.
 Download and Build TinyXML from Source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TinyXML is a dependency of CSXCAD, building it from source is needed on Windows
-(Visual Studio only) and macOS.
+TinyXML is a dependency of CSXCAD, building it from source is needed on macOS.
+If vcpkg is not used on Windows, a manual build is also needed with Visual Studio.
 
 For macOS users, unfortunately, openEMS depends on TinyXML, which is unmaintained
 since 2011 and has been removed from Homebrew (TinyXML2 is not API-compatible).
@@ -412,12 +464,12 @@ TinyXML and patches online, building it from source.
 
 .. tip::
    Only macOS Homebrew removed TinyXML. As of writing, it's still available
-   in the package manager of most operating systems.
+   in the package manager of most operating systems, including Windows vcpkg.
 
 Although no manual intervention is needed on macOS, it's sometimes necessary to
 understand the inner working of this process. When targetting Windows using
-Visual Studio, it must also be built manually. Thus, this section describes the
-manual build process without using any script.
+Visual Studio without vcpkg, it must also be built manually. Thus, this section
+describes the manual build process without using any script.
 
 - First, we obtain the last available version of TinyXML.
 

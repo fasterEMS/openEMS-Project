@@ -39,7 +39,7 @@ programs.
 
 Environment variables are located under the ``env:`` namespace, they
 affect other programs, similar to exported Unix shell variables.
- 
+
 .. code-block:: powershell
 
    # pass a HTTP proxy to a program for HTTP and HTTPS requests
@@ -150,7 +150,7 @@ The set of aliases is limited, but useful.
      # "ls -l" is not supported, use "ls" only
 
 - Move, copy and delete files and directories:
-  
+
   .. code-block:: powershell
 
      # files
@@ -166,7 +166,19 @@ The set of aliases is limited, but useful.
 
   .. warning::
 
-     ``rm -rf`` is not supported, use ``rm -r`` only.
+     - ``rm -rf`` is not supported. To delete most files, one
+       can use ``rm -r``. To force a deletion when it's necessary,
+       use ``rm -r -force``.
+
+     - In PowerShell, ``mkdir`` and ``rm`` take only one argument. To
+       create or delete multiple files, pass a comma-separated
+       array:
+
+       .. code-block:: powershell
+
+          # the argument is a single array {file1, file2, file3}
+          mkdir dir1, dir2, dir3
+          rm dir1, dir2, dir3
 
 - Unix-style path separator:
 
@@ -239,15 +251,15 @@ the actual ``curl.exe`` was introduced to Windows.
 
 .. code-block:: powershell
 
-   PS C:\> Get-Command curl    
-   
+   PS C:\> Get-Command curl
+
    CommandType     Name                                               Version    Source
    -----------     ----                                               -------    ------
    Alias           curl -> Invoke-WebRequest
-   
-   
+
+
    PS C:\> Get-Command curl.exe
-   
+
    CommandType     Name                                               Version    Source
    -----------     ----                                               -------    ------
    Application     curl.exe                                           8.16.0.0   C:\WINDOWS\system32\curl.exe
@@ -296,12 +308,46 @@ line-by-line plaintext format via ``Out-String -Stream``.
    # but in this particular case, just use...
    PS C:\> ls -Filter Windows
 
+Show Documentation
+~~~~~~~~~~~~~~~~~~~~
+
+Use ``Get-Help`` to show a command's documentation:
+
+.. code-block:: powershell
+
+   PS C:\> Get-Help ls
+   NAME
+       Get-ChildItem
+
+   SYNTAX
+       Get-ChildItem [[-Path] <string[]>] [[-Filter] <string>] [-Include <string[]>] [-Exclude <string[]>] [-Recurse] [-Depth <uint32>] [-Force] [-Name]
+       [-UseTransaction] [-Attributes {ReadOnly | Hidden | System | Directory | Archive | Device | Normal | Temporary | SparseFile | ReparsePoint | Compressed
+       | Offline | NotContentIndexed | Encrypted | IntegrityStream | NoScrubData}] [-FollowSymlink] [-Directory] [-File] [-Hidden] [-ReadOnly] [-System]
+       [<CommonParameters>]
+
+       Get-ChildItem [[-Filter] <string>] -LiteralPath <string[]> [-Include <string[]>] [-Exclude <string[]>] [-Recurse] [-Depth <uint32>] [-Force] [-Name]
+       [-UseTransaction] [-Attributes {ReadOnly | Hidden | System | Directory | Archive | Device | Normal | Temporary | SparseFile | ReparsePoint | Compressed
+       | Offline | NotContentIndexed | Encrypted | IntegrityStream | NoScrubData}] [-FollowSymlink] [-Directory] [-File] [-Hidden] [-ReadOnly] [-System]
+       [<CommonParameters>]
+
+
+   ALIASES
+       gci
+       ls
+       dir
+
+
+   REMARKS
+       Get-Help cannot find the Help files for this cmdlet on this computer. It is displaying only partial help.
+           -- To download and install Help files for the module that includes this cmdlet, use Update-Help.
+           -- To view the Help topic for this cmdlet online, type: "Get-Help Get-ChildItem -Online" or
+              go to https://go.microsoft.com/fwlink/?LinkID=113308.
 
 Unix Tools
 ~~~~~~~~~~~~
 
 On Windows 11, useful Unix command-line tools have been installed
-by default. 
+by default.
 
 ``curl.exe`` - the Unix HTTP tool
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
