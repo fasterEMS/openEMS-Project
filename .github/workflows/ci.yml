@@ -608,13 +608,44 @@ jobs:
         toolchain:
           # name: toonchain name (only a name for humans to read).
           # CC, CXX: C/C++ compiler, environment variables
+          # pkgmgr: vcpkg for per-commit testing, manual for official
+          # binary releases because it allows targeting platforms
+          # unsupported by vcpkg
+          #- name: "MSVC"
+          #  CC: "cl"
+          #  CXX: "cl"
+          #  pkgmgr: "vcpkg"
+          #  build: "dev"
+
+          #- name: "clang-cl"
+          #  CC: "clang-cl"
+          #  CXX: "clang-cl"
+          #  pkgmgr: "vpkg"
+          #  build: "dev"
+
           - name: "MSVC"
             CC: "cl"
             CXX: "cl"
+            pkgmgr: "manual"
+            build: "modern"
 
           - name: "clang-cl"
             CC: "clang-cl"
             CXX: "clang-cl"
+            pkgmgr: "manual"
+            build: "modern"
+
+          - name: "MSVC"
+            CC: "cl"
+            CXX: "cl"
+            pkgmgr: "manual"
+            build: "legacy"
+
+          - name: "clang-cl"
+            CC: "clang-cl"
+            CXX: "clang-cl"
+            pkgmgr: "manual"
+            build: "legacy"
 
     env:
       VS_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/"
@@ -622,6 +653,8 @@ jobs:
       CXX: "${{ matrix.toolchain.CXX }}"
       CFLAGS: "/D_WIN32_WINNT=0x0601"
       CXXFLAGS: "/D_WIN32_WINNT=0x0601"
+      PKGMGR: "${{ matrix.toolchain.pkgmgr }}"
+      BUILD: "${{ matrix.toolchain.build }}"
 
       VCPKG_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/"
       VCPKG_BINARY_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/binary"
@@ -629,7 +662,7 @@ jobs:
       VCPKG_ASSET_CACHE_PATH: "${{ github.workspace }}/vcpkg-cache/asset"
       X_VCPKG_ASSET_SOURCES: "x-azurl,file://${{ github.workspace }}/vcpkg-cache/asset,readwrite"
 
-    name: "Windows (${{ matrix.toolchain.name }}, latest)"
+    name: "Windows (latest, ${{ matrix.toolchain.name }}, ${{ matrix.toolchain.build }}, ${{ matrix.toolchain.pkgmgr }})"
 
     steps:
       - name: Show checkout sources
@@ -663,157 +696,165 @@ jobs:
           New-ItemProperty -Path "HKLM:/SYSTEM/CurrentControlSet/Control/FileSystem" `
                            -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
 
-      - name: Download dependencies
+      - name: Prepare download sources
+        id: sources
+        shell: python
+        run: |
+          from os import getenv
+
+
+          PACKAGE_DICT = {
+            "tinyxml": {
+              "ver": "2.6.2",
+              "dirname": "tinyxml",
+              "tarball": "tinyxml_2_6_2.tar.gz",
+              "url": "https://sourceforge.net/projects/tinyxml/files/tinyxml/$(ver)/$(tarball)",
+            },
+            "cgal": {
+              "ver": "6.1",
+              "dirname": "CGAL-$(ver)",
+              "tarball": "$(dirname).tar.xz",
+              "url": "$(github)/CGAL/cgal/releases/download/v$(ver)/$(tarball)"
+            },
+            "boost": {
+              "ver": "1.90.0",
+              "dirname": "boost-$(ver)",
+              "tarball": "$(dirname)-cmake.tar.xz",
+              "url": "$(github)/boostorg/boost/releases/download/boost-$(ver)/$(tarball)"
+            },
+            "hdf5": {
+              "ver": "2.0.0",
+              "dirname": "HDF5-$(ver)",
+              "tarball": "$(ver).tar.gz",
+              "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/$(tarball)"
+            },
+            "qt6_legacy": {
+              "ver": "6.1.3",
+              "shortver": "6.1",
+              "dirname": "qt-everywhere-src-$(ver)",
+              "tarball": "$(dirname).tar.xz",
+              "url": "https://download.qt.io/archive/qt/6.1/6.1.3/single/$(tarball)"
+            },
+            "qt6_modern": {
+              "ver": "6.10.1",
+              "shortver": "6.10",
+              "dirname": "qt-everywhere-src-$(ver)",
+              "tarball": "$(dirname).tar.xz",
+              "url": "https://download.qt.io/official_releases/qt/$(shortver)/$(ver)/single/$(tarball)"
+            },
+            "vtk": {
+              "ver": "9.6.0.rc2",
+              "dirname": "VTK-$(ver)",
+              "tarball": "v$(ver).tar.gz",
+              "url": "$(github)/Kitware/VTK/archive/refs/tags/$(tarball)"
+            },
+            # mesa-dist-win 25.2.6 is the last Win7 SP1+ version, see:
+            # https://github.com/pal1000/mesa-dist-win/issues/233
+            "mesa_legacy": {
+              "ver": "25.2.6",
+              # tarbomb, extract directly to the current directory
+              "dirname": "./",
+              "tarball": "mesa3d-$(ver)-release-msvc.7z",
+              "url": "$(github)/pal1000/mesa-dist-win/releases/download/$(ver)/$(tarball)"
+            },
+            "mesa_modern": {
+              "ver": "25.3.3",
+              # tarbomb, extract directly to the current directory
+              "dirname": "./",
+              "tarball": "mesa3d-$(ver)-release-msvc.7z",
+              "url": "$(github)/pal1000/mesa-dist-win/releases/download/$(ver)/$(tarball)"
+            },
+          }
+
+
+          for name, prop in PACKAGE_DICT.items():
+            dirname = prop["dirname"].replace("$(ver)", prop["ver"])
+            if "shortver" in prop:
+              dirname = dirname.replace("$(shortver)", prop["shortver"])
+
+            tarball = prop["tarball"].replace("$(ver)", prop["ver"])
+            tarball = tarball.replace("$(dirname)", dirname)
+
+            url = prop["url"].replace("$(github)", getenv("GITHUB_SERVER_URL"))
+            url = url.replace("$(ver)", prop["ver"])
+            url = url.replace("$(tarball)", tarball)
+            if "shortver" in prop:
+              url = url.replace("$(shortver)", prop["shortver"])
+
+            # to test locally, set:
+            # export GITHUB_SERVER_URL="https://github.com"
+            # export GITHUB_OUTPUT="/dev/stdout"
+            with open(getenv("GITHUB_OUTPUT"), "a") as output:
+              dirname_line = "%s_dirname=%s\n" % (name, dirname)
+              tarball_line = "%s_tarball=%s\n" % (name, tarball)
+              url_line = "%s_url=%s\n" % (name, url)
+
+              # print but don't add more newlines
+              print(dirname_line, end="")
+              print(tarball_line, end="")
+              print(url_line, end="")
+
+              output.write(dirname_line)
+              output.write(tarball_line)
+              output.write(url_line)
+
+      - name: (manual) Download dependencies
+        if: matrix.toolchain.pkgmgr == 'manual'
         run: |
           mkdir -p $HOME/code/downloads && cd $HOME/code/downloads
           mkdir -p $HOME/code/opt
           mkdir -p $HOME/code/build
 
           # TODO: sha256sum to prevent malware
-          $args = (
-            "--remote-name-all",
+          $curl_args = (
+            "-L",                 # follow redirect
+            "--fail",             # fail if 404
+            "--fail-early",       # fail if any of the link is a 404
+                                  # by default, a later success overrides the fail
+            "--remote-name-all",  # use auto filenames
 
-            # Qt 6
-            "https://download.qt.io/official_releases/qt/6.10/6.10.1/single/qt-everywhere-src-6.10.1.tar.xz",
-
-            # VTK
-            "$env:GITHUB_SERVER_URL/Kitware/VTK/archive/refs/tags/v9.6.0.rc2.tar.gz",
-
-            # HDF 5
-            "$env:GITHUB_SERVER_URL/HDFGroup/hdf5/releases/download/2.0.0/hdf5-2.0.0.tar.gz",
-
-            # CGAL
-            "$env:GITHUB_SERVER_URL/CGAL/cgal/releases/download/v6.1/CGAL-6.1.tar.xz",
-
-            # Boost has two release tarballs, the traditional b2 build release
-            # and the optional CMake release. For consistency, we use the CMake
-            # version.
-            "$env:GITHUB_SERVER_URL/boostorg/boost/releases/download/boost-1.90.0/boost-1.90.0-cmake.tar.xz",
-
-            # Mesa (OpenGL software rendering)
-            "$env:GITHUB_SERVER_URL/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z",
-
-            # TinyXML
-            "https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz",
+            # TinyXML with special cases
+            # The first patch enforces use of stl strings, rather than a custom string type.
+            # The second patch is a fix for incorrect encoding of elements with special characters.
+            # The third and fourth patches are security fixes.
+            # The final patch introduces a CMake build file
+            "${{ steps.sources.outputs.tinyxml_url }}",
             "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch",
             "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch",
             "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch",
             "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch",
-            "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+            "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch",
+
+            # Qt 6 legacy with special cases
+            # Both patches allow building qt5compat without optional dependencies
+            "${{ steps.sources.outputs.qt6_legacy_url }}",
+            "https://github.com/qt/qt5/commit/81096b44bb183772c979debca2ffd1f8b364bbc8.patch",
+            "https://github.com/qt/qt5compat/commit/307d82ee13b68a4ffd488709fb948d37f04b096b.patch",
+
+            # qsharedpointer_impl.h(668,77): error: no member named 'data' in 'QWeakPointer<T>'
+            # under clang
+            "https://github.com/qt/qtbase/commit/0e4cc15da330fb25b913fbc8089e60f80a08f49f.patch",
+
+            "${{ steps.sources.outputs.mesa_legacy_url }}",
+            "${{ steps.sources.outputs.mesa_modern_url }}",
+            "${{ steps.sources.outputs.cgal_url }}",
+            "${{ steps.sources.outputs.boost_url }}",
+            "${{ steps.sources.outputs.hdf5_url }}",
+            "${{ steps.sources.outputs.qt6_modern_url }}",
+            "${{ steps.sources.outputs.vtk_url }}"
           )
-          echo $args
-          curl.exe -L $args
 
-      - name: Build and install Qt 6
+          echo "Downloading $curl_args"
+          curl.exe -L $curl_args
+
+      - name: (manual) Build and install TinyXML
+        if: matrix.toolchain.pkgmgr == 'manual'
         run: |
           & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
 
           cd $HOME/code/build
-          tar -xf $HOME/code/downloads/qt-everywhere-src-6.10.1.tar.xz
-
-          # rename Qt 6 directory to avoid path long problem.
-          mv ./qt-everywhere-src-6.10.1/ ./qt6/
-          cd qt6
-          mkdir build && cd build
-
-          # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
-          # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
-          ../configure.bat -skip qtdeclarative -submodules qtbase,qt5compat `
-                           -prefix "$HOME/opt/"
-
-          cmake --build . --parallel
-          cmake --install . --parallel 8
-
-        env:
-          # Qt 6 uses Win8.1+ features, set to 0x0602 to avoid build failures.
-          CFLAGS: "/D_WIN32_WINNT=0x0602"
-          CXXFLAGS: "/D_WIN32_WINNT=0x0602"
-
-      - name: Build and install VTK
-        run: |
-          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-
-          cd $HOME/code/build
-          tar -xf $HOME/code/downloads/v9.6.0.rc2.tar.gz
-          cd VTK-9.6.0.rc2
-
-          mkdir build && cd build
-
-          # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
-          # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
-          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release  `
-                  -DVTK_MODULE_ENABLE_VTK_GUISupportQt=WANT `
-                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=DONT_WANT `
-                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=DONT_WANT `
-                  -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
-
-          cmake --build . --parallel
-          cmake --install . --parallel 8
-
-        env:
-          # only works with MSVC
-          CC: cl
-          CXX: cl
-
-      - name: Build and install HDF5
-        run: |
-          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-
-          cd $HOME/code/build
-          tar -xf $HOME/code/downloads/hdf5-2.0.0.tar.gz
-          cd hdf5-2.0.0
-
-          mkdir build && cd build
-
-          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
-                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
-
-          cmake --build . --parallel
-          cmake --install . --parallel 8
-        env:
-          # only works with MSVC
-          CC: cl
-          CXX: cl
-
-      - name: Build and install CGAL
-        run: |
-          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-
-          cd $HOME/code/build
-          tar -xf $HOME/code/downloads/CGAL-6.1.tar.xz
-          cd CGAL-6.1
-          mkdir build && cd build
-
-          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
-                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
-
-          cmake --build . --parallel
-          cmake --install . --parallel 8
-
-      - name: Build and install Boost
-        run: |
-          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-
-          cd $HOME/code/build
-          tar -xf $HOME/code/downloads/boost-1.90.0-cmake.tar.xz
-          cd boost-1.90.0
-          mkdir build && cd build
-
-          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
-                    -DBOOST_USE_WINAPI_VERSION="0x0601"  `
-                    -DBOOST_EXCLUDE_LIBRARIES="log" `
-                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
-
-          cmake --build . --parallel
-          cmake --install . --parallel 8
-
-      - name: Build and install TinyXML
-        run: |
-          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-
-          cd $HOME/code/build
-          tar -xf $HOME/code/downloads/tinyxml_2_6_2.tar.gz
-          cd tinyxml
+          tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.tinyxml_tarball }}"
+          cd "${{ steps.sources.outputs.tinyxml_dirname }}"
 
           # The first patch enforces use of stl strings, rather than a custom string type.
           # The second patch is a fix for incorrect encoding of elements with special characters
@@ -846,6 +887,187 @@ jobs:
           cmake --build ./ --parallel
           cmake --install ./ --parallel 8
 
+      - name: (manual) Build and install CGAL
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.cgal_tarball }}"
+          cd "${{ steps.sources.outputs.cgal_dirname }}"
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+      - name: (manual) Build and install Boost
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.boost_tarball }}"
+          cd "${{ steps.sources.outputs.boost_dirname }}"
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DBOOST_USE_WINAPI_VERSION="0x0601"  `
+                    -DBOOST_EXCLUDE_LIBRARIES="log" `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+      - name: (manual) Build and install HDF5
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.hdf5_tarball }}"
+          cd "${{ steps.sources.outputs.hdf5_dirname }}"
+
+          mkdir build && cd build
+
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+        env:
+          # only works with MSVC
+          CC: cl
+          CXX: cl
+
+      - name: (manual) Build and install Qt 6
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+
+          if ($env:BUILD -eq "legacy") {
+            # rename Qt 6 directory to avoid path long problem.
+            tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.qt6_legacy_tarball }}"
+            mv "${{ steps.sources.outputs.qt6_legacy_dirname }}" qt6
+            cd qt6
+
+            # allow building qt5compat without optional dependencies
+            cat $HOME/code/downloads/81096b44bb183772c979debca2ffd1f8b364bbc8.patch |
+              patch -p1
+
+            # Use fuzz match for second patch, because the file content in git and
+            # stable version slightly differs.
+            cat $HOME/code/downloads/307d82ee13b68a4ffd488709fb948d37f04b096b.patch |
+              patch -p1 --fuzz 5 -d qt5compat
+
+            # qsharedpointer_impl.h(668,77): error: no member named 'data' in 'QWeakPointer<T>'
+            # under clang
+            cat $HOME/code/downloads/0e4cc15da330fb25b913fbc8089e60f80a08f49f.patch |
+              patch -p1 -d qtbase
+          }
+          elseif ($env:BUILD -eq "modern") {
+            # rename Qt 6 directory to avoid path long problem.
+            tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.qt6_modern_tarball }}"
+            mv "${{ steps.sources.outputs.qt6_modern_dirname }}" qt6
+            cd qt6
+          }
+          else {
+            exit 1
+          }
+
+          mkdir build && cd build
+
+          if ($env:BUILD -eq "legacy") {
+            # only build qtbase,qt5compat
+            $opt = (
+              "-cmake-generator", "Ninja",
+              "-release",
+              "-nomake", "examples",
+              "-skip", "qt3d",              "-skip", "qtactiveqt",
+              "-skip", "qtcharts",          "-skip", "qtcoap",
+              "-skip", "qtdatavis3d",       "-skip", "qtdeclarative",
+              "-skip", "qtdoc",             "-skip", "qtimageformats",
+              "-skip", "qtlottie",          "-skip", "qtmqtt",
+              "-skip", "qtnetworkauth",     "-skip", "qtopcua",
+              "-skip", "qtquick3d",         "-skip", "qtquickcontrols2",
+              "-skip", "qtquicktimeline",   "-skip", "qtscxml",
+              "-skip", "qtshadertools",     "-skip", "qtsvg",
+              "-skip", "qttools",           "-skip", "qttranslations",
+              "-skip", "qtvirtualkeyboard", "-skip", "qtwayland"
+            )
+
+            # not compatible with clang-cl, only works with MSVC
+            $env:CC="cl"
+            $env:CXX="cl"
+          }
+          elseif ($env:BUILD -eq "modern") {
+            # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
+            # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
+            $opt = (
+              "-nomake", "examples",
+              "-skip", "qtdeclarative",
+              "-submodules", "qtbase,qt5compat"
+            )
+          }
+          else {
+            exit 1
+          }
+
+          ../configure.bat -prefix "$HOME/opt/" $opt
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+        env:
+          # Qt 6 uses Win8.1+ features, set to 0x0602 to avoid build failures.
+          CFLAGS: "/D_WIN32_WINNT=0x0602"
+          CXXFLAGS: "/D_WIN32_WINNT=0x0602"
+
+      - name: (manual) Build and install VTK
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd $HOME/code/build
+          tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.vtk_tarball }}"
+          cd "${{ steps.sources.outputs.vtk_dirname }}"
+
+          mkdir build && cd build
+
+          # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
+          # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
+          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release  `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQt=WANT `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=DONT_WANT `
+                  -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=DONT_WANT `
+                  -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+
+          cmake --build . --parallel
+          cmake --install . --parallel 8
+
+        env:
+          # only works with MSVC
+          CC: cl
+          CXX: cl
+
+      - name: (vcpkg) Download and install dependencies
+        if: matrix.toolchain.pkgmgr == 'vcpkg'
+        run: |
+          # hack, will be removed
+          cd $env:GITHUB_WORKSPACE/openEMS-Project/QCSXCAD
+          vcpkg new --application
+          vcpkg add port boost cgal hdf5 tinyxml
+          vcpkg add port qtbase qt5compat vtk[qt]
+
+          cd $env:GITHUB_WORKSPACE/openEMS-Project/AppCSXCAD
+          vcpkg new --application
+          vcpkg add port boost cgal hdf5 tinyxml
+          vcpkg add port qtbase qt5compat vtk[qt]
+
       - name: Build and install openEMS
         run: |
           & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
@@ -856,9 +1078,83 @@ jobs:
           sed -i -e "1i set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)" `
                     fparser/CMakeLists.txt
 
-          mkdir build && cd build
-          cmake ../ -GNinja -DCMAKE_BUILD_TYPE=Release `
-                    -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+          mkdir build
+
+          # We want a short path to work around MSVC's path limitation
+          # but it cannot be too short! CMake has a bug that generates
+          # a broken Ninja build file if the build directory is a drive's
+          # root directory!
+          #
+          # https://gitlab.kitware.com/cmake/cmake/-/issues/20404
+          # https://github.com/ninja-build/ninja/issues/1747
+          subst X: (Resolve-Path ./)
+          cd X:/build
+
+          if ($env:PKGMGR -eq "manual") {
+            cmake "$env:GITHUB_WORKSPACE/openEMS-Project" `
+                  -GNinja -DCMAKE_BUILD_TYPE=Release `
+                  -DCMAKE_INSTALL_PREFIX="$HOME/opt/"
+          }
+          elseif ($env:PKGMGR -eq "vcpkg") {
+            cmake "$env:GITHUB_WORKSPACE/openEMS-Project" `
+                  -GNinja -DCMAKE_BUILD_TYPE=Release `
+                  -DCMAKE_INSTALL_PREFIX="$HOME/opt/" `
+                  -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                  -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                  -DVCPKG_TARGET_TRIPLET="x64-windows-release" `
+                  -DVCPKG_INSTALL_OPTIONS="--x-buildtrees-root=C:/vctree;--clean-buildtrees-after-build"
+          }
+          else {
+            exit 1
+          }
 
           cmake --build ./ --parallel --verbose
           cmake --install ./ --parallel 8
+
+      - name: (manual) Bundle openEMS DLLs
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          cp $HOME/opt/lib/tinyxml.dll $HOME/opt/bin/
+          cp $HOME/opt/lib/fparser.dll $HOME/opt/bin/
+          cp $HOME/opt/lib/CSXCAD.dll $HOME/opt/bin/
+          cp $HOME/opt/lib/QCSXCAD.dll $HOME/opt/bin/
+
+      - name: (manual) Bundle Windows Universal CRT
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          # ignored on Windows 10+ in favor of OS's UCRT, but needed on
+          # Windows 7 SP1+.
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+          cp $env:WindowsSdkDir/Redist/ucrt/DLLs/x64/* $HOME/opt/bin/
+
+      - name: (manual) Bundle Mesa
+        if: matrix.toolchain.pkgmgr == 'manual'
+        run: |
+          cd ~/code
+
+          # tarbomb, extract many files directly to the current directory
+          # make sure we're already in a safe subdirectory
+          mkdir mesa3d
+          cd mesa3d
+
+          if ($env:BUILD -eq "legacy") {
+            tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.mesa_legacy_tarball }}"
+          }
+          elseif ($env:BUILD -eq "modern") {
+            tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.mesa_modern_tarball }}"
+          }
+          else {
+            exit 1
+          }
+          ls
+
+          cp ./x64/libgallium_wgl.dll $HOME/opt/bin/
+          cp ./x64/opengl32.dll $HOME/opt/bin/
+          cp ./x64/dxil.dll $HOME/opt/bin/
+
+      - name: Upload build artifacts
+        if: matrix.toolchain.pkgmgr == 'manual'
+        uses: actions/upload-artifact@v4
+        with:
+          name: openems-windows-${{ matrix.toolchain.name }}-${{ matrix.toolchain.build }}-${{ github.sha }}
+          path: ~/opt/
