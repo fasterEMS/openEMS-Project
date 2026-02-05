@@ -611,17 +611,17 @@ jobs:
           # pkgmgr: vcpkg for per-commit testing, manual for official
           # binary releases because it allows targeting platforms
           # unsupported by vcpkg
-          #- name: "MSVC"
-          #  CC: "cl"
-          #  CXX: "cl"
-          #  pkgmgr: "vcpkg"
-          #  build: "dev"
+          - name: "MSVC"
+            CC: "cl"
+            CXX: "cl"
+            pkgmgr: "vcpkg"
+            build: "dev"
 
-          #- name: "clang-cl"
-          #  CC: "clang-cl"
-          #  CXX: "clang-cl"
-          #  pkgmgr: "vpkg"
-          #  build: "dev"
+          - name: "clang-cl"
+            CC: "clang-cl"
+            CXX: "clang-cl"
+            pkgmgr: "vcpkg"
+            build: "dev"
 
           - name: "MSVC"
             CC: "cl"
@@ -969,14 +969,11 @@ jobs:
             cat $HOME/code/downloads/0e4cc15da330fb25b913fbc8089e60f80a08f49f.patch |
               patch -p1 -d qtbase
           }
-          elseif ($env:BUILD -eq "modern") {
+          else {
             # rename Qt 6 directory to avoid path long problem.
             tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.qt6_modern_tarball }}"
             mv "${{ steps.sources.outputs.qt6_modern_dirname }}" qt6
             cd qt6
-          }
-          else {
-            exit 1
           }
 
           mkdir build && cd build
@@ -1004,7 +1001,7 @@ jobs:
             $env:CC="cl"
             $env:CXX="cl"
           }
-          elseif ($env:BUILD -eq "modern") {
+          else {
             # QML (qtdeclarative, or Qt Quick) is a heavy JavaScript GUI
             # engine, which is NOT used by QCSXCAD/AppCSXCAD, disable it.
             $opt = (
@@ -1012,9 +1009,6 @@ jobs:
               "-skip", "qtdeclarative",
               "-submodules", "qtbase,qt5compat"
             )
-          }
-          else {
-            exit 1
           }
 
           ../configure.bat -prefix "$HOME/opt/" $opt
@@ -1119,16 +1113,14 @@ jobs:
           cp $HOME/opt/lib/CSXCAD.dll $HOME/opt/bin/
           cp $HOME/opt/lib/QCSXCAD.dll $HOME/opt/bin/
 
-      - name: (manual) Bundle Windows Universal CRT
-        if: matrix.toolchain.pkgmgr == 'manual'
+      - name: Bundle Windows Universal CRT
         run: |
           # ignored on Windows 10+ in favor of OS's UCRT, but needed on
           # Windows 7 SP1+.
           & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
           cp $env:WindowsSdkDir/Redist/ucrt/DLLs/x64/* $HOME/opt/bin/
 
-      - name: (manual) Bundle Mesa
-        if: matrix.toolchain.pkgmgr == 'manual'
+      - name: Bundle Mesa
         run: |
           cd ~/code
 
@@ -1140,13 +1132,9 @@ jobs:
           if ($env:BUILD -eq "legacy") {
             tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.mesa_legacy_tarball }}"
           }
-          elseif ($env:BUILD -eq "modern") {
+          else {
             tar -xf "$HOME/code/downloads/${{ steps.sources.outputs.mesa_modern_tarball }}"
           }
-          else {
-            exit 1
-          }
-          ls
 
           cp ./x64/libgallium_wgl.dll $HOME/opt/bin/
           cp ./x64/opengl32.dll $HOME/opt/bin/
@@ -1156,5 +1144,5 @@ jobs:
         if: matrix.toolchain.pkgmgr == 'manual'
         uses: actions/upload-artifact@v4
         with:
-          name: openems-windows-${{ matrix.toolchain.name }}-${{ matrix.toolchain.build }}-${{ github.sha }}
+          name: openems-windows-${{ matrix.toolchain.name }}-${{ matrix.toolchain.build }}-${{ matrix.toolchain.pkgmgr }}-${{ github.sha }}
           path: ~/opt/
