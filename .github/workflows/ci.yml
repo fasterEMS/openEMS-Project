@@ -798,8 +798,7 @@ jobs:
               output.write(tarball_line)
               output.write(url_line)
 
-      - name: (manual) Download dependencies
-        if: matrix.toolchain.pkgmgr == 'manual'
+      - name: Download dependencies
         run: |
           mkdir -p $HOME/code/downloads && cd $HOME/code/downloads
           mkdir -p $HOME/code/opt
