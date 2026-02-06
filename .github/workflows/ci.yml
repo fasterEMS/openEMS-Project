@@ -812,37 +812,42 @@ jobs:
             "--fail-early",       # fail if any of the link is a 404
                                   # by default, a later success overrides the fail
             "--remote-name-all",  # use auto filenames
-
-            # TinyXML with special cases
-            # The first patch enforces use of stl strings, rather than a custom string type.
-            # The second patch is a fix for incorrect encoding of elements with special characters.
-            # The third and fourth patches are security fixes.
-            # The final patch introduces a CMake build file
-            "${{ steps.sources.outputs.tinyxml_url }}",
-            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch",
-            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch",
-            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch",
-            "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch",
-            "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch",
-
-            # Qt 6 legacy with special cases
-            # Both patches allow building qt5compat without optional dependencies
-            "${{ steps.sources.outputs.qt6_legacy_url }}",
-            "https://github.com/qt/qt5/commit/81096b44bb183772c979debca2ffd1f8b364bbc8.patch",
-            "https://github.com/qt/qt5compat/commit/307d82ee13b68a4ffd488709fb948d37f04b096b.patch",
-
-            # qsharedpointer_impl.h(668,77): error: no member named 'data' in 'QWeakPointer<T>'
-            # under clang
-            "https://github.com/qt/qtbase/commit/0e4cc15da330fb25b913fbc8089e60f80a08f49f.patch",
-
             "${{ steps.sources.outputs.mesa_legacy_url }}",
-            "${{ steps.sources.outputs.mesa_modern_url }}",
-            "${{ steps.sources.outputs.cgal_url }}",
-            "${{ steps.sources.outputs.boost_url }}",
-            "${{ steps.sources.outputs.hdf5_url }}",
-            "${{ steps.sources.outputs.qt6_modern_url }}",
-            "${{ steps.sources.outputs.vtk_url }}"
+            "${{ steps.sources.outputs.mesa_modern_url }}"
           )
+
+          if ($env:PKGMGR -eq "manual") {
+            $manual_args = (
+              # TinyXML with special cases
+              # The first patch enforces use of stl strings, rather than a custom string type.
+              # The second patch is a fix for incorrect encoding of elements with special characters.
+              # The third and fourth patches are security fixes.
+              # The final patch introduces a CMake build file
+              "${{ steps.sources.outputs.tinyxml_url }}",
+              "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch",
+              "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch",
+              "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch",
+              "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch",
+              "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch",
+
+              # Qt 6 legacy with special cases
+              # Both patches allow building qt5compat without optional dependencies
+              "${{ steps.sources.outputs.qt6_legacy_url }}",
+              "https://github.com/qt/qt5/commit/81096b44bb183772c979debca2ffd1f8b364bbc8.patch",
+              "https://github.com/qt/qt5compat/commit/307d82ee13b68a4ffd488709fb948d37f04b096b.patch",
+
+              # qsharedpointer_impl.h(668,77): error: no member named 'data' in 'QWeakPointer<T>'
+              # under clang
+              "https://github.com/qt/qtbase/commit/0e4cc15da330fb25b913fbc8089e60f80a08f49f.patch",
+
+              "${{ steps.sources.outputs.cgal_url }}",
+              "${{ steps.sources.outputs.boost_url }}",
+              "${{ steps.sources.outputs.hdf5_url }}",
+              "${{ steps.sources.outputs.qt6_modern_url }}",
+              "${{ steps.sources.outputs.vtk_url }}"
+            )
+            $curl_args += $manual_args
+          }
 
           echo "Downloading $curl_args"
           curl.exe -L $curl_args
