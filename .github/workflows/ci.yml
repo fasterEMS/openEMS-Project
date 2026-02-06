@@ -1145,7 +1145,6 @@ jobs:
           cp ./x64/dxil.dll $HOME/opt/bin/
 
       - name: Upload build artifacts
-        if: matrix.toolchain.pkgmgr == 'manual'
         uses: actions/upload-artifact@v4
         with:
           name: openems-windows-${{ matrix.toolchain.name }}-${{ matrix.toolchain.build }}-${{ matrix.toolchain.pkgmgr }}-${{ github.sha }}
